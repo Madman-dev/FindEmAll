@@ -2,7 +2,7 @@
 //  SceneDelegate.swift
 //  FindEmAll
 //
-//  Created by Jack Lee on 2023/12/15.
+//  Created by Porori on 2/2/24.
 //
 
 import UIKit
@@ -13,13 +13,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+        
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
-        window?.rootViewController = MainViewController()
+        window?.rootViewController = StartingVC()
         window?.makeKeyAndVisible()
     }
+    
+    // give navigationBar item a color > adding color no more
+//    func configureNavigationBar() {
+//        UINavigationBar.appearance().tintColor = .blue
+//    }
 
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.
