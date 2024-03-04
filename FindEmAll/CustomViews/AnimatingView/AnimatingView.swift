@@ -26,7 +26,7 @@ class AnimatingView: UIView {
     }
     
     private func configure() {
-        layer.cornerRadius = 30
+        layer.cornerRadius = 15
         translatesAutoresizingMaskIntoConstraints = false
     }
     
@@ -34,12 +34,12 @@ class AnimatingView: UIView {
         switch position {
         case .up:
             UIView.animate(withDuration: 0.5) {
-                self.frame.origin.y -= 300
+                self.frame.origin.y -= 410
             } completion: { _ in completion?() }
             
         case .down:
             UIView.animate(withDuration: 0.5) {
-                self.frame.origin.y += 300
+                self.frame.origin.y += 410
             } completion: { _ in completion?() }
         }
     }
