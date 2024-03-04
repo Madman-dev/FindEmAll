@@ -27,8 +27,8 @@ class PokeButton: UIButton {
         layer.cornerRadius = 50
         
         NSLayoutConstraint.activate([
-            heightAnchor.constraint(equalToConstant: 100),
-            widthAnchor.constraint(equalToConstant: 100)
+            heightAnchor.constraint(equalToConstant: 101),
+            widthAnchor.constraint(equalToConstant: 101)
         ])
     }
     
