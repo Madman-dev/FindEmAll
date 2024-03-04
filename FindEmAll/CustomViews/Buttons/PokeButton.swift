@@ -8,6 +8,10 @@
 import UIKit
 
 class PokeButton: UIButton {
+    enum Size {
+        case smaller, bigger
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         configure()
@@ -17,14 +21,16 @@ class PokeButton: UIButton {
         fatalError("init(coder:) has not been implemented")
     }
     
-    convenience init(color: UIColor, image: String) {
+    convenience init(color: UIColor) {
         self.init(frame: .zero)
-        set(color: color, withImage: image)
+        set(color: color)
     }
     
     private func configure() {
         translatesAutoresizingMaskIntoConstraints = false
         layer.cornerRadius = 50
+        layer.borderColor = UIColor.black.cgColor
+        layer.borderWidth = 8
         
         NSLayoutConstraint.activate([
             heightAnchor.constraint(equalToConstant: 101),
@@ -32,11 +38,16 @@ class PokeButton: UIButton {
         ])
     }
     
-    private func set(color: UIColor, withImage image: String) {
-        configuration?.image = UIImage(systemName: image)
-        configuration?.imagePadding = 5
-        configuration?.imagePlacement = .all
-        
+    private func set(color: UIColor) {
         backgroundColor = color
+    }
+    
+    func scale(size: Size) {
+        switch size {
+        case .bigger:
+            sizeUp(view: self)
+        case .smaller:
+            sizeDown(view: self)
+        }
     }
 }

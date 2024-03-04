@@ -12,7 +12,7 @@ class StartingVC: UIViewController {
     let titleView = TitleLabel(text: "이렇게?", textAlignment: .center, fontSize: 30)
     let topAnimatingView = AnimatingView(color: .purple)
     let bottomAnimatingView = AnimatingView(color: .green)
-    let actionButton = PokeButton(color: .orange, image: "pencil")
+    let actionButton = PokeButton(color: .white)
     // var isAnimatingComplete: Bool = false
     
     override func viewDidLoad() {
@@ -62,12 +62,8 @@ class StartingVC: UIViewController {
         
         NSLayoutConstraint.activate([
             actionButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            actionButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            actionButton.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
-    }
-    
-    private func buttonChangeDuringTransition() {
-        actionButton
     }
     
     @objc func actionButtonTapped() {
@@ -78,6 +74,8 @@ class StartingVC: UIViewController {
         
         // moving the views at once
         let dispatchGroup = DispatchGroup()
+        actionButton.scale(size: .bigger)
+        
         dispatchGroup.enter()
         topAnimatingView.move(to: .up) {
             dispatchGroup.leave()

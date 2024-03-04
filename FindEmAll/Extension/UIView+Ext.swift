@@ -8,12 +8,15 @@
 import UIKit
 
 extension UIView {
-    func scaleBigger(view: UIView) {
-
-        view.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
+    func sizeUp(view: UIView) {
+        UIView.transition(with: self, duration: 0.5) {
+            view.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
+        }
     }
     
-    func scaleSmaller(view: UIView) {
-        view.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
+    func sizeDown(view: UIView) {
+        UIView.transition(with: self, duration: 0.5) {
+            view.transform = CGAffineTransform(scaleX: 1, y: 1)
+        }
     }
 }

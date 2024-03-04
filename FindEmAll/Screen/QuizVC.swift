@@ -11,16 +11,19 @@ class QuizVC: UIViewController {
     
     let topAnimatingView = AnimatingView(color: .red)
     let bottomAnimatingView = AnimatingView(color: .blue)
+    let actionButton = PokeButton(color: .white)
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .yellow
         configureAnimatingViews()
+        configureButton()
     }
     
     override func viewIsAppearing(_ animated: Bool) {
         super.viewIsAppearing(animated)
         loadingView()
+        actionButton.scale(size: .smaller)
     }
     
     private func configureAnimatingViews() {
@@ -39,6 +42,15 @@ class QuizVC: UIViewController {
             bottomAnimatingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             bottomAnimatingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             bottomAnimatingView.heightAnchor.constraint(equalToConstant: 410)
+        ])
+    }
+    
+    private func configureButton() {
+        view.addSubview(actionButton)
+        
+        NSLayoutConstraint.activate([
+            actionButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            actionButton.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
     }
     
