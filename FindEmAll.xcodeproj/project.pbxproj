@@ -18,6 +18,7 @@
 		BDBD46A62B2C999500B62405 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDBD46A52B2C999500B62405 /* AppDelegate.swift */; };
 		BDBD46AF2B2C999700B62405 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BDBD46AE2B2C999700B62405 /* Assets.xcassets */; };
 		BDBD46B22B2C999700B62405 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BDBD46B02B2C999700B62405 /* LaunchScreen.storyboard */; };
+		BDFCDC192B959DB4004DD56C /* UIView+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFCDC182B959DB4004DD56C /* UIView+Ext.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,7 @@
 		BDBD46AE2B2C999700B62405 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BDBD46B12B2C999700B62405 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BDBD46B32B2C999700B62405 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BDFCDC182B959DB4004DD56C /* UIView+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Ext.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -130,12 +132,21 @@
 		BDBD46A42B2C999500B62405 /* FindEmAll */ = {
 			isa = PBXGroup;
 			children = (
+				BDFCDC162B959D9A004DD56C /* Extension */,
 				BD55412C2B8E2A3A0089CA78 /* Support */,
 				BD55412F2B8E37680089CA78 /* CustomViews */,
 				BD5541332B8E388D0089CA78 /* Screen */,
 				BDBD46B32B2C999700B62405 /* Info.plist */,
 			);
 			path = FindEmAll;
+			sourceTree = "<group>";
+		};
+		BDFCDC162B959D9A004DD56C /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				BDFCDC182B959DB4004DD56C /* UIView+Ext.swift */,
+			);
+			path = Extension;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -210,6 +221,7 @@
 			files = (
 				BD28152A2B90173F0095C1AD /* LayoutVC.swift in Sources */,
 				BD2815242B8F473C0095C1AD /* BodyLabel.swift in Sources */,
+				BDFCDC192B959DB4004DD56C /* UIView+Ext.swift in Sources */,
 				BD2815312B903A940095C1AD /* SceneDelegate.swift in Sources */,
 				BD2815272B8F7EE80095C1AD /* AnimatingView.swift in Sources */,
 				BDBD46A62B2C999500B62405 /* AppDelegate.swift in Sources */,

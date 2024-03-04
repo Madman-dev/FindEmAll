@@ -10,10 +10,10 @@ import UIKit
 class StartingVC: UIViewController {
     
     let titleView = TitleLabel(text: "이렇게?", textAlignment: .center, fontSize: 30)
-    let upAnimatingView = AnimatingView(color: .purple)
-    let downAnimatingView = AnimatingView(color: .purple)
-    let actionButton = PokeButton(color: .blue, image: "pencil")
-    var isAnimatingComplete: Bool = false
+    let topAnimatingView = AnimatingView(color: .purple)
+    let bottomAnimatingView = AnimatingView(color: .green)
+    let actionButton = PokeButton(color: .orange, image: "pencil")
+    // var isAnimatingComplete: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,21 +28,21 @@ class StartingVC: UIViewController {
     }
     
     private func configureAnimatingViews() {
-        view.addSubview(upAnimatingView)
-        view.addSubview(downAnimatingView)
+        view.addSubview(topAnimatingView)
+        view.addSubview(bottomAnimatingView)
         
         NSLayoutConstraint.activate([
-            upAnimatingView.topAnchor.constraint(equalTo: view.topAnchor),
-            upAnimatingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            upAnimatingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            upAnimatingView.heightAnchor.constraint(equalToConstant: 300)
+            topAnimatingView.topAnchor.constraint(equalTo: view.topAnchor),
+            topAnimatingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            topAnimatingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            topAnimatingView.heightAnchor.constraint(equalToConstant: 410)
         ])
         
         NSLayoutConstraint.activate([
-            downAnimatingView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            downAnimatingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            downAnimatingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            downAnimatingView.heightAnchor.constraint(equalToConstant: 100)
+            bottomAnimatingView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            bottomAnimatingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            bottomAnimatingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            bottomAnimatingView.heightAnchor.constraint(equalToConstant: 410)
         ])
     }
     
@@ -63,9 +63,11 @@ class StartingVC: UIViewController {
         NSLayoutConstraint.activate([
             actionButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             actionButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            actionButton.heightAnchor.constraint(equalToConstant: 100),
-            actionButton.widthAnchor.constraint(equalToConstant: 100)
         ])
+    }
+    
+    private func buttonChangeDuringTransition() {
+        actionButton
     }
     
     @objc func actionButtonTapped() {
@@ -77,12 +79,12 @@ class StartingVC: UIViewController {
         // moving the views at once
         let dispatchGroup = DispatchGroup()
         dispatchGroup.enter()
-        upAnimatingView.move(to: .up) {
+        topAnimatingView.move(to: .up) {
             dispatchGroup.leave()
         }
         
         dispatchGroup.enter()
-        downAnimatingView.move(to: .down) {
+        bottomAnimatingView.move(to: .down) {
             dispatchGroup.leave()
         }
         
