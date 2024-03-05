@@ -10,14 +10,32 @@ import UIKit
 class QuizVC: UIViewController {
     
     let topAnimatingView = AnimatingView(color: .red)
-    let bottomAnimatingView = AnimatingView(color: .blue)
+    let bottomAnimatingView = AnimatingView(color: .gray)
     let actionButton = PokeButton(color: .white)
+    let firstInfo = UIView()
+    let secondInfo = UIView()
+    let thirdInfo = UIView()
+    let fourthInfo = UIView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .yellow
+        view.backgroundColor = .black
         configureAnimatingViews()
         configureButton()
+        NetworkManager.shared.fetchData(for: 1) { pokemon, errorMessage in
+            guard let pokemon = pokemon else {
+                print("VC에서 호출 문제")
+                return
+            }
+            
+            if let error = errorMessage {
+                print("호출 에러 문제 발생",error)
+            }
+            
+            print(pokemon)
+            print("=========")
+            print(pokemon.count)
+        }
     }
     
     override func viewIsAppearing(_ animated: Bool) {
@@ -55,7 +73,6 @@ class QuizVC: UIViewController {
     }
     
     private func loadingView() {
-        // moving the views at once
         let dispatchGroup = DispatchGroup()
         dispatchGroup.enter()
         topAnimatingView.move(to: .down) {
