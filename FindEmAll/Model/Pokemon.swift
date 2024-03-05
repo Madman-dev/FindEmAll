@@ -12,5 +12,5 @@ struct Pokemon: Codable {
     let name: String
     let height: Int
     let weight: Int
-    let move: [PokemonMove] // need to update model
+    let moves: [Move] // need to update model
 }
