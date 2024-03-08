@@ -31,24 +31,22 @@ class QuizVC: UIViewController {
         actionButton.scale(size: .smaller)
     }
     
-    private func fetchData(is firstLoad: Bool = false) {
+    private func fetchData() {
         NetworkManager.shared.fetchPokemon() { [weak self] pokemon, errorMessage in
             guard let self = self else { return }
             
-            DispatchQueue.main.async {
-                if let error = errorMessage {
-                    print("호출 에러 문제 발생",error)
-                    return
-                }
-
-                guard let pokemon = pokemon else {
-                    print("Error Occurs here")
-                    return
-                }
-                                
-                print(pokemon.moves[0].move.name)
-                print(pokemon.sprites.frontDefault)
+            if let error = errorMessage {
+                print("호출 에러 문제 발생",error)
+                return
             }
+            
+            guard let pokemon = pokemon else {
+                print("Error Occurs here")
+                return
+            }
+            
+            print(pokemon.moves[0].move.name)
+            print(pokemon.sprites.frontDefault)
         }
     }
     

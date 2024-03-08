@@ -53,11 +53,7 @@ class NetworkManager {
                 return
             }
             
-            do {
-                // 데이터 fetch 여부 확인
-//                let json = try JSONSerialization.jsonObject(with: data, options: [])
-//                print(json)
-                
+            do {                
                 // 받아온 데이터 decode
                 let pokemonData = try decoder.decode(Pokemon.self, from: data)
                 completion(pokemonData, nil)
