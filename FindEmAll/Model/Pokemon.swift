@@ -7,10 +7,11 @@
 
 import Foundation
 
-struct Pokemon: Codable {
+struct Pokemon: Decodable {
     let id: Int
     let name: String
     let height: Int
     let weight: Int
-    let moves: [Move] // need to update model
+    let moves: [Move]
+    let sprites: PokemonSprites // unable to fetch data due to wrong naming
 }

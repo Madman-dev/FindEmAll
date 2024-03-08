@@ -54,19 +54,17 @@ class NetworkManager {
             }
             
             do {
+                // 데이터 fetch 여부 확인
+//                let json = try JSONSerialization.jsonObject(with: data, options: [])
+//                print(json)
+                
                 // 받아온 데이터 decode
                 let pokemonData = try decoder.decode(Pokemon.self, from: data)
                 completion(pokemonData, nil)
             } catch {
-                completion(nil, "데이터는 올바르게 왔지만 문제가 발생했습니다.")
+                completion(nil, "데이터는 올바르게 왔습니다만... \(error).")
             }
         }
         task.resume()
-    }
-    
-    func cacheData(from urlString: String, completion: @escaping (Pokemon) -> Void) {
-        let cacheKey = NSString(string: urlString)
-        
-        
     }
 }

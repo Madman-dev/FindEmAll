@@ -22,6 +22,7 @@ class QuizVC: UIViewController {
         view.backgroundColor = .black
         configureAnimatingViews()
         configureButton()
+        fetchData()
     }
     
     override func viewIsAppearing(_ animated: Bool) {
@@ -31,15 +32,22 @@ class QuizVC: UIViewController {
     }
     
     private func fetchData(is firstLoad: Bool = false) {
-        NetworkManager.shared.fetchPokemon() { pokemon, errorMessage in
-            guard let pokemon = pokemon else {
-                print("VC에서 호출 문제")
-                return
-            }
+        NetworkManager.shared.fetchPokemon() { [weak self] pokemon, errorMessage in
+            guard let self = self else { return }
             
-            if let error = errorMessage {
-                print("호출 에러 문제 발생",error)
-                return
+            DispatchQueue.main.async {
+                if let error = errorMessage {
+                    print("호출 에러 문제 발생",error)
+                    return
+                }
+
+                guard let pokemon = pokemon else {
+                    print("Error Occurs here")
+                    return
+                }
+                                
+                print(pokemon.moves[0].move.name)
+                print(pokemon.sprites.frontDefault)
             }
         }
     }

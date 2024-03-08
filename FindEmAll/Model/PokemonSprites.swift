@@ -8,7 +8,7 @@
 import Foundation
 
 extension Pokemon {
-    struct PokemonSprites {
-        let front_default: URL
+    struct PokemonSprites: Decodable {
+        let frontDefault: String
     }
 }

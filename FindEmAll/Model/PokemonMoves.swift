@@ -8,18 +8,12 @@
 import Foundation
 
 extension Pokemon {
-    struct Move: Codable {
+    struct Move: Decodable {
         let move: Species
-        let versionGroupDetails: [VersionGroupDetail]
     }
     
-    struct Species: Codable {
+    struct Species: Decodable {
         let name: String
-        let url: URL
-    }
-    
-    struct VersionGroupDetail: Codable {
-        let levelLearnedAt: Int
-        let versionGroup, moveLearnMethod: Species
+        let url: String
     }
 }
