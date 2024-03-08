@@ -8,8 +8,12 @@
 import Foundation
 
 extension Pokemon {
-    struct PokemonMove: Codable {
+    struct Move: Decodable {
+        let move: Species
+    }
+    
+    struct Species: Decodable {
         let name: String
-        let url: URL
+        let url: String
     }
 }
