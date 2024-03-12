@@ -9,36 +9,31 @@ import UIKit
 
 class StartingVC: UIViewController {
     
-    let titleView = TitleLabel(text: "이렇게?", textAlignment: .center, fontSize: 30)
+    let titleView = TitleLabel(textAlignment: .center, fontSize: 30)
     let topAnimatingView = AnimatingView(color: .purple)
     let bottomAnimatingView = AnimatingView(color: .green)
     let actionButton = PokeButton(color: .white)
-    // var isAnimatingComplete: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        configure()
+        layoutUI()
         configureAnimatingViews()
         configureTitleView()
         configureButton()
     }
     
-    private func configure() {
+    private func layoutUI() {
         view.backgroundColor = .darkGray
+        view.addSubviews(topAnimatingView, bottomAnimatingView, titleView, actionButton)
     }
     
     private func configureAnimatingViews() {
-        view.addSubview(topAnimatingView)
-        view.addSubview(bottomAnimatingView)
-        
         NSLayoutConstraint.activate([
             topAnimatingView.topAnchor.constraint(equalTo: view.topAnchor),
             topAnimatingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             topAnimatingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            topAnimatingView.heightAnchor.constraint(equalToConstant: 410)
-        ])
-        
-        NSLayoutConstraint.activate([
+            topAnimatingView.heightAnchor.constraint(equalToConstant: 410),
+            
             bottomAnimatingView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             bottomAnimatingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             bottomAnimatingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -47,17 +42,15 @@ class StartingVC: UIViewController {
     }
     
     private func configureTitleView() {
-        let padding: CGFloat = 200
-        view.addSubview(titleView)
+        titleView.text = "Welcome Aboard"
         
         NSLayoutConstraint.activate([
             titleView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            titleView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -padding)
+            titleView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -200)
         ])
     }
     
     private func configureButton() {
-        view.addSubview(actionButton)
         actionButton.addTarget(self, action: #selector(actionButtonTapped), for: .touchUpInside)
         
         NSLayoutConstraint.activate([
@@ -67,7 +60,6 @@ class StartingVC: UIViewController {
     }
     
     @objc func actionButtonTapped() {
-        print("버튼이 눌렸습니다")
         let destinationVC = QuizVC()
         destinationVC.modalTransitionStyle = .crossDissolve
         destinationVC.modalPresentationStyle = .fullScreen

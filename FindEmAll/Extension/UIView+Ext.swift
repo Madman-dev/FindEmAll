@@ -19,4 +19,10 @@ extension UIView {
             view.transform = CGAffineTransform(scaleX: 1, y: 1)
         }
     }
+    
+    func addSubviews(_ views: UIView...) {
+        for view in views {
+            addSubview(view)
+        }
+    }
 }
