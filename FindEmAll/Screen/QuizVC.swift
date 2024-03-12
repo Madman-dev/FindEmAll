@@ -13,9 +13,6 @@ class QuizVC: UIViewController {
     let bottomAnimatingView = AnimatingView(color: .gray)
     let actionButton = PokeButton(color: .white)
     let questionLabel = TitleLabel(textAlignment: .center, fontSize: 24)
-    let textField = Textfield(withSpace: true)
-    let stackView = UIStackView()
-    var infoViews = [UIView]()
     let firstInfo = UIView()
     let secondInfo = UIView()
     let thirdInfo = UIView()
@@ -28,31 +25,60 @@ class QuizVC: UIViewController {
     
     override func viewIsAppearing(_ animated: Bool) {
         super.viewIsAppearing(animated)
+        configureAnimatingViews()
         loadingView()
         actionButton.scale(size: .smaller)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
-        configureInfoViews()
-        configureStackView()
         populateViews()
-        configureTextfield()
+        fetchData()
     }
     
     private func layoutUI() {
         view.backgroundColor = .black
-        view.addSubviews(topAnimatingView, bottomAnimatingView, actionButton, questionLabel, textField)
+        view.addSubviews(topAnimatingView, bottomAnimatingView, actionButton, questionLabel, firstInfo, secondInfo, thirdInfo, fourthInfo)
+        
+        firstInfo.translatesAutoresizingMaskIntoConstraints = false
+        secondInfo.translatesAutoresizingMaskIntoConstraints = false
+        thirdInfo.translatesAutoresizingMaskIntoConstraints = false
+        fourthInfo.translatesAutoresizingMaskIntoConstraints = false
+        questionLabel.text = "Questions will be placed like so"
                 
-        configureAnimatingViews()
-        configureButton()
-        fetchData()
-        configureQuestionLabel()
+        NSLayoutConstraint.activate([
+            actionButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            actionButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            
+            questionLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 150),
+            questionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            questionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            questionLabel.heightAnchor.constraint(equalToConstant: 50),
+            
+            firstInfo.topAnchor.constraint(equalTo: questionLabel.bottomAnchor, constant: 50),
+            firstInfo.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            firstInfo.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            firstInfo.heightAnchor.constraint(equalToConstant: 80),
+            
+            secondInfo.topAnchor.constraint(equalTo: firstInfo.bottomAnchor, constant: 10),
+            secondInfo.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            secondInfo.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            secondInfo.heightAnchor.constraint(equalToConstant: 80),
+            
+            thirdInfo.topAnchor.constraint(equalTo: secondInfo.bottomAnchor, constant: 10),
+            thirdInfo.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            thirdInfo.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            thirdInfo.heightAnchor.constraint(equalToConstant: 80),
+            
+            fourthInfo.topAnchor.constraint(equalTo: thirdInfo.bottomAnchor, constant: 10),
+            fourthInfo.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            fourthInfo.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            fourthInfo.heightAnchor.constraint(equalToConstant: 80),
+        ])
     }
     
     private func fetchData() {
-        NetworkManager.shared.fetchPokemon() { [weak self] pokemon, errorMessage in
-            guard let self = self else { return }
+        NetworkManager.shared.fetchPokemon() { pokemon, errorMessage in
             
             if let error = errorMessage {
                 print("호출 에러 문제 발생",error)
@@ -67,32 +93,6 @@ class QuizVC: UIViewController {
             print(pokemon.moves[0].move.name)
             print(pokemon.sprites.frontDefault)
         }
-    }
-    
-    private func configureInfoViews() {
-        infoViews = [firstInfo, secondInfo, thirdInfo, fourthInfo]
-        
-        for infoView in infoViews {
-            stackView.addArrangedSubview(infoView)
-            
-            NSLayoutConstraint.activate([
-                infoView.heightAnchor.constraint(equalToConstant: 80)
-            ])
-        }
-    }
-    
-    private func configureStackView() {
-        view.addSubview(stackView)
-        stackView.axis = .vertical
-        stackView.distribution = .equalSpacing
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: questionLabel.bottomAnchor, constant: 50),
-            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
-            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
-            stackView.heightAnchor.constraint(equalToConstant: 400)
-        ])
     }
     
     private func populateViews() {
@@ -110,24 +110,6 @@ class QuizVC: UIViewController {
         childVC.didMove(toParent: self)
     }
     
-    private func configureQuestionLabel() {
-        questionLabel.text = "Questions will be placed like so"
-        
-        NSLayoutConstraint.activate([
-            questionLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 150),
-            questionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            questionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            questionLabel.heightAnchor.constraint(equalToConstant: 50)
-        ])
-    }
-    
-    private func configureButton() {
-        NSLayoutConstraint.activate([
-            actionButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            actionButton.centerYAnchor.constraint(equalTo: view.centerYAnchor)
-        ])
-    }
-    
     private func configureAnimatingViews() {
         NSLayoutConstraint.activate([
             topAnimatingView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -139,17 +121,6 @@ class QuizVC: UIViewController {
             bottomAnimatingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             bottomAnimatingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             bottomAnimatingView.heightAnchor.constraint(equalToConstant: 410)
-            ])
-    }
-    
-    private func configureTextfield() {
-        textField.delegate = self
-        
-        NSLayoutConstraint.activate([
-            textField.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -90),
-            textField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            textField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            textField.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
     
@@ -164,11 +135,5 @@ class QuizVC: UIViewController {
         bottomAnimatingView.move(to: .up) {
             dispatchGroup.leave()
         }
-    }
-}
-
-extension QuizVC: UITextFieldDelegate {
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        // 텍스트 필드가 이동하기를 바래야 된다.
     }
 }

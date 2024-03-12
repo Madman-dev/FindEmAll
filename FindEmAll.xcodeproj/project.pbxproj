@@ -20,6 +20,7 @@
 		BDBD46AF2B2C999700B62405 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BDBD46AE2B2C999700B62405 /* Assets.xcassets */; };
 		BDBD46B22B2C999700B62405 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BDBD46B02B2C999700B62405 /* LaunchScreen.storyboard */; };
 		BDD45B362BA021AD006DDD17 /* Textfield.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD45B352BA021AD006DDD17 /* Textfield.swift */; };
+		BDE710EB2BA044C400DD4B79 /* InfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE710EA2BA044C400DD4B79 /* InfoView.swift */; };
 		BDFCDC192B959DB4004DD56C /* UIView+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFCDC182B959DB4004DD56C /* UIView+Ext.swift */; };
 		BDFCDC202B95C1E7004DD56C /* Pokemon.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFCDC1F2B95C1E7004DD56C /* Pokemon.swift */; };
 		BDFCDC222B95C726004DD56C /* PokemonMoves.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFCDC212B95C726004DD56C /* PokemonMoves.swift */; };
@@ -44,6 +45,7 @@
 		BDBD46B12B2C999700B62405 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BDBD46B32B2C999700B62405 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BDD45B352BA021AD006DDD17 /* Textfield.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Textfield.swift; path = FindEmAll/CustomViews/Textfield/Textfield.swift; sourceTree = SOURCE_ROOT; };
+		BDE710EA2BA044C400DD4B79 /* InfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoView.swift; sourceTree = "<group>"; };
 		BDFCDC182B959DB4004DD56C /* UIView+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Ext.swift"; sourceTree = "<group>"; };
 		BDFCDC1F2B95C1E7004DD56C /* Pokemon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pokemon.swift; sourceTree = "<group>"; };
 		BDFCDC212B95C726004DD56C /* PokemonMoves.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonMoves.swift; sourceTree = "<group>"; };
@@ -71,12 +73,13 @@
 			path = Manager;
 			sourceTree = "<group>";
 		};
-		BD2815252B8F7EC90095C1AD /* AnimatingView */ = {
+		BD2815252B8F7EC90095C1AD /* View */ = {
 			isa = PBXGroup;
 			children = (
 				BD2815262B8F7EE80095C1AD /* AnimatingView.swift */,
+				BDE710EA2BA044C400DD4B79 /* InfoView.swift */,
 			);
-			path = AnimatingView;
+			path = View;
 			sourceTree = "<group>";
 		};
 		BD2815282B90171A0095C1AD /* ViewControllers */ = {
@@ -111,7 +114,7 @@
 			isa = PBXGroup;
 			children = (
 				BD2815282B90171A0095C1AD /* ViewControllers */,
-				BD2815252B8F7EC90095C1AD /* AnimatingView */,
+				BD2815252B8F7EC90095C1AD /* View */,
 				BD5541302B8E37950089CA78 /* Labels */,
 				BD28152B2B9017830095C1AD /* Buttons */,
 			);
@@ -272,6 +275,7 @@
 				BD28152F2B9037150095C1AD /* QuizVC.swift in Sources */,
 				BD55412E2B8E37540089CA78 /* StartingVC.swift in Sources */,
 				BD5541322B8E37A70089CA78 /* TitleLabel.swift in Sources */,
+				BDE710EB2BA044C400DD4B79 /* InfoView.swift in Sources */,
 				BD28152D2B90179C0095C1AD /* PokeButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

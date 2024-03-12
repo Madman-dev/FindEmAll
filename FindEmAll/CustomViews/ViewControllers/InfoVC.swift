@@ -8,26 +8,30 @@
 import UIKit
 
 class InfoVC: UIViewController {
-    let textLabel = BodyLabel(textAlignment: .left)
+    let firstItemInfoView = InfoView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        configureBackground()
+        layoutUI()
+    }
+    
+    private func configureBackground() {
         view.backgroundColor = .white
         view.layer.cornerRadius = 15
         view.layer.borderWidth = 2
         view.layer.borderColor = UIColor.black.cgColor
-        configureLabel()
     }
     
-    private func configureLabel() {
-        view.addSubview(textLabel)
-        textLabel.translatesAutoresizingMaskIntoConstraints = false
-        textLabel.text = "정보를 공유합니다."
+    private func layoutUI() {
+        view.addSubview(firstItemInfoView)
+        firstItemInfoView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            textLabel.topAnchor.constraint(equalTo: view.topAnchor),
-            textLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
-            textLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10)
+            firstItemInfoView.topAnchor.constraint(equalTo: view.topAnchor),
+            firstItemInfoView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            firstItemInfoView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            firstItemInfoView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
 }
