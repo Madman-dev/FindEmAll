@@ -13,7 +13,12 @@ class QuizVC: UIViewController {
     let bottomAnimatingView = AnimatingView(color: .gray)
     let actionButton = PokeButton(color: .white)
     let questionLabel = TitleLabel(textAlignment: .center, fontSize: 24)
+    let stackView = UIStackView()
+    var infoViews = [UIView]()
     let firstInfo = UIView()
+    let secondInfo = UIView()
+    let thirdInfo = UIView()
+    let fourthInfo = UIView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,6 +34,7 @@ class QuizVC: UIViewController {
         actionButton.scale(size: .smaller)
         
         configureQuestionLabel()
+        configureStackView()
     }
     
     private func fetchData() {
@@ -47,6 +53,36 @@ class QuizVC: UIViewController {
             
             print(pokemon.moves[0].move.name)
             print(pokemon.sprites.frontDefault)
+        }
+    }
+    
+    private func configureStackView() {
+        view.addSubview(stackView)
+        stackView.axis = .vertical
+        stackView.distribution = .equalSpacing
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            stackView.topAnchor.constraint(equalTo: questionLabel.bottomAnchor, constant: 50),
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            stackView.heightAnchor.constraint(equalToConstant: 400)
+        ])
+        
+        configureViewInfoViews()
+    }
+    
+    private func configureViewInfoViews() {
+        infoViews = [firstInfo, secondInfo, thirdInfo, fourthInfo]
+        
+        for infoView in infoViews {
+            stackView.addArrangedSubview(infoView)
+            infoView.backgroundColor = .white
+            infoView.layer.cornerRadius = 10
+            
+            NSLayoutConstraint.activate([
+                infoView.heightAnchor.constraint(equalToConstant: 80)
+            ])
         }
     }
     
