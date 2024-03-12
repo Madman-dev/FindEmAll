@@ -12,10 +12,8 @@ class QuizVC: UIViewController {
     let topAnimatingView = AnimatingView(color: .red)
     let bottomAnimatingView = AnimatingView(color: .gray)
     let actionButton = PokeButton(color: .white)
+    let questionLabel = TitleLabel(textAlignment: .center, fontSize: 24)
     let firstInfo = UIView()
-    let secondInfo = UIView()
-    let thirdInfo = UIView()
-    let fourthInfo = UIView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,6 +27,8 @@ class QuizVC: UIViewController {
         super.viewIsAppearing(animated)
         loadingView()
         actionButton.scale(size: .smaller)
+        
+        configureQuestionLabel()
     }
     
     private func fetchData() {
@@ -48,6 +48,18 @@ class QuizVC: UIViewController {
             print(pokemon.moves[0].move.name)
             print(pokemon.sprites.frontDefault)
         }
+    }
+    
+    private func configureQuestionLabel() {
+        view.addSubview(questionLabel)
+        questionLabel.text = "Questions will be placed like so"
+        
+        NSLayoutConstraint.activate([
+            questionLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 150),
+            questionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            questionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            questionLabel.heightAnchor.constraint(equalToConstant: 50)
+        ])
     }
     
     private func configureAnimatingViews() {

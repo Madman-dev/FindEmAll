@@ -9,7 +9,7 @@ import UIKit
 
 class StartingVC: UIViewController {
     
-    let titleView = TitleLabel(text: "이렇게?", textAlignment: .center, fontSize: 30)
+    let titleView = TitleLabel(textAlignment: .center, fontSize: 30)
     let topAnimatingView = AnimatingView(color: .purple)
     let bottomAnimatingView = AnimatingView(color: .green)
     let actionButton = PokeButton(color: .white)
@@ -49,6 +49,7 @@ class StartingVC: UIViewController {
     private func configureTitleView() {
         let padding: CGFloat = 200
         view.addSubview(titleView)
+        titleView.text = "Welcome Aboard"
         
         NSLayoutConstraint.activate([
             titleView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
