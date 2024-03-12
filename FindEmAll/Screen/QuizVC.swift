@@ -34,6 +34,7 @@ class QuizVC: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
+        configureInfoViews()
         configureStackView()
         populateViews()
         configureTextfield()
@@ -68,23 +69,7 @@ class QuizVC: UIViewController {
         }
     }
     
-    private func configureStackView() {
-        view.addSubview(stackView)
-        stackView.axis = .vertical
-        stackView.distribution = .equalSpacing
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: questionLabel.bottomAnchor, constant: 50),
-            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            stackView.heightAnchor.constraint(equalToConstant: 400)
-        ])
-        
-        configureViewInfoViews()
-    }
-    
-    private func configureViewInfoViews() {
+    private func configureInfoViews() {
         infoViews = [firstInfo, secondInfo, thirdInfo, fourthInfo]
         
         for infoView in infoViews {
@@ -94,6 +79,20 @@ class QuizVC: UIViewController {
                 infoView.heightAnchor.constraint(equalToConstant: 80)
             ])
         }
+    }
+    
+    private func configureStackView() {
+        view.addSubview(stackView)
+        stackView.axis = .vertical
+        stackView.distribution = .equalSpacing
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            stackView.topAnchor.constraint(equalTo: questionLabel.bottomAnchor, constant: 50),
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
+            stackView.heightAnchor.constraint(equalToConstant: 400)
+        ])
     }
     
     private func populateViews() {
@@ -134,15 +133,13 @@ class QuizVC: UIViewController {
             topAnimatingView.topAnchor.constraint(equalTo: view.topAnchor),
             topAnimatingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             topAnimatingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            topAnimatingView.heightAnchor.constraint(equalToConstant: 410)
-        ])
-        
-        NSLayoutConstraint.activate([
+            topAnimatingView.heightAnchor.constraint(equalToConstant: 410),
+            
             bottomAnimatingView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             bottomAnimatingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             bottomAnimatingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             bottomAnimatingView.heightAnchor.constraint(equalToConstant: 410)
-        ])
+            ])
     }
     
     private func configureTextfield() {
@@ -171,5 +168,7 @@ class QuizVC: UIViewController {
 }
 
 extension QuizVC: UITextFieldDelegate {
-    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        // 텍스트 필드가 이동하기를 바래야 된다.
+    }
 }
