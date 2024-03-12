@@ -13,6 +13,7 @@ class QuizVC: UIViewController {
     let bottomAnimatingView = AnimatingView(color: .gray)
     let actionButton = PokeButton(color: .white)
     let questionLabel = TitleLabel(textAlignment: .center, fontSize: 24)
+    let textField = Textfield(withSpace: true)
     let stackView = UIStackView()
     var infoViews = [UIView]()
     let firstInfo = UIView()
@@ -36,6 +37,7 @@ class QuizVC: UIViewController {
         
         configureStackView()
         populateViews()
+        configureTextfield()
     }
     
     private func layoutUI() {
@@ -148,6 +150,18 @@ class QuizVC: UIViewController {
         ])
     }
     
+    private func configureTextfield() {
+        view.addSubview(textField)
+        textField.delegate = self
+        
+        NSLayoutConstraint.activate([
+            textField.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -90),
+            textField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            textField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            textField.heightAnchor.constraint(equalToConstant: 50)
+        ])
+    }
+    
     private func loadingView() {
         let dispatchGroup = DispatchGroup()
         dispatchGroup.enter()
@@ -160,4 +174,8 @@ class QuizVC: UIViewController {
             dispatchGroup.leave()
         }
     }
+}
+
+extension QuizVC: UITextFieldDelegate {
+    
 }
