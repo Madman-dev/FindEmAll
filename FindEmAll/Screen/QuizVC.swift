@@ -35,6 +35,7 @@ class QuizVC: UIViewController {
         
         configureQuestionLabel()
         configureStackView()
+        populateViews()
     }
     
     private func fetchData() {
@@ -77,13 +78,26 @@ class QuizVC: UIViewController {
         
         for infoView in infoViews {
             stackView.addArrangedSubview(infoView)
-            infoView.backgroundColor = .white
-            infoView.layer.cornerRadius = 10
             
             NSLayoutConstraint.activate([
                 infoView.heightAnchor.constraint(equalToConstant: 80)
             ])
         }
+    }
+    
+    private func populateViews() {
+        addChild(childVC: InfoVC(), to: self.firstInfo)
+        addChild(childVC: InfoVC(), to: self.secondInfo)
+        addChild(childVC: InfoVC(), to: self.thirdInfo)
+        addChild(childVC: InfoVC(), to: self.fourthInfo)
+    }
+    
+    private func addChild(childVC: UIViewController, to container: UIView) {
+        addChild(childVC)
+        container.addSubview(childVC.view)
+        
+        childVC.view.frame = container.bounds
+        childVC.didMove(toParent: self)
     }
     
     private func configureQuestionLabel() {
