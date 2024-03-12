@@ -22,20 +22,28 @@ class QuizVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
-        configureAnimatingViews()
-        configureButton()
-        fetchData()
+        layoutUI()
     }
     
     override func viewIsAppearing(_ animated: Bool) {
         super.viewIsAppearing(animated)
         loadingView()
         actionButton.scale(size: .smaller)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
         
-        configureQuestionLabel()
         configureStackView()
         populateViews()
+    }
+    
+    private func layoutUI() {
+        view.backgroundColor = .black
+        configureAnimatingViews()
+        configureButton()
+        fetchData()
+        configureQuestionLabel()
     }
     
     private func fetchData() {
@@ -112,6 +120,15 @@ class QuizVC: UIViewController {
         ])
     }
     
+    private func configureButton() {
+        view.addSubview(actionButton)
+        
+        NSLayoutConstraint.activate([
+            actionButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            actionButton.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
+    }
+    
     private func configureAnimatingViews() {
         view.addSubview(topAnimatingView)
         view.addSubview(bottomAnimatingView)
@@ -128,15 +145,6 @@ class QuizVC: UIViewController {
             bottomAnimatingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             bottomAnimatingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             bottomAnimatingView.heightAnchor.constraint(equalToConstant: 410)
-        ])
-    }
-    
-    private func configureButton() {
-        view.addSubview(actionButton)
-        
-        NSLayoutConstraint.activate([
-            actionButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            actionButton.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
     }
     
