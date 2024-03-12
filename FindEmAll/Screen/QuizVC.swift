@@ -34,7 +34,6 @@ class QuizVC: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
-        
         configureStackView()
         populateViews()
         configureTextfield()
@@ -42,6 +41,8 @@ class QuizVC: UIViewController {
     
     private func layoutUI() {
         view.backgroundColor = .black
+        view.addSubviews(topAnimatingView, bottomAnimatingView, actionButton, questionLabel, textField)
+                
         configureAnimatingViews()
         configureButton()
         fetchData()
@@ -111,7 +112,6 @@ class QuizVC: UIViewController {
     }
     
     private func configureQuestionLabel() {
-        view.addSubview(questionLabel)
         questionLabel.text = "Questions will be placed like so"
         
         NSLayoutConstraint.activate([
@@ -123,8 +123,6 @@ class QuizVC: UIViewController {
     }
     
     private func configureButton() {
-        view.addSubview(actionButton)
-        
         NSLayoutConstraint.activate([
             actionButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             actionButton.centerYAnchor.constraint(equalTo: view.centerYAnchor)
@@ -132,9 +130,6 @@ class QuizVC: UIViewController {
     }
     
     private func configureAnimatingViews() {
-        view.addSubview(topAnimatingView)
-        view.addSubview(bottomAnimatingView)
-        
         NSLayoutConstraint.activate([
             topAnimatingView.topAnchor.constraint(equalTo: view.topAnchor),
             topAnimatingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -151,7 +146,6 @@ class QuizVC: UIViewController {
     }
     
     private func configureTextfield() {
-        view.addSubview(textField)
         textField.delegate = self
         
         NSLayoutConstraint.activate([
