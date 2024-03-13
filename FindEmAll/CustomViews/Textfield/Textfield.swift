@@ -28,6 +28,7 @@ class Textfield: UITextField {
         layer.cornerRadius = 15
         layer.borderWidth = 2
         layer.borderColor = UIColor.black.cgColor
+        backgroundColor = .white
         
         textColor = .label
         tintColor = .label

@@ -23,7 +23,7 @@ class StartingVC: UIViewController {
     }
     
     private func layoutUI() {
-        view.backgroundColor = .darkGray
+        view.backgroundColor = .black
         view.addSubviews(topAnimatingView, bottomAnimatingView, titleView, actionButton)
     }
     
