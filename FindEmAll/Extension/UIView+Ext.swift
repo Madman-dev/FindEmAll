@@ -29,7 +29,7 @@ extension UIView {
     func animateToCenter(of parent: UIView, origin: CGPoint) {
         DispatchQueue.main.async {
             UIView.animate(withDuration: 0.5) {
-                self.frame.origin.y = parent.frame.size.height/2
+                self.frame.origin.y = parent.frame.size.height/2 - 40
             }
         }
     }

@@ -26,6 +26,7 @@ class QuizVC: UIViewController {
         super.viewDidLoad()
         layoutUI()
         configureTextfield()
+        createDismissKeyboardGesture()
     }
     
     override func viewIsAppearing(_ animated: Bool) {
@@ -57,6 +58,11 @@ class QuizVC: UIViewController {
             print(pokemon.moves[0].move.name)
             print(pokemon.sprites.frontDefault)
         }
+    }
+    
+    private func createDismissKeyboardGesture() {
+        let tap = UITapGestureRecognizer(target: view, action: #selector(UIView.endEditing))
+        view.addGestureRecognizer(tap)
     }
     
     private func populateViews() {
@@ -170,6 +176,7 @@ extension QuizVC: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         returnBack()
+        guessingTextfield.resignFirstResponder()
         return true
     }
 }
