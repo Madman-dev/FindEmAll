@@ -17,10 +17,15 @@ class QuizVC: UIViewController {
     let secondInfo = UIView()
     let thirdInfo = UIView()
     let fourthInfo = UIView()
+    var infoViews = [UIView]()
+    let guessingTextfield = Textfield(withSpace: true)
+    let padding: CGFloat = 20
+    private var originalPosition = [UIView: CGPoint]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         layoutUI()
+        configureTextfield()
     }
     
     override func viewIsAppearing(_ animated: Bool) {
@@ -33,48 +38,7 @@ class QuizVC: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
         populateViews()
-        fetchData()
-    }
-    
-    private func layoutUI() {
-        view.backgroundColor = .black
-        view.addSubviews(topAnimatingView, bottomAnimatingView, actionButton, questionLabel, firstInfo, secondInfo, thirdInfo, fourthInfo)
-        
-        firstInfo.translatesAutoresizingMaskIntoConstraints = false
-        secondInfo.translatesAutoresizingMaskIntoConstraints = false
-        thirdInfo.translatesAutoresizingMaskIntoConstraints = false
-        fourthInfo.translatesAutoresizingMaskIntoConstraints = false
-        questionLabel.text = "Questions will be placed like so"
-                
-        NSLayoutConstraint.activate([
-            actionButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            actionButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            
-            questionLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 150),
-            questionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            questionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            questionLabel.heightAnchor.constraint(equalToConstant: 50),
-            
-            firstInfo.topAnchor.constraint(equalTo: questionLabel.bottomAnchor, constant: 50),
-            firstInfo.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            firstInfo.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            firstInfo.heightAnchor.constraint(equalToConstant: 80),
-            
-            secondInfo.topAnchor.constraint(equalTo: firstInfo.bottomAnchor, constant: 10),
-            secondInfo.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            secondInfo.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            secondInfo.heightAnchor.constraint(equalToConstant: 80),
-            
-            thirdInfo.topAnchor.constraint(equalTo: secondInfo.bottomAnchor, constant: 10),
-            thirdInfo.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            thirdInfo.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            thirdInfo.heightAnchor.constraint(equalToConstant: 80),
-            
-            fourthInfo.topAnchor.constraint(equalTo: thirdInfo.bottomAnchor, constant: 10),
-            fourthInfo.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            fourthInfo.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            fourthInfo.heightAnchor.constraint(equalToConstant: 80),
-        ])
+//        fetchData()
     }
     
     private func fetchData() {
@@ -110,6 +74,59 @@ class QuizVC: UIViewController {
         childVC.didMove(toParent: self)
     }
     
+    private func layoutUI() {
+        view.backgroundColor = .black
+        questionLabel.text = "나는 누구일까요?"
+        
+        view.addSubviews(topAnimatingView, bottomAnimatingView, actionButton, questionLabel)
+        infoViews = [firstInfo, secondInfo, thirdInfo, fourthInfo]
+        
+        for infoView in infoViews {
+            view.addSubview(infoView)
+            infoView.translatesAutoresizingMaskIntoConstraints = false
+            
+            NSLayoutConstraint.activate([
+                infoView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
+                infoView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
+                infoView.heightAnchor.constraint(equalToConstant: 80)
+            ])
+        }
+        
+        NSLayoutConstraint.activate([
+            actionButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            actionButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            
+            questionLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 150),
+            questionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
+            questionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
+            questionLabel.heightAnchor.constraint(equalToConstant: 50),
+            
+            firstInfo.topAnchor.constraint(equalTo: questionLabel.bottomAnchor, constant: 50),
+            secondInfo.topAnchor.constraint(equalTo: firstInfo.bottomAnchor, constant: 10),
+            thirdInfo.topAnchor.constraint(equalTo: secondInfo.bottomAnchor, constant: 10),
+            fourthInfo.topAnchor.constraint(equalTo: thirdInfo.bottomAnchor, constant: 10),
+        ])
+    }
+    
+    private func configureTextfield() {
+        view.addSubview(guessingTextfield)
+        guessingTextfield.delegate = self
+        
+        NSLayoutConstraint.activate([
+            guessingTextfield.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -padding),
+            guessingTextfield.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: padding),
+            guessingTextfield.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -padding),
+            guessingTextfield.heightAnchor.constraint(equalToConstant: 50)
+        ])
+    }
+    
+    private func returnBack() {
+        firstInfo.animateBack(to: originalPosition[firstInfo]!)
+        secondInfo.animateBack(to: originalPosition[secondInfo]!)
+        thirdInfo.animateBack(to: originalPosition[thirdInfo]!)
+        fourthInfo.animateBack(to: originalPosition[fourthInfo]!)
+    }
+    
     private func configureAnimatingViews() {
         NSLayoutConstraint.activate([
             topAnimatingView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -135,5 +152,24 @@ class QuizVC: UIViewController {
         bottomAnimatingView.move(to: .up) {
             dispatchGroup.leave()
         }
+    }
+}
+
+extension QuizVC: UITextFieldDelegate {
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        originalPosition[firstInfo] = firstInfo.frame.origin
+        originalPosition[secondInfo] = secondInfo.frame.origin
+        originalPosition[thirdInfo] = thirdInfo.frame.origin
+        originalPosition[fourthInfo] = fourthInfo.frame.origin
+        
+        firstInfo.animateToCenter(of: self.view, origin: originalPosition[firstInfo]!)
+        secondInfo.animateToCenter(of: self.view, origin: originalPosition[secondInfo]!)
+        thirdInfo.animateToCenter(of: self.view, origin: originalPosition[thirdInfo]!)
+        fourthInfo.animateToCenter(of: self.view, origin: originalPosition[fourthInfo]!)
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        returnBack()
+        return true
     }
 }

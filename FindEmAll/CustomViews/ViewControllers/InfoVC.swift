@@ -17,10 +17,10 @@ class InfoVC: UIViewController {
     }
     
     private func configureBackground() {
-        view.backgroundColor = .white
         view.layer.cornerRadius = 15
         view.layer.borderWidth = 2
         view.layer.borderColor = UIColor.black.cgColor
+        view.layer.backgroundColor = UIColor.blue.cgColor
     }
     
     private func layoutUI() {
@@ -34,4 +34,22 @@ class InfoVC: UIViewController {
             firstItemInfoView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
+    
+    //    func animateToCenter(view: UIView, of parent: UIView) {
+    //        DispatchQueue.main.async {
+    //            let center = parent.center
+    //
+    //            UIView.animate(withDuration: 0.5) {
+    //                view.center = center
+    //            }
+    //        }
+    //    }
+    //
+    //    func animateBack(view: UIView) {
+    //        DispatchQueue.main.async {
+    //            UIView.animate(withDuration: 0.5) {
+    //                view.transform = .identity
+    //            }
+    //        }
+    //    }
 }
