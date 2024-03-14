@@ -12,7 +12,7 @@ class QuizVC: UIViewController {
     let topAnimatingView = AnimatingView(color: .red)
     let bottomAnimatingView = AnimatingView(color: .gray)
     let actionButton = PokeButton(color: .white)
-    let questionLabel = TitleLabel(textAlignment: .center, fontSize: 24)
+    let pokeImageview = PokeImageView(withImage: "circle.fill")
     let firstInfo = UIView()
     let secondInfo = UIView()
     let thirdInfo = UIView()
@@ -34,7 +34,6 @@ class QuizVC: UIViewController {
         super.viewIsAppearing(animated)
         configureAnimatingViews()
         loadingView()
-        actionButton.scale(size: .smaller)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -83,9 +82,8 @@ class QuizVC: UIViewController {
     
     private func layoutUI() {
         view.backgroundColor = .black
-        questionLabel.text = "나는 누구일까요?"
         
-        view.addSubviews(topAnimatingView, bottomAnimatingView, actionButton, questionLabel)
+        view.addSubviews(topAnimatingView, bottomAnimatingView, actionButton, pokeImageview)
         infoViews = [firstInfo, secondInfo, thirdInfo, fourthInfo]
         
         for infoView in infoViews {
@@ -103,10 +101,10 @@ class QuizVC: UIViewController {
             actionButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             actionButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             
-            questionLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 220),
-            questionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
-            questionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
-            questionLabel.heightAnchor.constraint(equalToConstant: 50),
+            pokeImageview.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            pokeImageview.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -100),
+            pokeImageview.heightAnchor.constraint(equalToConstant: 280),
+            pokeImageview.widthAnchor.constraint(equalToConstant: 280),
             
             firstInfo.topAnchor.constraint(equalTo: bottomAnimatingView.topAnchor, constant: 15),
             secondInfo.topAnchor.constraint(equalTo: firstInfo.bottomAnchor, constant: 10),
