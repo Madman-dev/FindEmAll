@@ -20,7 +20,7 @@ class InfoVC: UIViewController {
         view.layer.cornerRadius = 15
         view.layer.borderWidth = 2
         view.layer.borderColor = UIColor.black.cgColor
-        view.layer.backgroundColor = UIColor.white.cgColor
+        view.layer.backgroundColor = UIColor.white.withAlphaComponent(0.9).cgColor
     }
     
     private func layoutUI() {
