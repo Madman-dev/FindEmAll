@@ -20,7 +20,7 @@ class PokeImageView: UIImageView {
     
     convenience init(withImage: String) {
         self.init(frame: .zero)
-        image = UIImage(systemName: withImage)?.withTintColor(.blue, renderingMode: .alwaysOriginal)
+        image = UIImage(systemName: withImage)?.withTintColor(.black, renderingMode: .alwaysOriginal)
     }
     
     private func configure() {

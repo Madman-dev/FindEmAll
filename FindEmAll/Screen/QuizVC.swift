@@ -11,8 +11,7 @@ class QuizVC: UIViewController {
     
     let topAnimatingView = AnimatingView(color: .red)
     let bottomAnimatingView = AnimatingView(color: .gray)
-    let actionButton = PokeButton(color: .white)
-    let pokeImageview = PokeImageView(withImage: "circle.fill")
+    let pokeImageview = PokeView()
     let firstInfo = UIView()
     let secondInfo = UIView()
     let thirdInfo = UIView()
@@ -83,8 +82,9 @@ class QuizVC: UIViewController {
     private func layoutUI() {
         view.backgroundColor = .black
         
-        view.addSubviews(topAnimatingView, bottomAnimatingView, actionButton, pokeImageview)
+        view.addSubviews(topAnimatingView, bottomAnimatingView, pokeImageview)
         infoViews = [firstInfo, secondInfo, thirdInfo, fourthInfo]
+        pokeImageview.translatesAutoresizingMaskIntoConstraints = false
         
         for infoView in infoViews {
             view.addSubview(infoView)
@@ -98,15 +98,12 @@ class QuizVC: UIViewController {
         }
         
         NSLayoutConstraint.activate([
-            actionButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            actionButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            
             pokeImageview.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            pokeImageview.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -100),
-            pokeImageview.heightAnchor.constraint(equalToConstant: 280),
-            pokeImageview.widthAnchor.constraint(equalToConstant: 280),
+            pokeImageview.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            pokeImageview.heightAnchor.constraint(equalToConstant: 350),
+            pokeImageview.widthAnchor.constraint(equalToConstant: 350),
             
-            firstInfo.topAnchor.constraint(equalTo: bottomAnimatingView.topAnchor, constant: 15),
+            firstInfo.topAnchor.constraint(equalTo: view.topAnchor, constant: 250),
             secondInfo.topAnchor.constraint(equalTo: firstInfo.bottomAnchor, constant: 10),
             thirdInfo.topAnchor.constraint(equalTo: secondInfo.bottomAnchor, constant: 10),
             fourthInfo.topAnchor.constraint(equalTo: thirdInfo.bottomAnchor, constant: 10)
