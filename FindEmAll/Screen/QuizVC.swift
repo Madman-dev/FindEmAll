@@ -28,11 +28,6 @@ class QuizVC: UIViewController {
         layoutUI()
         configureTextfield()
         createDismissKeyboardGesture()
-        
-        //MARK: - Adding notificationCenter for keyboard events.
-        // 뷰를 전체적으로 올린다는 점에서 이슈 발생
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShowNotification), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHideNotification), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     override func viewIsAppearing(_ animated: Bool) {
@@ -108,15 +103,15 @@ class QuizVC: UIViewController {
             actionButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             actionButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             
-            questionLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 150),
+            questionLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 220),
             questionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
             questionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
             questionLabel.heightAnchor.constraint(equalToConstant: 50),
             
-            firstInfo.topAnchor.constraint(equalTo: questionLabel.bottomAnchor, constant: 50),
+            firstInfo.topAnchor.constraint(equalTo: bottomAnimatingView.topAnchor, constant: 15),
             secondInfo.topAnchor.constraint(equalTo: firstInfo.bottomAnchor, constant: 10),
             thirdInfo.topAnchor.constraint(equalTo: secondInfo.bottomAnchor, constant: 10),
-            fourthInfo.topAnchor.constraint(equalTo: thirdInfo.bottomAnchor, constant: 10),
+            fourthInfo.topAnchor.constraint(equalTo: thirdInfo.bottomAnchor, constant: 10)
         ])
     }
     
@@ -125,62 +120,11 @@ class QuizVC: UIViewController {
         guessingTextfield.delegate = self
         
         NSLayoutConstraint.activate([
-            guessingTextfield.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -padding),
+            guessingTextfield.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50),
             guessingTextfield.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: padding),
             guessingTextfield.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -padding),
-            guessingTextfield.heightAnchor.constraint(equalToConstant: 50)
+            guessingTextfield.heightAnchor.constraint(equalToConstant: 80)
         ])
-        
-        // needs to give LayoutConstraint activation OUTSIDE the NSLayoutConstraint.
-        textfieldBottomConstraint = guessingTextfield.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0)
-        textfieldBottomConstraint?.isActive = true
-    }
-    
-    @objc func keyboardWillShowNotification(notification: Notification) {
-        // 너무 복잡하게 되어 있는데? 쉽게 적용할 수 있는 방법이 있지 않을까?
-        // guard let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return }
-        
-        // self.view.frame.origin.y = 0 - keyboardSize.height
-        
-        if guessingTextfield.isEditing {
-            moveViewWithNotification(notification: notification, viewBottomConstraint: self.textfieldBottomConstraint, keyboardWillShow: true)
-        }
-    }
-    
-    @objc func keyboardWillHideNotification(notification: Notification) {
-        // self.view.frame.origin.y = 0
-        
-        moveViewWithNotification(notification: notification, viewBottomConstraint: self.textfieldBottomConstraint, keyboardWillShow: false)
-    }
-    
-    func moveViewWithNotification(notification: Notification, viewBottomConstraint: NSLayoutConstraint, keyboardWillShow: Bool) {
-        // 키보드 규격 확인
-        guard let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return }
-        
-        let keyboardHeight = keyboardSize.height
-        
-        // 키보드 규격을 명확하게 알고 있기에 userInfo는 not optional
-        // keyboard animation duration
-        let keyboardDuration = notification.userInfo![UIResponder.keyboardAnimationDurationUserInfoKey] as! Double
-        // keyboard animation curve
-        let keyboardCurve = UIView.AnimationCurve(rawValue: notification.userInfo![UIResponder.keyboardAnimationCurveUserInfoKey] as! Int)!
-        
-        // 키보드가 이동했는지 확인
-        if keyboardWillShow {
-            // notch를 포함한 디바이스 자체의 safe area가 존재하는지 확인
-//            let safeAreaExist = (self.view.window?.safeAreaInsets.bottom != 0)
-//            let bottomConstant: CGFloat = 20
-            viewBottomConstraint.constant = (-keyboardHeight) - 20
-        } else {
-            viewBottomConstraint.constant = 20
-        }
-        
-        let animator = UIViewPropertyAnimator(duration: keyboardDuration, curve: keyboardCurve) {
-            [weak self] in
-            self?.view.layoutIfNeeded()
-        }
-        
-        animator.startAnimation()
     }
     
     private func returnBack() {
