@@ -61,8 +61,6 @@ class StartingVC: UIViewController {
     
     @objc func actionButtonTapped() {
         let destinationVC = QuizVC()
-        destinationVC.modalTransitionStyle = .crossDissolve
-        destinationVC.modalPresentationStyle = .fullScreen
         
         // moving the views at once
         let dispatchGroup = DispatchGroup()
@@ -79,7 +77,7 @@ class StartingVC: UIViewController {
         }
         
         dispatchGroup.notify(queue: .main) {
-            self.present(destinationVC, animated: true)
+            self.navigationController?.pushViewController(destinationVC, animated: false)
         }
     }
 }
