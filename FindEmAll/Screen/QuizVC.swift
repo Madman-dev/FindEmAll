@@ -28,7 +28,13 @@ class QuizVC: UIViewController {
         configureTextfield()
         createDismissKeyboardGesture()
         
-        let backButton = UIBarButtonItem(image: UIImage(systemName: "lasso"), style: .plain, target: self, action: #selector(backButtonTapped))
+        let backButton = UIBarButtonItem(
+            image: UIImage(
+                systemName: "arrowshape.backward.fill")?.withTintColor(.white, renderingMode: .alwaysOriginal),
+            style: .plain,
+            target: self,
+            action: #selector(backButtonTapped)
+        )
         navigationItem.leftBarButtonItem = backButton
     }
     
