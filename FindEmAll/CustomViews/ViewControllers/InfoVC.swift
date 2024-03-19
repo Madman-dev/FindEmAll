@@ -8,7 +8,8 @@
 import UIKit
 
 class InfoVC: UIViewController {
-    let firstItemInfoView = InfoView()
+    // infoVC에는 더 많은 콘텐츠를 담을 것이기 때문에 infoView를 적용했다.
+    let itemInfoView = InfoView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,14 +25,14 @@ class InfoVC: UIViewController {
     }
     
     private func layoutUI() {
-        view.addSubview(firstItemInfoView)
-        firstItemInfoView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(itemInfoView)
+        itemInfoView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            firstItemInfoView.topAnchor.constraint(equalTo: view.topAnchor),
-            firstItemInfoView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            firstItemInfoView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            firstItemInfoView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            itemInfoView.topAnchor.constraint(equalTo: view.topAnchor),
+            itemInfoView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            itemInfoView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            itemInfoView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
 }
