@@ -14,6 +14,7 @@ class StartingVC: UIViewController {
     let bottomAnimatingView = AnimatingView(color: .green)
     let actionButton = PokeButton(color: .white)
     
+    //MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         layoutUI()
@@ -27,6 +28,7 @@ class StartingVC: UIViewController {
         loadingView()
     }
     
+    //MARK: - UILayout
     private func layoutUI() {
         view.backgroundColor = .black
         view.addSubviews(topAnimatingView, bottomAnimatingView, titleView, actionButton)
@@ -64,6 +66,7 @@ class StartingVC: UIViewController {
         ])
     }
     
+    //MARK: - Methods
     @objc func actionButtonTapped() {
         let destinationVC = QuizVC()
         

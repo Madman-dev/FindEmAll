@@ -22,6 +22,7 @@ class QuizVC: UIViewController {
     private var originalPosition = [UIView: CGPoint]()
     let padding: CGFloat = 20
     
+    //MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         layoutUI()
@@ -44,15 +45,10 @@ class QuizVC: UIViewController {
         loadingView()
     }
     
-//    override func viewDidDisappear(_ animated: Bool) {
-//        super.viewDidDisappear(animated)
-//        dismissingView()
-//    }
-//    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
         populateViews()
-        fetchData()
+//        fetchData()
     }
     
     private func fetchData() {
@@ -94,6 +90,7 @@ class QuizVC: UIViewController {
         childVC.didMove(toParent: self)
     }
     
+    //MARK: - UILayout
     private func layoutUI() {
         view.backgroundColor = .black
         
@@ -137,13 +134,6 @@ class QuizVC: UIViewController {
         ])
     }
     
-    private func returnBack() {
-        firstInfo.animateBack(to: originalPosition[firstInfo]!)
-        secondInfo.animateBack(to: originalPosition[secondInfo]!)
-        thirdInfo.animateBack(to: originalPosition[thirdInfo]!)
-        fourthInfo.animateBack(to: originalPosition[fourthInfo]!)
-    }
-    
     private func configureAnimatingViews() {
         NSLayoutConstraint.activate([
             topAnimatingView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -156,6 +146,19 @@ class QuizVC: UIViewController {
             bottomAnimatingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             bottomAnimatingView.heightAnchor.constraint(equalToConstant: 410)
         ])
+    }
+    
+    //MARK: - Methods
+    @objc func backButtonTapped() {
+        print("뒤돌아가기 버튼이 눌렸습니다.")
+        dismissingView()
+    }
+    
+    private func returnBack() {
+        firstInfo.animateBack(to: originalPosition[firstInfo]!)
+        secondInfo.animateBack(to: originalPosition[secondInfo]!)
+        thirdInfo.animateBack(to: originalPosition[thirdInfo]!)
+        fourthInfo.animateBack(to: originalPosition[fourthInfo]!)
     }
     
     private func loadingView() {
@@ -187,13 +190,9 @@ class QuizVC: UIViewController {
             self.navigationController?.popViewController(animated: false)
         }
     }
-    
-    @objc func backButtonTapped() {
-        print("뒤돌아가기 버튼이 눌렸습니다.")
-        dismissingView()
-    }
 }
 
+// MARK: - TextfieldDelegate
 extension QuizVC: UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
         originalPosition[firstInfo] = firstInfo.frame.origin
