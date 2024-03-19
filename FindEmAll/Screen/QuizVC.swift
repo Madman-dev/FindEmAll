@@ -16,17 +16,20 @@ class QuizVC: UIViewController {
     let secondInfo = UIView()
     let thirdInfo = UIView()
     let fourthInfo = UIView()
-    var infoViews = [UIView]()
     let guessingTextfield = Textfield(withSpace: true)
+    var infoViews = [UIView]()
     var textfieldBottomConstraint: NSLayoutConstraint!
-    let padding: CGFloat = 20
     private var originalPosition = [UIView: CGPoint]()
+    let padding: CGFloat = 20
     
     override func viewDidLoad() {
         super.viewDidLoad()
         layoutUI()
         configureTextfield()
         createDismissKeyboardGesture()
+        
+        let backButton = UIBarButtonItem(image: UIImage(systemName: "lasso"), style: .plain, target: self, action: #selector(backButtonTapped))
+        navigationItem.leftBarButtonItem = backButton
     }
     
     override func viewIsAppearing(_ animated: Bool) {
@@ -35,10 +38,15 @@ class QuizVC: UIViewController {
         loadingView()
     }
     
+//    override func viewDidDisappear(_ animated: Bool) {
+//        super.viewDidDisappear(animated)
+//        dismissingView()
+//    }
+//    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
         populateViews()
-//        fetchData()
+        fetchData()
     }
     
     private func fetchData() {
@@ -61,6 +69,7 @@ class QuizVC: UIViewController {
     
     private func createDismissKeyboardGesture() {
         let tap = UITapGestureRecognizer(target: view, action: #selector(UIView.endEditing))
+        
         view.addGestureRecognizer(tap)
     }
     
@@ -154,6 +163,28 @@ class QuizVC: UIViewController {
         bottomAnimatingView.move(to: .up) {
             dispatchGroup.leave()
         }
+    }
+    
+    private func dismissingView() {
+        let dispatchGroup = DispatchGroup()
+        dispatchGroup.enter()
+        topAnimatingView.move(to: .up) {
+            dispatchGroup.leave()
+        }
+        
+        dispatchGroup.enter()
+        bottomAnimatingView.move(to: .down) {
+            dispatchGroup.leave()
+        }
+        
+        dispatchGroup.notify(queue: .main) {
+            self.navigationController?.popViewController(animated: false)
+        }
+    }
+    
+    @objc func backButtonTapped() {
+        print("뒤돌아가기 버튼이 눌렸습니다.")
+        dismissingView()
     }
 }
 

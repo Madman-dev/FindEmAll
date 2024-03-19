@@ -22,6 +22,11 @@ class StartingVC: UIViewController {
         configureButton()
     }
     
+    override func viewIsAppearing(_ animated: Bool) {
+        super.viewIsAppearing(animated)
+        loadingView()
+    }
+    
     private func layoutUI() {
         view.backgroundColor = .black
         view.addSubviews(topAnimatingView, bottomAnimatingView, titleView, actionButton)
@@ -78,6 +83,19 @@ class StartingVC: UIViewController {
         
         dispatchGroup.notify(queue: .main) {
             self.navigationController?.pushViewController(destinationVC, animated: false)
+        }
+    }
+    
+    private func loadingView() {
+        let dispatchGroup = DispatchGroup()
+        dispatchGroup.enter()
+        topAnimatingView.move(to: .down) {
+            dispatchGroup.leave()
+        }
+        
+        dispatchGroup.enter()
+        bottomAnimatingView.move(to: .up) {
+            dispatchGroup.leave()
         }
     }
 }
