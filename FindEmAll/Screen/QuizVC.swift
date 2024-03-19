@@ -53,7 +53,6 @@ class QuizVC: UIViewController {
     
     private func fetchData() {
         NetworkManager.shared.fetchPokemon() { pokemon, errorMessage in
-            
             if let error = errorMessage {
                 print("호출 에러 문제 발생",error)
                 return
@@ -67,12 +66,6 @@ class QuizVC: UIViewController {
             print(pokemon.moves[0].move.name)
             print(pokemon.sprites.frontDefault)
         }
-    }
-    
-    private func createDismissKeyboardGesture() {
-        let tap = UITapGestureRecognizer(target: view, action: #selector(UIView.endEditing))
-        
-        view.addGestureRecognizer(tap)
     }
     
     private func populateViews() {
@@ -189,6 +182,12 @@ class QuizVC: UIViewController {
         dispatchGroup.notify(queue: .main) {
             self.navigationController?.popViewController(animated: false)
         }
+    }
+    
+    private func createDismissKeyboardGesture() {
+        let tap = UITapGestureRecognizer(target: view, action: #selector(UIView.endEditing))
+        
+        view.addGestureRecognizer(tap)
     }
 }
 

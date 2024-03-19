@@ -13,6 +13,7 @@ class StartingVC: UIViewController {
     let topAnimatingView = AnimatingView(color: .purple)
     let bottomAnimatingView = AnimatingView(color: .green)
     let actionButton = PokeButton(color: .white)
+    let pokedexButton = PokeButton(color: .green)
     
     //MARK: - LifeCycle
     override func viewDidLoad() {
@@ -21,17 +22,23 @@ class StartingVC: UIViewController {
         configureAnimatingViews()
         configureTitleView()
         configureButton()
+        configurePokeDex()
     }
     
     override func viewIsAppearing(_ animated: Bool) {
         super.viewIsAppearing(animated)
+//        loadingView()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         loadingView()
     }
     
     //MARK: - UILayout
     private func layoutUI() {
         view.backgroundColor = .black
-        view.addSubviews(topAnimatingView, bottomAnimatingView, titleView, actionButton)
+        view.addSubviews(topAnimatingView, bottomAnimatingView, titleView, actionButton, pokedexButton)
     }
     
     private func configureAnimatingViews() {
@@ -66,10 +73,17 @@ class StartingVC: UIViewController {
         ])
     }
     
-    //MARK: - Methods
-    @objc func actionButtonTapped() {
-        let destinationVC = QuizVC()
+    private func configurePokeDex() {
+        pokedexButton.addTarget(self, action: #selector(pokedexButtonTapped), for: .touchUpInside)
         
+        NSLayoutConstraint.activate([
+            pokedexButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            pokedexButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50)
+        ])
+    }
+    
+    //MARK: - Methods
+    private func moveTo(VC destination: UIViewController) {
         // moving the views at once
         let dispatchGroup = DispatchGroup()
         actionButton.scale(size: .bigger)
@@ -85,8 +99,18 @@ class StartingVC: UIViewController {
         }
         
         dispatchGroup.notify(queue: .main) {
-            self.navigationController?.pushViewController(destinationVC, animated: false)
+            self.navigationController?.pushViewController(destination, animated: false)
         }
+    }
+    
+    @objc func actionButtonTapped() {
+        let destinationVC = QuizVC()
+        moveTo(VC: destinationVC)
+    }
+    
+    @objc func pokedexButtonTapped() {
+        let destinationVC = PokedexVC()
+        self.navigationController?.pushViewController(destinationVC, animated: false)
     }
     
     private func loadingView() {
