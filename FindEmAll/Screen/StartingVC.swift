@@ -66,6 +66,7 @@ class StartingVC: UIViewController {
     
     private func configureButton() {
         actionButton.addTarget(self, action: #selector(actionButtonTapped), for: .touchUpInside)
+        actionButton.addBorder(color: .black)
         
         NSLayoutConstraint.activate([
             actionButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -77,10 +78,13 @@ class StartingVC: UIViewController {
     
     private func configurePokeDex() {
         pokedexButton.addTarget(self, action: #selector(pokedexButtonTapped), for: .touchUpInside)
+        pokedexButton.addBorder(color: .white)
         
         NSLayoutConstraint.activate([
             pokedexButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            pokedexButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -30)
+            pokedexButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -30),
+            pokedexButton.heightAnchor.constraint(equalToConstant: 101),
+            pokedexButton.widthAnchor.constraint(equalToConstant: 101)
         ])
     }
     
@@ -111,7 +115,6 @@ class StartingVC: UIViewController {
     private func dismissAndAnimateTo(VC destination: UIViewController) {
         // moving the views at once
         let dispatchGroup = DispatchGroup()
-        actionButton.scale(size: .bigger)
         
         dispatchGroup.enter()
         topAnimatingView.animate(to: .up) {
