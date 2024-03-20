@@ -7,7 +7,7 @@
 
 import UIKit
 
-class PokeView: UIView {
+class PokeImageView: UIView {
     let pokeImage = PokeImageView(withImage: "lasso")
     
     override init(frame: CGRect) {

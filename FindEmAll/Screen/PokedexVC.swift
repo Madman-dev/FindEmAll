@@ -10,18 +10,20 @@ import UIKit
 class PokedexVC: UIViewController {
     let topAnimatingView = AnimatingView(color: .black)
     let bottomAnimatingView = AnimatingView(color: .blue)
-    let returnButton = PokeButton(color: .yellow)
+    let returnButton = PokeButton(color: .white)
+    let displayView = DataDisplayView()
+    var collectionView: UICollectionView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         configure()
-        loadAnimatingView()
-        configureReturnButton()
-    }
-    
-    override func viewIsAppearing(_ animated: Bool) {
-        super.viewIsAppearing(animated)
         configureAnimatingViews()
+        
+        // animatingView 이후 호출될 수 있도록 시점 변경
+        loadAnimatingView()
+        configureDataDisplay()
+        configureCollectionView()
+        configureReturnButton()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -30,31 +32,64 @@ class PokedexVC: UIViewController {
     }
     
     private func configure() {
-        view.addSubviews(bottomAnimatingView, returnButton)
         view.backgroundColor = .red
-        // hiding navigation back button - below iOS 15
-        self.navigationItem.setHidesBackButton(true, animated: false)
+        navigationItem.setHidesBackButton(true, animated: false)
     }
     
+    private func configureCollectionView() {
+        collectionView = UICollectionView(frame: .zero,
+                                          collectionViewLayout: UIHelpers.createThreeColumnFlowlayout(in: self.view))
+        view.addSubview(collectionView)
+        collectionView.register(PokeCollectionViewCell.self, forCellWithReuseIdentifier: PokeCollectionViewCell.reuseId)
+        
+        collectionView.backgroundColor = UIColor.clear
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        
+        NSLayoutConstraint.activate([
+            collectionView.topAnchor.constraint(equalTo: displayView.bottomAnchor, constant: 35),
+            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 5),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -5),
+            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ])
+    }
+    
+    private func configureDataDisplay() {
+        view.addSubview(displayView)
+        displayView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            displayView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            displayView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            displayView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            displayView.heightAnchor.constraint(equalToConstant: 50)
+        ])
+    }
+    
+    // 추가 수정할 필요없는 UI
     private func configureAnimatingViews() {
+        view.addSubview(bottomAnimatingView)
+        
         NSLayoutConstraint.activate([
             bottomAnimatingView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             bottomAnimatingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             bottomAnimatingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            bottomAnimatingView.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.height - 150)
+            bottomAnimatingView.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.height - 180)
         ])
     }
     
     private func configureReturnButton() {
-        returnButton.layer.borderWidth = 0
-        returnButton.setImage(UIImage(systemName: "lasso"), for: .normal)
-        returnButton.imageView?.contentMode = .scaleToFill
-        
+        let padding: CGFloat = 50
+        view.addSubview(returnButton)
+        returnButton.setImage(UIImage(systemName: "arrowshape.backward.fill"), for: .normal)
         returnButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         
         NSLayoutConstraint.activate([
-            returnButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -30),
-            returnButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10)
+            returnButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -padding),
+            returnButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            returnButton.heightAnchor.constraint(equalToConstant: padding),
+            returnButton.widthAnchor.constraint(equalToConstant: padding)
         ])
     }
     
@@ -88,5 +123,27 @@ class PokedexVC: UIViewController {
     
     deinit {
         print("Pokedex 화면이 내려갔습니다")
+    }
+}
+
+extension PokedexVC: UICollectionViewDelegate {
+    
+}
+
+extension PokedexVC: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 40
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PokeCollectionViewCell.reuseId, for: indexPath) as! PokeCollectionViewCell
+        cell.alpha = 0.5
+        return cell
+    }
+}
+
+extension PokedexVC: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 80, height: 80)
     }
 }
