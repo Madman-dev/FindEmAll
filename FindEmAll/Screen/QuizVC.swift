@@ -9,18 +9,18 @@ import UIKit
 
 class QuizVC: UIViewController {
     
-    let topAnimatingView = AnimatingView(color: .red)
-    let bottomAnimatingView = AnimatingView(color: .gray)
-    let pokeImageview = PokeView()
-    let firstInfo = UIView()
-    let secondInfo = UIView()
-    let thirdInfo = UIView()
-    let fourthInfo = UIView()
-    let guessingTextfield = Textfield(withSpace: true)
-    var infoViews = [UIView]()
-    var textfieldBottomConstraint: NSLayoutConstraint!
+    private let topAnimatingView = AnimatingView(color: .red)
+    private let bottomAnimatingView = AnimatingView(color: .gray)
+    private let guessingTextfield = Textfield(withSpace: true)
+    private let pokeImageview = PokeImageView()
+    private let firstInfo = UIView()
+    private let secondInfo = UIView()
+    private let thirdInfo = UIView()
+    private let fourthInfo = UIView()
+    private var infoViews = [UIView]()
+    private var textfieldBottomConstraint: NSLayoutConstraint!
     private var originalPosition = [UIView: CGPoint]()
-    let padding: CGFloat = 20
+    private let padding: CGFloat = 20
     
     //MARK: - LifeCycle
     override func viewDidLoad() {
@@ -69,10 +69,10 @@ class QuizVC: UIViewController {
     }
     
     private func populateViews() {
-        addChild(childVC: InfoVC(), to: self.firstInfo)
-        addChild(childVC: InfoVC(), to: self.secondInfo)
-        addChild(childVC: InfoVC(), to: self.thirdInfo)
-        addChild(childVC: InfoVC(), to: self.fourthInfo)
+        addChild(childVC: PokeInfoVC(), to: self.firstInfo)
+        addChild(childVC: PokeInfoVC(), to: self.secondInfo)
+        addChild(childVC: PokeInfoVC(), to: self.thirdInfo)
+        addChild(childVC: PokeInfoVC(), to: self.fourthInfo)
     }
     
     private func addChild(childVC: UIViewController, to container: UIView) {

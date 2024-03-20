@@ -24,7 +24,7 @@ class TitleLabel: UILabel {
     }
     
     private func configure() {
-        textColor = .systemBackground
+        textColor = .secondaryLabel
         adjustsFontForContentSizeCategory = true
         translatesAutoresizingMaskIntoConstraints = false
     }

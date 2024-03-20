@@ -8,7 +8,7 @@
 import UIKit
 
 class PokeImageView: UIView {
-    let pokeImage = PokeImageView(withImage: "lasso")
+    let pokeImage = ImageView(withImage: "lasso")
     
     override init(frame: CGRect) {
         super.init(frame: frame)
