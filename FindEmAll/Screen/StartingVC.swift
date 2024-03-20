@@ -32,7 +32,7 @@ class StartingVC: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        loadingView()
+        loadAnimatingView()
     }
     
     //MARK: - UILayout
@@ -69,7 +69,9 @@ class StartingVC: UIViewController {
         
         NSLayoutConstraint.activate([
             actionButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            actionButton.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            actionButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            actionButton.heightAnchor.constraint(equalToConstant: 101),
+            actionButton.widthAnchor.constraint(equalToConstant: 101)
         ])
     }
     
@@ -78,23 +80,46 @@ class StartingVC: UIViewController {
         
         NSLayoutConstraint.activate([
             pokedexButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            pokedexButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50)
+            pokedexButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -30)
         ])
     }
     
     //MARK: - Methods
-    private func moveTo(VC destination: UIViewController) {
+    @objc func actionButtonTapped() {
+        let destinationVC = QuizVC()
+        dismissAndAnimateTo(VC: destinationVC)
+    }
+    
+    @objc func pokedexButtonTapped() {
+        let destinationVC = PokedexVC()
+        dismissAndAnimateTo(VC: destinationVC)
+    }
+    
+    private func loadAnimatingView() {
+        let dispatchGroup = DispatchGroup()
+        dispatchGroup.enter()
+        topAnimatingView.animate(to: .down) {
+            dispatchGroup.leave()
+        }
+        
+        dispatchGroup.enter()
+        bottomAnimatingView.animate(to: .up) {
+            dispatchGroup.leave()
+        }
+    }
+    
+    private func dismissAndAnimateTo(VC destination: UIViewController) {
         // moving the views at once
         let dispatchGroup = DispatchGroup()
         actionButton.scale(size: .bigger)
         
         dispatchGroup.enter()
-        topAnimatingView.move(to: .up) {
+        topAnimatingView.animate(to: .up) {
             dispatchGroup.leave()
         }
         
         dispatchGroup.enter()
-        bottomAnimatingView.move(to: .down) {
+        bottomAnimatingView.animate(to: .down) {
             dispatchGroup.leave()
         }
         
@@ -103,26 +128,7 @@ class StartingVC: UIViewController {
         }
     }
     
-    @objc func actionButtonTapped() {
-        let destinationVC = QuizVC()
-        moveTo(VC: destinationVC)
-    }
-    
-    @objc func pokedexButtonTapped() {
-        let destinationVC = PokedexVC()
-        self.navigationController?.pushViewController(destinationVC, animated: false)
-    }
-    
-    private func loadingView() {
-        let dispatchGroup = DispatchGroup()
-        dispatchGroup.enter()
-        topAnimatingView.move(to: .down) {
-            dispatchGroup.leave()
-        }
-        
-        dispatchGroup.enter()
-        bottomAnimatingView.move(to: .up) {
-            dispatchGroup.leave()
-        }
+    deinit {
+        print("StartingVC가 내려갔습니다")
     }
 }

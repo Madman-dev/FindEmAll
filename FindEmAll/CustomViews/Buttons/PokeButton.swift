@@ -32,10 +32,11 @@ class PokeButton: UIButton {
         layer.borderColor = UIColor.black.cgColor
         layer.borderWidth = 8
         
-        NSLayoutConstraint.activate([
-            heightAnchor.constraint(equalToConstant: 101),
-            widthAnchor.constraint(equalToConstant: 101)
-        ])
+        // 잘못된 적용방식 - giving a value of the height and width limits the use of the button
+//        NSLayoutConstraint.activate([
+//            heightAnchor.constraint(equalToConstant: 101),
+//            widthAnchor.constraint(equalToConstant: 101)
+//        ])
     }
     
     private func set(color: UIColor) {
