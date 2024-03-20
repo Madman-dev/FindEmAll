@@ -144,7 +144,7 @@ class QuizVC: UIViewController {
     //MARK: - Methods
     @objc func backButtonTapped() {
         print("뒤돌아가기 버튼이 눌렸습니다.")
-        dismissingView()
+        dismissView()
     }
     
     private func returnBack() {
@@ -157,25 +157,25 @@ class QuizVC: UIViewController {
     private func loadingView() {
         let dispatchGroup = DispatchGroup()
         dispatchGroup.enter()
-        topAnimatingView.move(to: .down) {
+        topAnimatingView.animate(to: .down) {
             dispatchGroup.leave()
         }
         
         dispatchGroup.enter()
-        bottomAnimatingView.move(to: .up) {
+        bottomAnimatingView.animate(to: .up) {
             dispatchGroup.leave()
         }
     }
     
-    private func dismissingView() {
+    private func dismissView() {
         let dispatchGroup = DispatchGroup()
         dispatchGroup.enter()
-        topAnimatingView.move(to: .up) {
+        topAnimatingView.animate(to: .up) {
             dispatchGroup.leave()
         }
         
         dispatchGroup.enter()
-        bottomAnimatingView.move(to: .down) {
+        bottomAnimatingView.animate(to: .down) {
             dispatchGroup.leave()
         }
         
@@ -188,6 +188,10 @@ class QuizVC: UIViewController {
         let tap = UITapGestureRecognizer(target: view, action: #selector(UIView.endEditing))
         
         view.addGestureRecognizer(tap)
+    }
+    
+    deinit {
+        print("QuizVC가 화면에서 내려갔습니다")
     }
 }
 

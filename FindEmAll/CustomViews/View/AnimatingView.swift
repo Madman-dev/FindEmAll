@@ -26,11 +26,11 @@ class AnimatingView: UIView {
     }
     
     private func configure() {
-        layer.cornerRadius = 15
+        layer.cornerRadius = 20
         translatesAutoresizingMaskIntoConstraints = false
     }
     
-    func move(to position: Movement, completion: (() -> Void)?) {
+    func animate(to position: Movement, completion: (() -> Void)?) {
         switch position {
         case .up:
             UIView.animate(withDuration: 0.5) {
@@ -40,6 +40,19 @@ class AnimatingView: UIView {
         case .down:
             UIView.animate(withDuration: 0.5) {
                 self.frame.origin.y += 410
+            } completion: { _ in completion?() }
+        }
+    }
+    
+    func animateFull(to position: Movement, completion: (() -> Void)?) {
+        switch position {
+        case .up:
+            UIView.animate(withDuration: 0.5) {
+                self.frame.origin.y -= UIScreen.main.bounds.height
+            } completion: { _ in completion?() }
+        case .down:
+            UIView.animate(withDuration: 0.5) {
+                self.frame.origin.y += UIScreen.main.bounds.height
             } completion: { _ in completion?() }
         }
     }
