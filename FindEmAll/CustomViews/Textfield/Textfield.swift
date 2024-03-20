@@ -25,22 +25,23 @@ class Textfield: UITextField {
     private func configure() {
         translatesAutoresizingMaskIntoConstraints = false
         
-        layer.cornerRadius = 15
+        layer.cornerRadius = 25
         layer.borderWidth = 2
-        layer.borderColor = UIColor.black.cgColor
+        layer.borderColor = UIColor.darkGray.cgColor
+        backgroundColor = .systemGray4
         
-        textColor = .label
-        tintColor = .label
-        textAlignment = .left
+        textColor = .white
+        tintColor = .white
+        textAlignment = .center
         
-        placeholder = "무엇일까요??"
-        font = UIFont.preferredFont(forTextStyle: .body)
+        placeholder = "정답을 적어보세요!"
+        font = UIFont.preferredFont(forTextStyle: .largeTitle)
         
-        minimumFontSize = 14
+        minimumFontSize = 24
         autocorrectionType = .no
         clearButtonMode = .whileEditing
         
-        returnKeyType = .done
+        returnKeyType = .go
     }
     
     private func addSpacing() {

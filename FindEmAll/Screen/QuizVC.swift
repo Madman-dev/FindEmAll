@@ -11,28 +11,38 @@ class QuizVC: UIViewController {
     
     let topAnimatingView = AnimatingView(color: .red)
     let bottomAnimatingView = AnimatingView(color: .gray)
-    let actionButton = PokeButton(color: .white)
-    let questionLabel = TitleLabel(textAlignment: .center, fontSize: 24)
+    let pokeImageview = PokeView()
     let firstInfo = UIView()
     let secondInfo = UIView()
     let thirdInfo = UIView()
     let fourthInfo = UIView()
-    var infoViews = [UIView]()
     let guessingTextfield = Textfield(withSpace: true)
-    let padding: CGFloat = 20
+    var infoViews = [UIView]()
+    var textfieldBottomConstraint: NSLayoutConstraint!
     private var originalPosition = [UIView: CGPoint]()
+    let padding: CGFloat = 20
     
+    //MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         layoutUI()
         configureTextfield()
+        createDismissKeyboardGesture()
+        
+        let backButton = UIBarButtonItem(
+            image: UIImage(
+                systemName: "arrowshape.backward.fill")?.withTintColor(.white, renderingMode: .alwaysOriginal),
+            style: .plain,
+            target: self,
+            action: #selector(backButtonTapped)
+        )
+        navigationItem.leftBarButtonItem = backButton
     }
     
     override func viewIsAppearing(_ animated: Bool) {
         super.viewIsAppearing(animated)
         configureAnimatingViews()
         loadingView()
-        actionButton.scale(size: .smaller)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -43,7 +53,6 @@ class QuizVC: UIViewController {
     
     private func fetchData() {
         NetworkManager.shared.fetchPokemon() { pokemon, errorMessage in
-            
             if let error = errorMessage {
                 print("호출 에러 문제 발생",error)
                 return
@@ -74,12 +83,13 @@ class QuizVC: UIViewController {
         childVC.didMove(toParent: self)
     }
     
+    //MARK: - UILayout
     private func layoutUI() {
         view.backgroundColor = .black
-        questionLabel.text = "나는 누구일까요?"
         
-        view.addSubviews(topAnimatingView, bottomAnimatingView, actionButton, questionLabel)
+        view.addSubviews(topAnimatingView, bottomAnimatingView, pokeImageview)
         infoViews = [firstInfo, secondInfo, thirdInfo, fourthInfo]
+        pokeImageview.translatesAutoresizingMaskIntoConstraints = false
         
         for infoView in infoViews {
             view.addSubview(infoView)
@@ -93,18 +103,15 @@ class QuizVC: UIViewController {
         }
         
         NSLayoutConstraint.activate([
-            actionButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            actionButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            pokeImageview.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            pokeImageview.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            pokeImageview.heightAnchor.constraint(equalToConstant: 350),
+            pokeImageview.widthAnchor.constraint(equalToConstant: 350),
             
-            questionLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 150),
-            questionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
-            questionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
-            questionLabel.heightAnchor.constraint(equalToConstant: 50),
-            
-            firstInfo.topAnchor.constraint(equalTo: questionLabel.bottomAnchor, constant: 50),
+            firstInfo.topAnchor.constraint(equalTo: view.topAnchor, constant: 250),
             secondInfo.topAnchor.constraint(equalTo: firstInfo.bottomAnchor, constant: 10),
             thirdInfo.topAnchor.constraint(equalTo: secondInfo.bottomAnchor, constant: 10),
-            fourthInfo.topAnchor.constraint(equalTo: thirdInfo.bottomAnchor, constant: 10),
+            fourthInfo.topAnchor.constraint(equalTo: thirdInfo.bottomAnchor, constant: 10)
         ])
     }
     
@@ -113,18 +120,11 @@ class QuizVC: UIViewController {
         guessingTextfield.delegate = self
         
         NSLayoutConstraint.activate([
-            guessingTextfield.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -padding),
+            guessingTextfield.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50),
             guessingTextfield.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: padding),
             guessingTextfield.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -padding),
-            guessingTextfield.heightAnchor.constraint(equalToConstant: 50)
+            guessingTextfield.heightAnchor.constraint(equalToConstant: 80)
         ])
-    }
-    
-    private func returnBack() {
-        firstInfo.animateBack(to: originalPosition[firstInfo]!)
-        secondInfo.animateBack(to: originalPosition[secondInfo]!)
-        thirdInfo.animateBack(to: originalPosition[thirdInfo]!)
-        fourthInfo.animateBack(to: originalPosition[fourthInfo]!)
     }
     
     private func configureAnimatingViews() {
@@ -141,20 +141,61 @@ class QuizVC: UIViewController {
         ])
     }
     
+    //MARK: - Methods
+    @objc func backButtonTapped() {
+        print("뒤돌아가기 버튼이 눌렸습니다.")
+        dismissView()
+    }
+    
+    private func returnBack() {
+        firstInfo.animateBack(to: originalPosition[firstInfo]!)
+        secondInfo.animateBack(to: originalPosition[secondInfo]!)
+        thirdInfo.animateBack(to: originalPosition[thirdInfo]!)
+        fourthInfo.animateBack(to: originalPosition[fourthInfo]!)
+    }
+    
     private func loadingView() {
         let dispatchGroup = DispatchGroup()
         dispatchGroup.enter()
-        topAnimatingView.move(to: .down) {
+        topAnimatingView.animate(to: .down) {
             dispatchGroup.leave()
         }
         
         dispatchGroup.enter()
-        bottomAnimatingView.move(to: .up) {
+        bottomAnimatingView.animate(to: .up) {
             dispatchGroup.leave()
         }
     }
+    
+    private func dismissView() {
+        let dispatchGroup = DispatchGroup()
+        dispatchGroup.enter()
+        topAnimatingView.animate(to: .up) {
+            dispatchGroup.leave()
+        }
+        
+        dispatchGroup.enter()
+        bottomAnimatingView.animate(to: .down) {
+            dispatchGroup.leave()
+        }
+        
+        dispatchGroup.notify(queue: .main) {
+            self.navigationController?.popViewController(animated: false)
+        }
+    }
+    
+    private func createDismissKeyboardGesture() {
+        let tap = UITapGestureRecognizer(target: view, action: #selector(UIView.endEditing))
+        
+        view.addGestureRecognizer(tap)
+    }
+    
+    deinit {
+        print("QuizVC가 화면에서 내려갔습니다")
+    }
 }
 
+// MARK: - TextfieldDelegate
 extension QuizVC: UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
         originalPosition[firstInfo] = firstInfo.frame.origin
@@ -170,6 +211,7 @@ extension QuizVC: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         returnBack()
+        guessingTextfield.resignFirstResponder()
         return true
     }
 }

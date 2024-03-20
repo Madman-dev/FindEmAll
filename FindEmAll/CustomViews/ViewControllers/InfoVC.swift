@@ -8,7 +8,8 @@
 import UIKit
 
 class InfoVC: UIViewController {
-    let firstItemInfoView = InfoView()
+    // infoVC에는 더 많은 콘텐츠를 담을 것이기 때문에 infoView를 적용했다.
+    let itemInfoView = InfoView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,36 +21,18 @@ class InfoVC: UIViewController {
         view.layer.cornerRadius = 15
         view.layer.borderWidth = 2
         view.layer.borderColor = UIColor.black.cgColor
-        view.layer.backgroundColor = UIColor.blue.cgColor
+        view.layer.backgroundColor = UIColor.white.withAlphaComponent(0.9).cgColor
     }
     
     private func layoutUI() {
-        view.addSubview(firstItemInfoView)
-        firstItemInfoView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(itemInfoView)
+        itemInfoView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            firstItemInfoView.topAnchor.constraint(equalTo: view.topAnchor),
-            firstItemInfoView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            firstItemInfoView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            firstItemInfoView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            itemInfoView.topAnchor.constraint(equalTo: view.topAnchor),
+            itemInfoView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            itemInfoView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            itemInfoView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
-    
-    //    func animateToCenter(view: UIView, of parent: UIView) {
-    //        DispatchQueue.main.async {
-    //            let center = parent.center
-    //
-    //            UIView.animate(withDuration: 0.5) {
-    //                view.center = center
-    //            }
-    //        }
-    //    }
-    //
-    //    func animateBack(view: UIView) {
-    //        DispatchQueue.main.async {
-    //            UIView.animate(withDuration: 0.5) {
-    //                view.transform = .identity
-    //            }
-    //        }
-    //    }
 }

@@ -26,10 +26,9 @@ class InfoView: UIView {
         textLabel.text = "테스트"
         
         NSLayoutConstraint.activate([
-            textLabel.topAnchor.constraint(equalTo: self.topAnchor),
+            textLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             textLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: padding),
-            textLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -padding),
-            textLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+            textLabel.heightAnchor.constraint(equalToConstant: 40)
         ])
     }
 }
