@@ -10,7 +10,7 @@ import UIKit
 class PokedexVC: UIViewController {
     let topAnimatingView = AnimatingView(color: .black)
     let bottomAnimatingView = AnimatingView(color: .blue)
-    let returnButton = PokeButton(color: .white)
+    let returnButton = PokeButton(color: .yellow)
     let displayView = DataDisplayView()
     var collectionView: UICollectionView!
     
@@ -139,11 +139,5 @@ extension PokedexVC: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PokeCollectionViewCell.reuseId, for: indexPath) as! PokeCollectionViewCell
         cell.alpha = 0.5
         return cell
-    }
-}
-
-extension PokedexVC: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 80, height: 80)
     }
 }

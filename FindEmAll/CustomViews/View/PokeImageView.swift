@@ -24,6 +24,7 @@ class PokeImageView: UIView {
         clipsToBounds = true
         layer.borderWidth = 8
         layer.borderColor = UIColor.black.cgColor
+        translatesAutoresizingMaskIntoConstraints = false
         
         addSubviews(pokeImage)
         NSLayoutConstraint.activate([

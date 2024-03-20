@@ -34,7 +34,6 @@ class DataDisplayView: UIView {
         addSubviews(titleLabel, dataLabel)
         
         NSLayoutConstraint.activate([
-            
             titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 40),
             titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
             
