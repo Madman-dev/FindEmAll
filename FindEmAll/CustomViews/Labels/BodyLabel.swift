@@ -24,7 +24,7 @@ class BodyLabel: UILabel {
     
     private func configure() {
         textColor                           = .black
-        font                                = UIFont.preferredFont(forTextStyle: .title2)
+        font                                = UIFont.preferredFont(forTextStyle: .body)
         adjustsFontForContentSizeCategory   = true
         adjustsFontSizeToFitWidth           = true
         minimumScaleFactor                  = 0.75

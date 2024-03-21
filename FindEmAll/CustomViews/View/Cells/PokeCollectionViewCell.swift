@@ -18,10 +18,13 @@ class PokeCollectionViewCell: UICollectionViewCell {
         configureImage()
     }
     
+    func changeImage(to image: String) {
+        pokeImage.set(image: image)
+    }
+    
     private func configure() {
-        backgroundColor = .white
+        backgroundColor = .clear
         layer.cornerRadius = 10
-        clipsToBounds = true
     }
     
     private func configureImage() {

@@ -8,7 +8,7 @@
 import UIKit
 
 class PokeImageView: UIView {
-    let pokeImage = ImageView(withImage: "lasso")
+    let pokeImage = ImageView(withImage: "")
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -19,8 +19,11 @@ class PokeImageView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func set(image: String) {
+        pokeImage.image = UIImage(systemName: image)
+    }
+    
     private func configure() {
-        backgroundColor = .white
         clipsToBounds = true
         layer.borderWidth = 8
         layer.borderColor = UIColor.black.cgColor
