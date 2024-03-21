@@ -11,8 +11,12 @@ class PokedexVC: UIViewController {
     let topAnimatingView = AnimatingView(color: .black)
     let bottomAnimatingView = AnimatingView(color: .blue)
     let returnButton = PokeButton(color: .yellow)
-    let displayView = DataDisplayView()
+    let firstDisplayView = DataDisplayView()
+    let secondDisplayView = DataDisplayView()
     var collectionView: UICollectionView!
+    
+    let animationDuration: Double = 1.0
+    let delayBase: Double = 0.3
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,11 +28,17 @@ class PokedexVC: UIViewController {
         configureDataDisplay()
         configureCollectionView()
         configureReturnButton()
+        configureDisplayData()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         dismissAndAnimateOut()
+    }
+    
+    private func configureDisplayData() {
+        firstDisplayView.set(item: .seen, withCount: 2)
+        secondDisplayView.set(item: .captured, withCount: 1)
     }
     
     private func configure() {
@@ -40,15 +50,15 @@ class PokedexVC: UIViewController {
         collectionView = UICollectionView(frame: .zero,
                                           collectionViewLayout: UIHelpers.createThreeColumnFlowlayout(in: self.view))
         view.addSubview(collectionView)
-        collectionView.register(PokeCollectionViewCell.self, forCellWithReuseIdentifier: PokeCollectionViewCell.reuseId)
-        
-        collectionView.backgroundColor = UIColor.clear
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.delegate = self
         collectionView.dataSource = self
         
+        collectionView.register(PokeCollectionViewCell.self, forCellWithReuseIdentifier: PokeCollectionViewCell.reuseId)
+        collectionView.backgroundColor = UIColor.clear
+        
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: displayView.bottomAnchor, constant: 35),
+            collectionView.topAnchor.constraint(equalTo: firstDisplayView.bottomAnchor, constant: 35),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 5),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -5),
             collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
@@ -56,14 +66,19 @@ class PokedexVC: UIViewController {
     }
     
     private func configureDataDisplay() {
-        view.addSubview(displayView)
-        displayView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(firstDisplayView)
+        view.addSubview(secondDisplayView)
         
         NSLayoutConstraint.activate([
-            displayView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            displayView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            displayView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            displayView.heightAnchor.constraint(equalToConstant: 50)
+            firstDisplayView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            firstDisplayView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            firstDisplayView.heightAnchor.constraint(equalToConstant: 50),
+            firstDisplayView.widthAnchor.constraint(equalToConstant: view.frame.width/2 - 10),
+            
+            secondDisplayView.centerYAnchor.constraint(equalTo: firstDisplayView.centerYAnchor),
+            secondDisplayView.leadingAnchor.constraint(equalTo: firstDisplayView.trailingAnchor),
+            secondDisplayView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            secondDisplayView.heightAnchor.constraint(equalToConstant: 50),
         ])
     }
     
@@ -81,6 +96,7 @@ class PokedexVC: UIViewController {
     
     private func configureReturnButton() {
         let padding: CGFloat = 50
+        
         view.addSubview(returnButton)
         returnButton.setImage(UIImage(systemName: "arrowshape.backward.fill"), for: .normal)
         returnButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
@@ -137,7 +153,29 @@ extension PokedexVC: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PokeCollectionViewCell.reuseId, for: indexPath) as! PokeCollectionViewCell
-        cell.alpha = 0.5
+        cell.alpha = 0
+        cell.transform = CGAffineTransform(scaleX: 0.7, y: 0.7)
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        
+        // let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PokeCollectionViewCell.reuseId, for: indexPath) as! PokeCollectionViewCell
+        
+        // 이 계산이 이해가 안되는데?
+        let column = Double(cell.frame.maxX / cell.frame.width)
+        let row = Double(cell.frame.minY / cell.frame.height)
+        let distance = sqrt(pow(column, 3) + pow(row, 3))
+        let delay = sqrt(distance) * delayBase
+        
+        UIView.animate(withDuration: animationDuration,
+                       delay: delay,
+                       usingSpringWithDamping: 0.8,
+                       initialSpringVelocity: 2,
+                       options: []) {
+            cell.backgroundColor = .white
+            cell.alpha = 1
+            cell.transform = .identity
+        }
     }
 }
