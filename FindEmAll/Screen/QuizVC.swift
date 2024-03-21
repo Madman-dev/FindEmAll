@@ -12,7 +12,7 @@ class QuizVC: UIViewController {
     private let topAnimatingView = AnimatingView(color: .red)
     private let bottomAnimatingView = AnimatingView(color: .gray)
     private let guessingTextfield = Textfield(withSpace: true)
-    private let pokeImageview = PokeImageView()
+    private let pokeImageview = ImageView(frame: .zero)
     private let firstInfo = UIView()
     private let secondInfo = UIView()
     private let thirdInfo = UIView()
@@ -90,6 +90,7 @@ class QuizVC: UIViewController {
         view.addSubviews(topAnimatingView, bottomAnimatingView, pokeImageview)
         infoViews = [firstInfo, secondInfo, thirdInfo, fourthInfo]
         pokeImageview.translatesAutoresizingMaskIntoConstraints = false
+        pokeImageview.set(img: "lasso")
         
         for infoView in infoViews {
             view.addSubview(infoView)

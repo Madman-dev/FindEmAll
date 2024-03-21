@@ -15,9 +15,6 @@ class PokedexVC: UIViewController {
     let secondDisplayView = DataDisplayView()
     var collectionView: UICollectionView!
     
-    let animationDuration: Double = 1.0
-    let delayBase: Double = 0.3
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         configure()
@@ -51,6 +48,7 @@ class PokedexVC: UIViewController {
                                           collectionViewLayout: UIHelpers.createThreeColumnFlowlayout(in: self.view))
         view.addSubview(collectionView)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        
         collectionView.delegate = self
         collectionView.dataSource = self
         
@@ -153,14 +151,16 @@ extension PokedexVC: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PokeCollectionViewCell.reuseId, for: indexPath) as! PokeCollectionViewCell
-        cell.alpha = 0
+        cell.pokeImage.image = UIImage(systemName: "clipboard.fill")
+        cell.pokeImage.contentMode = .scaleToFill
         cell.transform = CGAffineTransform(scaleX: 0.7, y: 0.7)
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         
-        // let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PokeCollectionViewCell.reuseId, for: indexPath) as! PokeCollectionViewCell
+        let animationDuration: Double = 1.0
+        let delayBase: Double = 0.3
         
         // 이 계산이 이해가 안되는데?
         let column = Double(cell.frame.maxX / cell.frame.width)
@@ -168,13 +168,9 @@ extension PokedexVC: UICollectionViewDataSource {
         let distance = sqrt(pow(column, 3) + pow(row, 3))
         let delay = sqrt(distance) * delayBase
         
-        UIView.animate(withDuration: animationDuration,
-                       delay: delay,
-                       usingSpringWithDamping: 0.8,
-                       initialSpringVelocity: 2,
-                       options: []) {
-            cell.backgroundColor = .white
-            cell.alpha = 1
+        UIView.animate(withDuration: animationDuration, delay: delay,
+                       usingSpringWithDamping: 0.8, initialSpringVelocity: 2, options: []) {
+            cell.backgroundColor = .white.withAlphaComponent(0.7)
             cell.transform = .identity
         }
     }

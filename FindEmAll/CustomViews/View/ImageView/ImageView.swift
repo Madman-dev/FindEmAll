@@ -23,9 +23,18 @@ class ImageView: UIImageView {
         image = UIImage(systemName: withImage)?.withTintColor(.black, renderingMode: .alwaysOriginal)
     }
     
+    func set(img: String) {
+        image = UIImage(systemName: img)
+    }
+    
     private func configure() {
         layer.cornerRadius = 10
         clipsToBounds = true
         translatesAutoresizingMaskIntoConstraints = false
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        layer.cornerRadius = layer.frame.width/2
     }
 }

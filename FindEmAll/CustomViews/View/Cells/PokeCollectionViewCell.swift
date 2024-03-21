@@ -10,7 +10,7 @@ import UIKit
 class PokeCollectionViewCell: UICollectionViewCell {
     
     static let reuseId = "PokeCollectionViewCell"
-    let pokeImage = PokeImageView()
+    let pokeImage = ImageView(frame: .zero)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -19,12 +19,13 @@ class PokeCollectionViewCell: UICollectionViewCell {
     }
     
     func changeImage(to image: String) {
-        pokeImage.set(image: image)
+        pokeImage.set(img: image)
     }
     
     private func configure() {
         backgroundColor = .clear
         layer.cornerRadius = 10
+        clipsToBounds = true
     }
     
     private func configureImage() {
