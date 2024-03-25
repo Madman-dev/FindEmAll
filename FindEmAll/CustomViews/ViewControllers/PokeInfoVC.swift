@@ -17,6 +17,10 @@ class PokeInfoVC: UIViewController {
         layoutUI()
     }
     
+    func set(text: String) {
+        itemInfoView.textLabel.text = text
+    }
+    
     private func configureBackground() {
         view.layer.cornerRadius = 15
         view.layer.borderWidth = 2

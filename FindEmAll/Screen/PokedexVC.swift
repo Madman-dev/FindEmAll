@@ -10,7 +10,7 @@ import UIKit
 class PokedexVC: UIViewController {
     let topAnimatingView = AnimatingView(color: .black)
     let bottomAnimatingView = AnimatingView(color: .blue)
-    let returnButton = PokeButton(color: .yellow)
+    let returnButton = PokeButton(color: .black)
     let firstDisplayView = DataDisplayView()
     let secondDisplayView = DataDisplayView()
     var collectionView: UICollectionView!
@@ -28,10 +28,10 @@ class PokedexVC: UIViewController {
         configureDisplayData()
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        dismissAndAnimateOut()
-    }
+//    override func viewWillDisappear(_ animated: Bool) {
+//        super.viewWillDisappear(animated)
+//        dismissAndAnimateOut()
+//    }
     
     private func configureDisplayData() {
         firstDisplayView.set(item: .seen, withCount: 2)
@@ -44,16 +44,21 @@ class PokedexVC: UIViewController {
     }
     
     private func configureCollectionView() {
-        collectionView = UICollectionView(frame: .zero,
-                                          collectionViewLayout: UIHelpers.createThreeColumnFlowlayout(in: self.view))
+        collectionView = UICollectionView(
+            frame: .zero,
+            collectionViewLayout: UIHelpers.createThreeColumnFlowlayout(in: self.view)
+        )
+        
         view.addSubview(collectionView)
+        collectionView.backgroundColor = UIColor.clear
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         
+        collectionView.register(
+            PokeCollectionViewCell.self,
+            forCellWithReuseIdentifier: PokeCollectionViewCell.reuseId
+        )
         collectionView.delegate = self
         collectionView.dataSource = self
-        
-        collectionView.register(PokeCollectionViewCell.self, forCellWithReuseIdentifier: PokeCollectionViewCell.reuseId)
-        collectionView.backgroundColor = UIColor.clear
         
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: firstDisplayView.bottomAnchor, constant: 35),
@@ -123,11 +128,11 @@ class PokedexVC: UIViewController {
         }
     }
     
-    private func dismissAndAnimateOut() {
-        bottomAnimatingView.animate(to: .down) {
-            return
-        }
-    }
+//    private func dismissAndAnimateOut() {
+//        bottomAnimatingView.animate(to: .down) {
+//            return
+//        }
+//    }
     
     private func dismissView() {
         bottomAnimatingView.animateFull(to: .down) {
@@ -151,8 +156,8 @@ extension PokedexVC: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PokeCollectionViewCell.reuseId, for: indexPath) as! PokeCollectionViewCell
-        cell.pokeImage.image = UIImage(systemName: "clipboard.fill")
-        cell.pokeImage.contentMode = .scaleToFill
+        
+        cell.pokeImage.set(img: "clipboard.fill")
         cell.transform = CGAffineTransform(scaleX: 0.7, y: 0.7)
         return cell
     }
@@ -169,7 +174,7 @@ extension PokedexVC: UICollectionViewDataSource {
         let delay = sqrt(distance) * delayBase
         
         UIView.animate(withDuration: animationDuration, delay: delay,
-                       usingSpringWithDamping: 0.8, initialSpringVelocity: 2, options: []) {
+                       usingSpringWithDamping: 0.8, initialSpringVelocity: 4, options: []) {
             cell.backgroundColor = .white.withAlphaComponent(0.7)
             cell.transform = .identity
         }

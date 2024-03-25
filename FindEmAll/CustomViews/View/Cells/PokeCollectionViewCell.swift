@@ -11,6 +11,7 @@ class PokeCollectionViewCell: UICollectionViewCell {
     
     static let reuseId = "PokeCollectionViewCell"
     let pokeImage = ImageView(frame: .zero)
+    let nameLabel = TitleLabel(textAlignment: .center, fontSize: 18)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -18,8 +19,9 @@ class PokeCollectionViewCell: UICollectionViewCell {
         configureImage()
     }
     
-    func changeImage(to image: String) {
+    func set(image: String, title: String) {
         pokeImage.set(img: image)
+        nameLabel.text = title
     }
     
     private func configure() {
@@ -29,12 +31,19 @@ class PokeCollectionViewCell: UICollectionViewCell {
     }
     
     private func configureImage() {
-        addSubviews(pokeImage)
-        pokeImage.layer.borderWidth = 0
+        addSubview(pokeImage)
+        addSubview(nameLabel)
+        
+        nameLabel.text = "실험"
         
         NSLayoutConstraint.activate([
             pokeImage.centerXAnchor.constraint(equalTo: centerXAnchor),
-            pokeImage.centerYAnchor.constraint(equalTo: centerYAnchor)
+            pokeImage.centerYAnchor.constraint(equalTo: centerYAnchor),
+            pokeImage.heightAnchor.constraint(equalToConstant: 40),
+            pokeImage.widthAnchor.constraint(equalToConstant: 40),
+            
+            nameLabel.topAnchor.constraint(equalTo: pokeImage.bottomAnchor, constant: 8),
+            nameLabel.centerXAnchor.constraint(equalTo: centerXAnchor)
         ])
     }
     

@@ -23,8 +23,14 @@ class ImageView: UIImageView {
         image = UIImage(systemName: withImage)?.withTintColor(.black, renderingMode: .alwaysOriginal)
     }
     
+    func setBorder() {
+        layer.borderColor = UIColor.black.cgColor
+        layer.borderWidth = 8
+    }
+    
     func set(img: String) {
         image = UIImage(systemName: img)
+        contentMode = .scaleToFill
     }
     
     private func configure() {

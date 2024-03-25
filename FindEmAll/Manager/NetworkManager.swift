@@ -5,7 +5,7 @@
 //  Created by Porori on 3/4/24.
 //
 
-import Foundation
+import UIKit
 
 class NetworkManager {
     // networkManager 생성
@@ -60,6 +60,44 @@ class NetworkManager {
             } catch {
                 completion(nil, "데이터는 올바르게 왔습니다만... \(error).")
             }
+        }
+        task.resume()
+    }
+    
+    // 이미지를 던지는 이유는?
+    func downloadImage(from dataString: String, completed: @escaping (UIImage?) -> Void) {
+        
+        // check if URL is valid
+        guard let url = URL(string: dataString) else {
+            completed(nil)
+            return
+        }
+        
+        // parse url into data
+        let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
+            guard let self = self else {
+                completed(nil)
+                return
+            }
+            
+            // check for error
+            if let error = error {
+                print("에러가 발생했습니다.")
+            }
+            
+            // check for correct response
+            guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
+                completed(nil)
+                return
+            }
+            
+            // check if data is correct and convert to image
+            guard let data = data, let image = UIImage(data: data) else {
+                completed(nil)
+                return
+            }
+            
+            completed(image)
         }
         task.resume()
     }
