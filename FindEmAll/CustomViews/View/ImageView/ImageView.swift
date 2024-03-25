@@ -7,7 +7,7 @@
 
 import UIKit
 
-class PokeImageView: UIImageView {
+class ImageView: UIImageView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -23,9 +23,24 @@ class PokeImageView: UIImageView {
         image = UIImage(systemName: withImage)?.withTintColor(.black, renderingMode: .alwaysOriginal)
     }
     
+    func setBorder() {
+        layer.borderColor = UIColor.black.cgColor
+        layer.borderWidth = 8
+    }
+    
+    func set(img: String) {
+        image = UIImage(systemName: img)
+        contentMode = .scaleToFill
+    }
+    
     private func configure() {
         layer.cornerRadius = 10
         clipsToBounds = true
         translatesAutoresizingMaskIntoConstraints = false
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        layer.cornerRadius = layer.frame.width/2
     }
 }

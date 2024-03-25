@@ -33,12 +33,12 @@ class AnimatingView: UIView {
     func animate(to position: Movement, completion: (() -> Void)?) {
         switch position {
         case .up:
-            UIView.animate(withDuration: 0.5) {
+            UIView.animate(withDuration: 0.4) {
                 self.frame.origin.y -= 410
             } completion: { _ in completion?() }
             
         case .down:
-            UIView.animate(withDuration: 0.5) {
+            UIView.animate(withDuration: 0.4) {
                 self.frame.origin.y += 410
             } completion: { _ in completion?() }
         }
@@ -47,11 +47,11 @@ class AnimatingView: UIView {
     func animateFull(to position: Movement, completion: (() -> Void)?) {
         switch position {
         case .up:
-            UIView.animate(withDuration: 0.5) {
+            UIView.animate(withDuration: 0.4) {
                 self.frame.origin.y -= UIScreen.main.bounds.height
             } completion: { _ in completion?() }
         case .down:
-            UIView.animate(withDuration: 0.5) {
+            UIView.animate(withDuration: 0.4) {
                 self.frame.origin.y += UIScreen.main.bounds.height
             } completion: { _ in completion?() }
         }

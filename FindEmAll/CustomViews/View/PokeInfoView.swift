@@ -7,7 +7,7 @@
 
 import UIKit
 
-class InfoView: UIView {
+class PokeInfoView: UIView {
     
     let textLabel = BodyLabel(textAlignment: .left)
     let padding: CGFloat = 10

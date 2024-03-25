@@ -9,18 +9,18 @@ import UIKit
 
 class QuizVC: UIViewController {
     
-    let topAnimatingView = AnimatingView(color: .red)
-    let bottomAnimatingView = AnimatingView(color: .gray)
-    let pokeImageview = PokeView()
-    let firstInfo = UIView()
-    let secondInfo = UIView()
-    let thirdInfo = UIView()
-    let fourthInfo = UIView()
-    let guessingTextfield = Textfield(withSpace: true)
-    var infoViews = [UIView]()
-    var textfieldBottomConstraint: NSLayoutConstraint!
+    private let topAnimatingView = AnimatingView(color: .red)
+    private let bottomAnimatingView = AnimatingView(color: .gray)
+    private let guessingTextfield = Textfield(withSpace: true)
+    private let pokeImageview = ImageView(frame: .zero)
+    private let firstInfo = UIView() // VC로 옮겨서 하나로 만들 수 있는지 시도해보자
+    private let secondInfo = UIView()
+    private let thirdInfo = UIView()
+    private let fourthInfo = UIView()
+    private var infoViews = [UIView]()
     private var originalPosition = [UIView: CGPoint]()
-    let padding: CGFloat = 20
+    private let padding: CGFloat = 20
+    private var pokemonData: Pokemon?
     
     //MARK: - LifeCycle
     override func viewDidLoad() {
@@ -28,15 +28,7 @@ class QuizVC: UIViewController {
         layoutUI()
         configureTextfield()
         createDismissKeyboardGesture()
-        
-        let backButton = UIBarButtonItem(
-            image: UIImage(
-                systemName: "arrowshape.backward.fill")?.withTintColor(.white, renderingMode: .alwaysOriginal),
-            style: .plain,
-            target: self,
-            action: #selector(backButtonTapped)
-        )
-        navigationItem.leftBarButtonItem = backButton
+        configureReturnButton()
     }
     
     override func viewIsAppearing(_ animated: Bool) {
@@ -48,7 +40,7 @@ class QuizVC: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
         populateViews()
-//        fetchData()
+        fetchData()
     }
     
     private func fetchData() {
@@ -63,16 +55,29 @@ class QuizVC: UIViewController {
                 return
             }
             
-            print(pokemon.moves[0].move.name)
-            print(pokemon.sprites.frontDefault)
+//            self.pokemonData = pokemon
+            self.setData(data: pokemon)
+//            print(pokemon.moves[0].move.name)
+//            print(pokemon.sprites.frontDefault)
+        }
+    }
+    
+    private func setData(data: Pokemon) {
+        NetworkManager.shared.downloadImage(from: data.sprites.frontDefault) { [weak self] image in
+            guard let self = self else { return }
+            guard let image = image else { return }
+            DispatchQueue.main.async {
+                self.pokeImageview.image = image
+                self.pokeImageview.contentMode = .scaleAspectFill
+            }
         }
     }
     
     private func populateViews() {
-        addChild(childVC: InfoVC(), to: self.firstInfo)
-        addChild(childVC: InfoVC(), to: self.secondInfo)
-        addChild(childVC: InfoVC(), to: self.thirdInfo)
-        addChild(childVC: InfoVC(), to: self.fourthInfo)
+        addChild(childVC: PokeInfoVC(), to: self.firstInfo)
+        addChild(childVC: PokeInfoVC(), to: self.secondInfo)
+        addChild(childVC: PokeInfoVC(), to: self.thirdInfo)
+        addChild(childVC: PokeInfoVC(), to: self.fourthInfo)
     }
     
     private func addChild(childVC: UIViewController, to container: UIView) {
@@ -89,7 +94,9 @@ class QuizVC: UIViewController {
         
         view.addSubviews(topAnimatingView, bottomAnimatingView, pokeImageview)
         infoViews = [firstInfo, secondInfo, thirdInfo, fourthInfo]
-        pokeImageview.translatesAutoresizingMaskIntoConstraints = false
+        pokeImageview.backgroundColor = .white
+        pokeImageview.set(img: "lasso")
+        pokeImageview.setBorder()
         
         for infoView in infoViews {
             view.addSubview(infoView)
@@ -113,6 +120,19 @@ class QuizVC: UIViewController {
             thirdInfo.topAnchor.constraint(equalTo: secondInfo.bottomAnchor, constant: 10),
             fourthInfo.topAnchor.constraint(equalTo: thirdInfo.bottomAnchor, constant: 10)
         ])
+    }
+    
+    private func configureReturnButton() {
+        let backButton = UIBarButtonItem(
+            image: UIImage(
+                systemName: "arrowshape.backward.fill")?
+                .withTintColor(.white, renderingMode: .alwaysOriginal
+                ),
+            style: .plain,
+            target: self,
+            action: #selector(backButtonTapped)
+        )
+        navigationItem.leftBarButtonItem = backButton
     }
     
     private func configureTextfield() {
@@ -186,7 +206,6 @@ class QuizVC: UIViewController {
     
     private func createDismissKeyboardGesture() {
         let tap = UITapGestureRecognizer(target: view, action: #selector(UIView.endEditing))
-        
         view.addGestureRecognizer(tap)
     }
     

@@ -7,14 +7,18 @@
 
 import UIKit
 
-class InfoVC: UIViewController {
+class PokeInfoVC: UIViewController {
     // infoVC에는 더 많은 콘텐츠를 담을 것이기 때문에 infoView를 적용했다.
-    let itemInfoView = InfoView()
+    let itemInfoView = PokeInfoView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         configureBackground()
         layoutUI()
+    }
+    
+    func set(text: String) {
+        itemInfoView.textLabel.text = text
     }
     
     private func configureBackground() {
