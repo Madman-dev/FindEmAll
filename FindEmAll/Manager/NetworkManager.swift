@@ -12,6 +12,7 @@ class NetworkManager {
     static let shared = NetworkManager()
     let decoder = JSONDecoder()
     let baseUrl = "https://pokeapi.co/api/v2/pokemon/"
+    let cache = NSCache<NSString, UIImage>()
     
     private init() {
         decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -66,6 +67,17 @@ class NetworkManager {
     
     // 이미지를 던지는 이유는?
     func downloadImage(from dataString: String, completed: @escaping (UIImage?) -> Void) {
+        
+        /// cache check
+        // convert String to cacheKey
+        let cacheKey = NSString(string: dataString)
+        
+        // check if cache has image
+        if let image = cache.object(forKey: cacheKey) {
+            // if yes, load image
+            completed(image)
+            return
+        }
         
         // check if URL is valid
         guard let url = URL(string: dataString) else {
