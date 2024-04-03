@@ -14,6 +14,7 @@ class PokedexVC: UIViewController {
     let firstDisplayView = DataDisplayView()
     let secondDisplayView = DataDisplayView()
     var collectionView: UICollectionView!
+    private var pokeData: Pokemon!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,6 +27,17 @@ class PokedexVC: UIViewController {
         configureCollectionView()
         configureReturnButton()
         configureDisplayData()
+        
+        print(pokeData)
+    }
+    
+    init() {
+        super.init(nibName: nil, bundle: nil)
+        
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
 //    override func viewWillDisappear(_ animated: Bool) {
@@ -178,5 +190,12 @@ extension PokedexVC: UICollectionViewDataSource {
             cell.backgroundColor = .white.withAlphaComponent(0.7)
             cell.transform = .identity
         }
+    }
+}
+
+extension PokedexVC: SendDataToVCDelegate {
+    func passDataToVC(data: Pokemon) {
+        pokeData = data
+        print("데이터가 넘어왔습니다")
     }
 }

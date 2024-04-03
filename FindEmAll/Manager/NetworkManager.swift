@@ -21,7 +21,7 @@ class NetworkManager {
     // 리턴 타입 PokemonType으로 진행
     func fetchPokemon(completion: @escaping (Pokemon?, String?) -> Void) {
         // randomPokemon check
-        let pokemonIndex = Int.random(in: 1...151)
+        let pokemonIndex = Int.random(in: 1...4)
         
         // basePoint
         let endPoint = baseUrl + "\(pokemonIndex)"
@@ -54,7 +54,7 @@ class NetworkManager {
                 return
             }
             
-            do {                
+            do {
                 // 받아온 데이터 decode
                 let pokemonData = try decoder.decode(Pokemon.self, from: data)
                 completion(pokemonData, nil)
@@ -108,7 +108,6 @@ class NetworkManager {
                 completed(nil)
                 return
             }
-            
             completed(image)
         }
         task.resume()
