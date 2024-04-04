@@ -12,6 +12,7 @@ class NetworkManager {
     static let shared = NetworkManager()
     let decoder = JSONDecoder()
     let baseUrl = "https://pokeapi.co/api/v2/pokemon/"
+    let cache = NSCache<NSString, UIImage>()
     
     private init() {
         decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -20,7 +21,7 @@ class NetworkManager {
     // 리턴 타입 PokemonType으로 진행
     func fetchPokemon(completion: @escaping (Pokemon?, String?) -> Void) {
         // randomPokemon check
-        let pokemonIndex = Int.random(in: 1...151)
+        let pokemonIndex = Int.random(in: 1...4)
         
         // basePoint
         let endPoint = baseUrl + "\(pokemonIndex)"
@@ -53,7 +54,7 @@ class NetworkManager {
                 return
             }
             
-            do {                
+            do {
                 // 받아온 데이터 decode
                 let pokemonData = try decoder.decode(Pokemon.self, from: data)
                 completion(pokemonData, nil)
@@ -66,6 +67,17 @@ class NetworkManager {
     
     // 이미지를 던지는 이유는?
     func downloadImage(from dataString: String, completed: @escaping (UIImage?) -> Void) {
+        
+        /// cache check
+        // convert String to cacheKey
+        let cacheKey = NSString(string: dataString)
+        
+        // check if cache has image
+        if let image = cache.object(forKey: cacheKey) {
+            // if yes, load image
+            completed(image)
+            return
+        }
         
         // check if URL is valid
         guard let url = URL(string: dataString) else {
@@ -96,7 +108,6 @@ class NetworkManager {
                 completed(nil)
                 return
             }
-            
             completed(image)
         }
         task.resume()
