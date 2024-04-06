@@ -7,10 +7,6 @@
 
 import UIKit
 
-protocol SendDataToVCDelegate: AnyObject {
-    func passDataToVC(data: Pokemon)
-}
-
 class QuizVC: UIViewController {
     
     private let topAnimatingView = AnimatingView(color: .red)
@@ -24,8 +20,6 @@ class QuizVC: UIViewController {
     private var infoViews = [UIView]()
     private var originalPosition = [UIView: CGPoint]()
     private let padding: CGFloat = 20
-    private var pokemonData: Pokemon!
-    weak var delegate: SendDataToVCDelegate?
     
     //MARK: - LifeCycle
     override func viewDidLoad() {
@@ -60,11 +54,8 @@ class QuizVC: UIViewController {
                 return
             }
             
-            self.pokemonData = pokemon
+            PersistenceManager.shared.savePokeData(pokemon.id)
             self.setData(data: pokemon)
-            
-//            print(pokemon.moves[0].move.name)
-//            print(pokemon.sprites.frontDefault)
         }
     }
     
@@ -77,8 +68,6 @@ class QuizVC: UIViewController {
                 self.pokeImageview.contentMode = .scaleAspectFill
             }
         }
-        
-//        self.pokemonData = data
     }
     
     private func populateViews() {
@@ -171,7 +160,6 @@ class QuizVC: UIViewController {
     
     //MARK: - Methods
     @objc func backButtonTapped() {
-        delegate?.passDataToVC(data: pokemonData)
         print("데이터가 보내졌습니다.")
         dismissView()
     }
