@@ -14,7 +14,7 @@ class PokedexVC: UIViewController {
     let firstDisplayView = DataDisplayView()
     let secondDisplayView = DataDisplayView()
     var collectionView: UICollectionView!
-    private var pokeData: Pokemon!
+    private let allPokemon: [Int] = Array(1...151)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,23 +27,16 @@ class PokedexVC: UIViewController {
         configureCollectionView()
         configureReturnButton()
         configureDisplayData()
-        
-        print(pokeData)
     }
     
     init() {
         super.init(nibName: nil, bundle: nil)
         
     }
-    
+   
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-//    override func viewWillDisappear(_ animated: Bool) {
-//        super.viewWillDisappear(animated)
-//        dismissAndAnimateOut()
-//    }
     
     private func configureDisplayData() {
         firstDisplayView.set(item: .seen, withCount: 2)
@@ -163,13 +156,18 @@ extension PokedexVC: UICollectionViewDelegate {
 
 extension PokedexVC: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 40
+        return allPokemon.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PokeCollectionViewCell.reuseId, for: indexPath) as! PokeCollectionViewCell
         
-        cell.pokeImage.set(img: "clipboard.fill")
+        let encounteredIds = PersistenceManager.shared.fetchEncounteredId()
+        if encounteredIds.contains(allPokemon[indexPath.item]) {
+            cell.pokeImage.set(img: "circle")
+        } else {
+            cell.pokeImage.set(img: "clipboard.fill")
+        }
         cell.transform = CGAffineTransform(scaleX: 0.7, y: 0.7)
         return cell
     }
@@ -193,9 +191,9 @@ extension PokedexVC: UICollectionViewDataSource {
     }
 }
 
-extension PokedexVC: SendDataToVCDelegate {
-    func passDataToVC(data: Pokemon) {
-        pokeData = data
-        print("데이터가 넘어왔습니다")
-    }
-}
+//extension PokedexVC: SendDataToVCDelegate {
+//    func passDataToVC(data: Pokemon) {
+//        pokeData = data
+//        print("데이터가 넘어왔습니다")
+//    }
+//}
