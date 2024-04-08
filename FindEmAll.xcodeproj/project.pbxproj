@@ -21,6 +21,9 @@
 		BD5541322B8E37A70089CA78 /* TitleLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5541312B8E37A70089CA78 /* TitleLabel.swift */; };
 		BD70EF6B2BB28AD500391C4D /* PokeEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD70EF6A2BB28AD500391C4D /* PokeEntry.swift */; };
 		BDAD03CC2BC19524008B0F71 /* PersistenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDAD03CB2BC19524008B0F71 /* PersistenceManager.swift */; };
+		BDAD04302BC3B9FB008B0F71 /* FindEmAllTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDAD042F2BC3B9FB008B0F71 /* FindEmAllTest.swift */; };
+		BDAD04372BC3BA2A008B0F71 /* TestPersistenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDAD04362BC3BA2A008B0F71 /* TestPersistenceManager.swift */; };
+		BDAD043A2BC3BCB4008B0F71 /* PersistenceValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDAD04392BC3BCB4008B0F71 /* PersistenceValidator.swift */; };
 		BDBD46A62B2C999500B62405 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDBD46A52B2C999500B62405 /* AppDelegate.swift */; };
 		BDBD46AF2B2C999700B62405 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BDBD46AE2B2C999700B62405 /* Assets.xcassets */; };
 		BDBD46B22B2C999700B62405 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BDBD46B02B2C999700B62405 /* LaunchScreen.storyboard */; };
@@ -37,6 +40,16 @@
 		BDFCDC282B95C7BB004DD56C /* PokemonTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFCDC272B95C7BB004DD56C /* PokemonTypes.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		BDAD04312BC3B9FB008B0F71 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BDBD469A2B2C999500B62405 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BDBD46A12B2C999500B62405;
+			remoteInfo = FindEmAll;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		BD0C43692BAACA0D00D0E9B3 /* PokeCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokeCollectionViewCell.swift; sourceTree = "<group>"; };
 		BD0C436C2BAACB9F00D0E9B3 /* UIHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIHelpers.swift; sourceTree = "<group>"; };
@@ -52,6 +65,10 @@
 		BD5541312B8E37A70089CA78 /* TitleLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleLabel.swift; sourceTree = "<group>"; };
 		BD70EF6A2BB28AD500391C4D /* PokeEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokeEntry.swift; sourceTree = "<group>"; };
 		BDAD03CB2BC19524008B0F71 /* PersistenceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceManager.swift; sourceTree = "<group>"; };
+		BDAD042D2BC3B9FB008B0F71 /* FindEmAllTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FindEmAllTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		BDAD042F2BC3B9FB008B0F71 /* FindEmAllTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindEmAllTest.swift; sourceTree = "<group>"; };
+		BDAD04362BC3BA2A008B0F71 /* TestPersistenceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPersistenceManager.swift; sourceTree = "<group>"; };
+		BDAD04392BC3BCB4008B0F71 /* PersistenceValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceValidator.swift; sourceTree = "<group>"; };
 		BDBD46A22B2C999500B62405 /* FindEmAll.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FindEmAll.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BDBD46A52B2C999500B62405 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BDBD46AE2B2C999700B62405 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -71,6 +88,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		BDAD042A2BC3B9FB008B0F71 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		BDBD469F2B2C999500B62405 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -177,10 +201,28 @@
 			path = Screen;
 			sourceTree = "<group>";
 		};
+		BDAD042E2BC3B9FB008B0F71 /* FindEmAllTest */ = {
+			isa = PBXGroup;
+			children = (
+				BDAD042F2BC3B9FB008B0F71 /* FindEmAllTest.swift */,
+				BDAD04362BC3BA2A008B0F71 /* TestPersistenceManager.swift */,
+			);
+			path = FindEmAllTest;
+			sourceTree = "<group>";
+		};
+		BDAD04382BC3BC9D008B0F71 /* TestModel */ = {
+			isa = PBXGroup;
+			children = (
+				BDAD04392BC3BCB4008B0F71 /* PersistenceValidator.swift */,
+			);
+			path = TestModel;
+			sourceTree = "<group>";
+		};
 		BDBD46992B2C999500B62405 = {
 			isa = PBXGroup;
 			children = (
 				BDBD46A42B2C999500B62405 /* FindEmAll */,
+				BDAD042E2BC3B9FB008B0F71 /* FindEmAllTest */,
 				BDBD46A32B2C999500B62405 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -189,6 +231,7 @@
 			isa = PBXGroup;
 			children = (
 				BDBD46A22B2C999500B62405 /* FindEmAll.app */,
+				BDAD042D2BC3B9FB008B0F71 /* FindEmAllTest.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -235,6 +278,7 @@
 		BDFCDC1E2B95C1DE004DD56C /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				BDAD04382BC3BC9D008B0F71 /* TestModel */,
 				BDFCDC1F2B95C1E7004DD56C /* Pokemon.swift */,
 				BDFCDC212B95C726004DD56C /* PokemonMoves.swift */,
 				BDFCDC232B95C761004DD56C /* PokemonCries.swift */,
@@ -248,6 +292,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		BDAD042C2BC3B9FB008B0F71 /* FindEmAllTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BDAD04352BC3B9FB008B0F71 /* Build configuration list for PBXNativeTarget "FindEmAllTest" */;
+			buildPhases = (
+				BDAD04292BC3B9FB008B0F71 /* Sources */,
+				BDAD042A2BC3B9FB008B0F71 /* Frameworks */,
+				BDAD042B2BC3B9FB008B0F71 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				BDAD04322BC3B9FB008B0F71 /* PBXTargetDependency */,
+			);
+			name = FindEmAllTest;
+			productName = FindEmAllTest;
+			productReference = BDAD042D2BC3B9FB008B0F71 /* FindEmAllTest.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		BDBD46A12B2C999500B62405 /* FindEmAll */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = BDBD46B62B2C999700B62405 /* Build configuration list for PBXNativeTarget "FindEmAll" */;
@@ -272,9 +334,13 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1500;
+				LastSwiftUpdateCheck = 1530;
 				LastUpgradeCheck = 1500;
 				TargetAttributes = {
+					BDAD042C2BC3B9FB008B0F71 = {
+						CreatedOnToolsVersion = 15.3;
+						TestTargetID = BDBD46A12B2C999500B62405;
+					};
 					BDBD46A12B2C999500B62405 = {
 						CreatedOnToolsVersion = 15.0.1;
 					};
@@ -294,11 +360,19 @@
 			projectRoot = "";
 			targets = (
 				BDBD46A12B2C999500B62405 /* FindEmAll */,
+				BDAD042C2BC3B9FB008B0F71 /* FindEmAllTest */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		BDAD042B2BC3B9FB008B0F71 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		BDBD46A02B2C999500B62405 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -311,6 +385,15 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		BDAD04292BC3B9FB008B0F71 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BDAD04302BC3B9FB008B0F71 /* FindEmAllTest.swift in Sources */,
+				BDAD04372BC3BA2A008B0F71 /* TestPersistenceManager.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		BDBD469E2B2C999500B62405 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -322,6 +405,7 @@
 				BDF021142BA958E300EB5260 /* PokedexVC.swift in Sources */,
 				BDAD03CC2BC19524008B0F71 /* PersistenceManager.swift in Sources */,
 				BD0C436A2BAACA0D00D0E9B3 /* PokeCollectionViewCell.swift in Sources */,
+				BDAD043A2BC3BCB4008B0F71 /* PersistenceValidator.swift in Sources */,
 				BD28152A2B90173F0095C1AD /* PokeInfoVC.swift in Sources */,
 				BD2815242B8F473C0095C1AD /* BodyLabel.swift in Sources */,
 				BDCD4BB12BB145BC003A6378 /* Pokedex.swift in Sources */,
@@ -346,6 +430,14 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		BDAD04322BC3B9FB008B0F71 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BDBD46A12B2C999500B62405 /* FindEmAll */;
+			targetProxy = BDAD04312BC3B9FB008B0F71 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXVariantGroup section */
 		BDBD46B02B2C999700B62405 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
@@ -358,6 +450,50 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		BDAD04332BC3B9FB008B0F71 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 2U86LHQK8Q;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jack.lee.FindEmAllTest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FindEmAll.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/FindEmAll";
+			};
+			name = Debug;
+		};
+		BDAD04342BC3B9FB008B0F71 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 2U86LHQK8Q;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jack.lee.FindEmAllTest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FindEmAll.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/FindEmAll";
+			};
+			name = Release;
+		};
 		BDBD46B42B2C999700B62405 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -542,6 +678,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		BDAD04352BC3B9FB008B0F71 /* Build configuration list for PBXNativeTarget "FindEmAllTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BDAD04332BC3B9FB008B0F71 /* Debug */,
+				BDAD04342BC3B9FB008B0F71 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		BDBD469D2B2C999500B62405 /* Build configuration list for PBXProject "FindEmAll" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
