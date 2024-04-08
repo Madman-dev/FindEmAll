@@ -14,7 +14,7 @@ class PokedexVC: UIViewController {
     let firstDisplayView = DataDisplayView()
     let secondDisplayView = DataDisplayView()
     var collectionView: UICollectionView!
-    private let allPokemon: [Int] = Array(1...151)
+    var encounteredId: [Int: Pokemon] = [:]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,13 +27,14 @@ class PokedexVC: UIViewController {
         configureCollectionView()
         configureReturnButton()
         configureDisplayData()
+        fetchEncountered()
     }
     
     init() {
         super.init(nibName: nil, bundle: nil)
         
     }
-   
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -133,11 +134,21 @@ class PokedexVC: UIViewController {
         }
     }
     
-//    private func dismissAndAnimateOut() {
-//        bottomAnimatingView.animate(to: .down) {
-//            return
-//        }
-//    }
+    private func fetchEncountered() {
+        let encounteredId = PersistenceManager.shared.fetchEncounteredId().sorted()
+        
+        for id in encounteredId {
+            NetworkManager.shared.fetchPokemonWithId(id: id) { pokemon, errorMessage in
+                if let pokemon = pokemon {
+                    self.encounteredId[id - 1] = pokemon
+                }
+                DispatchQueue.main.async {
+                    self.collectionView.reloadData()
+                }
+            }
+        }
+        
+    }
     
     private func dismissView() {
         bottomAnimatingView.animateFull(to: .down) {
@@ -156,19 +167,20 @@ extension PokedexVC: UICollectionViewDelegate {
 
 extension PokedexVC: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return allPokemon.count
+        return 151
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PokeCollectionViewCell.reuseId, for: indexPath) as! PokeCollectionViewCell
         
-        let encounteredIds = PersistenceManager.shared.fetchEncounteredId()
-        if encounteredIds.contains(allPokemon[indexPath.item]) {
-            cell.pokeImage.set(img: "circle")
+        cell.transform = CGAffineTransform(scaleX: 0.7, y: 0.7)
+        
+        if let pokemon = encounteredId[indexPath.item] {
+            cell.set(data: pokemon)
+            
         } else {
             cell.pokeImage.set(img: "clipboard.fill")
         }
-        cell.transform = CGAffineTransform(scaleX: 0.7, y: 0.7)
         return cell
     }
     
@@ -190,10 +202,3 @@ extension PokedexVC: UICollectionViewDataSource {
         }
     }
 }
-
-//extension PokedexVC: SendDataToVCDelegate {
-//    func passDataToVC(data: Pokemon) {
-//        pokeData = data
-//        print("데이터가 넘어왔습니다")
-//    }
-//}

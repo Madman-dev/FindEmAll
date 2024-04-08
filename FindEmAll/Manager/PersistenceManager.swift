@@ -13,17 +13,17 @@ class PersistenceManager {
     private let encounteredKey = "EncounteredKey"
     private init() {}
     
+    // 마주한 포켓몬 ID 저장
     func savePokeData(_ id: Int) {
         var encounteredId = defaults.array(forKey: encounteredKey) as? [Int] ?? []
-        print("처음 마주한 ID: \(encounteredId)")
         
         if !encounteredId.contains(id) {
             encounteredId.append(id)
-            print("저장된 ID: \(encounteredId)")
             defaults.set(encounteredId, forKey: encounteredKey)
         }
     }
     
+    // 마주한 포켓몬 ID를 전체 반환
     func fetchEncounteredId() -> [Int] {
         return defaults.array(forKey: encounteredKey) as? [Int] ?? []
     }

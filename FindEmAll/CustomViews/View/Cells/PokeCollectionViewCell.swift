@@ -19,11 +19,13 @@ class PokeCollectionViewCell: UICollectionViewCell {
         configureImage()
     }
     
-    func set(image: String, title: String) {
-        pokeImage.set(img: image)
-        nameLabel.text = title
+    func set(data: Pokemon) {
+        DispatchQueue.main.async {
+            self.nameLabel.text = data.name
+            self.pokeImage.downloadImageUrl(from: data.sprites.frontDefault)
+        }
     }
-    
+        
     private func configure() {
         backgroundColor = .clear
         layer.cornerRadius = 10
