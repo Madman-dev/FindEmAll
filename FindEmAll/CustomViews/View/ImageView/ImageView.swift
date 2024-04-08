@@ -28,6 +28,15 @@ class ImageView: UIImageView {
         layer.borderWidth = 8
     }
     
+    func downloadImageUrl(from url: String) {
+        
+        NetworkManager.shared.downloadImage(from: url) { image in
+            DispatchQueue.main.async {
+                self.image = image
+            }
+        }
+    }
+    
     func set(img: String) {
         image = UIImage(systemName: img)
         contentMode = .scaleToFill
