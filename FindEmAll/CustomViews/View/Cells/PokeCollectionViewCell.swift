@@ -21,6 +21,9 @@ class PokeCollectionViewCell: UICollectionViewCell {
     
     func set(data: Pokemon) {
         DispatchQueue.main.async {
+            self.backgroundColor = .white.withAlphaComponent(0.7)
+            self.bringSubviewToFront(self.pokeImage)
+            self.bringSubviewToFront(self.nameLabel)
             self.nameLabel.text = data.name
             self.pokeImage.downloadImageUrl(from: data.sprites.frontDefault)
         }
@@ -36,8 +39,6 @@ class PokeCollectionViewCell: UICollectionViewCell {
         addSubview(pokeImage)
         addSubview(nameLabel)
         
-        nameLabel.text = "실험"
-        
         NSLayoutConstraint.activate([
             pokeImage.centerXAnchor.constraint(equalTo: centerXAnchor),
             pokeImage.centerYAnchor.constraint(equalTo: centerYAnchor),
@@ -47,6 +48,12 @@ class PokeCollectionViewCell: UICollectionViewCell {
             nameLabel.topAnchor.constraint(equalTo: pokeImage.bottomAnchor, constant: 8),
             nameLabel.centerXAnchor.constraint(equalTo: centerXAnchor)
         ])
+    }
+    
+    override func prepareForReuse() {
+        pokeImage.image = nil
+        nameLabel.text = nil
+        backgroundColor = .white.withAlphaComponent(0.7)
     }
     
     required init?(coder: NSCoder) {
