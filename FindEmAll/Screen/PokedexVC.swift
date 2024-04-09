@@ -15,6 +15,7 @@ class PokedexVC: UIViewController {
     let secondDisplayView = DataDisplayView()
     var collectionView: UICollectionView!
     var encounteredId: [Int: Pokemon] = [:]
+    let expandableCell = PokeCollectionViewCell()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -200,5 +201,34 @@ extension PokedexVC: UICollectionViewDataSource {
             cell.backgroundColor = UIColor.black.withAlphaComponent(0.1)
             cell.transform = .identity
         }
+    }
+    
+    // overriding method to animate cell collapse
+    func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
+        collectionView.deselectItem(at: indexPath, animated: true)
+        // update the collectionview with multiple animations(add remove etc) at once
+        collectionView.performBatchUpdates(nil)
+        return true
+    }
+    
+    // overriding method to animate unwrapping of cell ?
+    func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        collectionView.selectItem(at: indexPath, animated: true, scrollPosition: [])
+        collectionView.performBatchUpdates(nil)
+        
+        // scroll that when cell expands, it is visible
+        DispatchQueue.main.async {
+            guard let attributes = collectionView.collectionViewLayout.layoutAttributesForItem(at: indexPath) else {
+                return
+            }
+            
+            let desiredOffset = attributes.frame.origin.y - 20
+            let contentHeight = collectionView.collectionViewLayout.collectionViewContentSize.height
+            let maxPossibleOffset = contentHeight - collectionView.bounds.height
+            let finalOffset = max(min(desiredOffset, maxPossibleOffset), 0)
+            
+            collectionView.setContentOffset(CGPoint(x: 0, y: finalOffset), animated: true)
+        }
+        return true
     }
 }

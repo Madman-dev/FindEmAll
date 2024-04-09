@@ -10,6 +10,12 @@ import UIKit
 class PokeCollectionViewCell: UICollectionViewCell {
     
     static let reuseId = "PokeCollectionViewCell"
+    // MARK: - expanded State
+    private var expandedConstraint: NSLayoutConstraint!
+    
+    // MARK: - collapsed State
+    private var collapsedConstraint: NSLayoutConstraint!
+    
     let pokeImage = ImageView(frame: .zero)
     let nameLabel = TitleLabel(textAlignment: .center, fontSize: 18)
     
@@ -17,6 +23,12 @@ class PokeCollectionViewCell: UICollectionViewCell {
         super.init(frame: frame)
         configure()
         configureImage()
+    }
+    
+    override var isSelected: Bool {
+        didSet {
+            updateAppearance()
+        }
     }
     
     func set(data: Pokemon) {
@@ -48,6 +60,14 @@ class PokeCollectionViewCell: UICollectionViewCell {
             nameLabel.topAnchor.constraint(equalTo: pokeImage.bottomAnchor, constant: 8),
             nameLabel.centerXAnchor.constraint(equalTo: centerXAnchor)
         ])
+    }
+    
+    //MARK: - when cell selection state changes, toggle constraint and animate the rotation of the arrow
+    private func updateAppearance() {
+        collapsedConstraint.isActive = !isSelected
+        expandedConstraint.isActive = isSelected
+        
+        // animating the arrow image - which I don't have
     }
     
     override func prepareForReuse() {
