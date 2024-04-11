@@ -49,9 +49,9 @@ class DataDisplayView: UIView {
     func set(item: DisplayItem, withCount count: Int) {
         switch item {
         case .seen:
-            titleLabel.text = "본 포켓몬 수"
+            titleLabel.text = "본 포켓몬 수:"
         case .captured:
-            titleLabel.text = "잡은 포켓몬 수"
+            titleLabel.text = "잡은 포켓몬 수:"
         }
         
         dataLabel.text = String(count)
