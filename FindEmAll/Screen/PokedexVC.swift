@@ -9,8 +9,8 @@ import UIKit
 
 class PokedexVC: UIViewController {
     let topAnimatingView = AnimatingView(color: .black)
-    let bottomAnimatingView = AnimatingView(color: .blue)
-    let returnButton = PokeButton(color: .black)
+    let bottomAnimatingView = AnimatingView(color: Color.PokeGrey)
+    let returnButton = PokeButton(color: .white)
     let firstDisplayView = DataDisplayView()
     let secondDisplayView = DataDisplayView()
     var collectionView: UICollectionView!

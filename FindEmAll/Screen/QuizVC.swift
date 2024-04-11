@@ -87,7 +87,7 @@ class QuizVC: UIViewController {
     
     //MARK: - UILayout
     private func layoutUI() {
-        view.backgroundColor = .black
+        view.backgroundColor = Color.PitchBlack
         
         view.addSubviews(topAnimatingView, bottomAnimatingView, pokeImageview)
         infoViews = [firstInfo, secondInfo, thirdInfo, fourthInfo]

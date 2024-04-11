@@ -37,7 +37,7 @@ class StartingVC: UIViewController {
     
     //MARK: - UILayout
     private func layoutUI() {
-        view.backgroundColor = .black
+        view.backgroundColor = Color.PitchBlack
         view.addSubviews(topAnimatingView, bottomAnimatingView, titleView, actionButton, pokedexButton)
     }
     
@@ -66,7 +66,7 @@ class StartingVC: UIViewController {
     
     private func configureButton() {
         actionButton.addTarget(self, action: #selector(actionButtonTapped), for: .touchUpInside)
-        actionButton.addBorder(color: .black)
+        actionButton.addBorder(color: Color.PitchBlack)
         
         NSLayoutConstraint.activate([
             actionButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),

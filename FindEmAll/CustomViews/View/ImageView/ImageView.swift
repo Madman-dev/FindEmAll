@@ -24,7 +24,7 @@ class ImageView: UIImageView {
     }
     
     func setBorder() {
-        layer.borderColor = UIColor.black.cgColor
+        layer.borderColor = Color.PitchBlack.cgColor
         layer.borderWidth = 8
     }
     
