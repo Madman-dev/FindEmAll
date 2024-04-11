@@ -10,8 +10,8 @@ import UIKit
 class StartingVC: UIViewController {
     
     let titleView = TitleLabel(textAlignment: .center, fontSize: 30)
-    let topAnimatingView = AnimatingView(color: .purple)
-    let bottomAnimatingView = AnimatingView(color: .green)
+    let topAnimatingView = AnimatingView(color: Color.PokeRed)
+    let bottomAnimatingView = AnimatingView(color: Color.PokeGrey)
     let actionButton = PokeButton(color: .white)
     let pokedexButton = PokeButton(color: .green)
     
@@ -37,7 +37,7 @@ class StartingVC: UIViewController {
     
     //MARK: - UILayout
     private func layoutUI() {
-        view.backgroundColor = .black
+        view.backgroundColor = Color.PitchBlack
         view.addSubviews(topAnimatingView, bottomAnimatingView, titleView, actionButton, pokedexButton)
     }
     
@@ -66,7 +66,7 @@ class StartingVC: UIViewController {
     
     private func configureButton() {
         actionButton.addTarget(self, action: #selector(actionButtonTapped), for: .touchUpInside)
-        actionButton.addBorder(color: .black)
+        actionButton.addBorder(color: Color.PitchBlack)
         
         NSLayoutConstraint.activate([
             actionButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
