@@ -45,7 +45,7 @@ class PokedexVC: UIViewController {
     }
     
     private func configure() {
-        view.backgroundColor = .red
+        view.backgroundColor = Color.PokeRed
         navigationItem.setHidesBackButton(true, animated: false)
     }
     

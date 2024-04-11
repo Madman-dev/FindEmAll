@@ -10,8 +10,8 @@ import UIKit
 class StartingVC: UIViewController {
     
     let titleView = TitleLabel(textAlignment: .center, fontSize: 30)
-    let topAnimatingView = AnimatingView(color: .purple)
-    let bottomAnimatingView = AnimatingView(color: .green)
+    let topAnimatingView = AnimatingView(color: Color.PokeRed)
+    let bottomAnimatingView = AnimatingView(color: Color.PokeGrey)
     let actionButton = PokeButton(color: .white)
     let pokedexButton = PokeButton(color: .green)
     
