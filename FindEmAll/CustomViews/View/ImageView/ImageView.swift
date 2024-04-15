@@ -29,7 +29,6 @@ class ImageView: UIImageView {
     }
     
     func downloadImageUrl(from url: String) {
-        
         NetworkManager.shared.downloadImage(from: url) { image in
             DispatchQueue.main.async {
                 self.image = image
@@ -39,15 +38,14 @@ class ImageView: UIImageView {
     
     func set(img: String) {
         image = UIImage(systemName: img)
-        contentMode = .scaleToFill
+        contentMode = .scaleAspectFit
     }
     
     private func configure() {
-        layer.cornerRadius = 10
-        clipsToBounds = true
         translatesAutoresizingMaskIntoConstraints = false
     }
     
+    // create circular imageView
     override func layoutSubviews() {
         super.layoutSubviews()
         layer.cornerRadius = layer.frame.width/2

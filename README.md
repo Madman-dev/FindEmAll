@@ -14,6 +14,7 @@ DATE | DESCRIPTION |
 |:---:|---|
 4.07 | - **Testing Jira Software Integration with Github** <br/> *Learned the basics of what a ticket is, how to integrate Jira with github - creating branches, commits using Jira.* |
 4.11 | - **Found issue how current Jira Ticket is used** <br/> *Issued a ticket to every bugs, story, etc - although the ticket allowed me to track down the issue faster, I wasn't able to findout the main problem of the issue until I've read the commit message. NOT an effective use of tickets* |
+4.15 | Tapped cell is able to grow, but when the screen moves away from origin, the cell is unable to maintain its expanded status - providing the item's frame origin value has created a limit to how the collectionviewcell could be utilized. Looking for an alternative. |
 
 
 

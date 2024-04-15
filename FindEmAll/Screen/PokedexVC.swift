@@ -163,7 +163,18 @@ class PokedexVC: UIViewController {
 }
 
 extension PokedexVC: UICollectionViewDelegate {
-    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let item = collectionView.cellForItem(at: indexPath) as! PokeCollectionViewCell
+        item.backgroundColor = .black
+        
+        UIView.animate(withDuration: 1.0) {
+            self.view.bringSubviewToFront(collectionView)
+            collectionView.bringSubviewToFront(item)
+            item.frame.origin = self.view.frame.origin
+            item.frame.size.width = self.view.frame.width
+            item.frame.size.height = self.view.frame.height
+        }
+    }
 }
 
 extension PokedexVC: UICollectionViewDataSource {

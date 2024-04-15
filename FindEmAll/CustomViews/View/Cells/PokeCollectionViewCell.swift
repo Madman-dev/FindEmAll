@@ -10,52 +10,64 @@ import UIKit
 class PokeCollectionViewCell: UICollectionViewCell {
     
     static let reuseId = "PokeCollectionViewCell"
+    
+    // cell in closed state
+    var stackView: UIStackView = {
+        let closedStack = UIStackView()
+        closedStack.frame = .zero
+        closedStack.axis = .vertical
+        closedStack.alignment = .center
+        closedStack.distribution = .fillProportionally
+        closedStack.translatesAutoresizingMaskIntoConstraints = false
+        return closedStack
+    }()
+    
+    // properties
     let pokeImage = ImageView(frame: .zero)
     let nameLabel = TitleLabel(textAlignment: .center, fontSize: 18)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        configure()
-        configureImage()
+        layout()
+        configureClosedStack()
     }
-    
-//    override var isSelected: Bool { updateView() }
     
     func set(data: Pokemon) {
         DispatchQueue.main.async {
-            self.backgroundColor = .white.withAlphaComponent(0.7)
+            self.backgroundColor = .white
             self.bringSubviewToFront(self.pokeImage)
             self.bringSubviewToFront(self.nameLabel)
             self.nameLabel.text = data.name
             self.pokeImage.downloadImageUrl(from: data.sprites.frontDefault)
         }
     }
-        
-    private func configure() {
+    
+    private func layout() {
         backgroundColor = .clear
         layer.cornerRadius = 10
-        clipsToBounds = true
     }
     
-    private func configureImage() {
-        addSubview(pokeImage)
-        addSubview(nameLabel)
+    // NO distribution == no nameLabel
+    private func configureClosedStack() {
+        addSubviews(stackView)
+        stackView.addArrangedSubview(pokeImage)
+        stackView.addArrangedSubview(nameLabel)
+        
+        // give nameLabel a padding at bttom
+        stackView.layoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: 10, right: 0)
+        stackView.isLayoutMarginsRelativeArrangement = true
         
         NSLayoutConstraint.activate([
-            pokeImage.centerXAnchor.constraint(equalTo: centerXAnchor),
-            pokeImage.centerYAnchor.constraint(equalTo: centerYAnchor),
-            pokeImage.heightAnchor.constraint(equalToConstant: 40),
-            pokeImage.widthAnchor.constraint(equalToConstant: 40),
+            stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            stackView.topAnchor.constraint(equalTo: topAnchor),
+            stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
             
-            nameLabel.topAnchor.constraint(equalTo: pokeImage.bottomAnchor, constant: 8),
-            nameLabel.centerXAnchor.constraint(equalTo: centerXAnchor)
+            pokeImage.topAnchor.constraint(equalTo: stackView.topAnchor),
+            pokeImage.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
+            pokeImage.trailingAnchor.constraint(equalTo: stackView.trailingAnchor)
         ])
     }
-    
-//    private func updateAppearance() {
-//        collapsedConstraint.isActive = !isSelected
-//        expandedConstraint.isActive = isSelected
-//    }
     
     override func prepareForReuse() {
         pokeImage.image = nil
