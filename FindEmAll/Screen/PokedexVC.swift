@@ -15,6 +15,7 @@ class PokedexVC: UIViewController {
     var collectionView: UICollectionView!
     var encounteredId: [Int: Pokemon] = [:]
     let expandableCell = PokeCollectionViewCell()
+    var selectedIndexPath: IndexPath?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -163,7 +164,18 @@ class PokedexVC: UIViewController {
 }
 
 extension PokedexVC: UICollectionViewDelegate {
-    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        print("indexPath가 눌렸어요", indexPath)
+        
+        if selectedIndexPath != nil && selectedIndexPath == indexPath {
+            selectedIndexPath = nil
+        } else {
+            selectedIndexPath = indexPath
+        }
+        
+//        collectionView.reloadData()
+        collectionView.performBatchUpdates(nil)
+    }
 }
 
 extension PokedexVC: UICollectionViewDataSource {
@@ -174,8 +186,6 @@ extension PokedexVC: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PokeCollectionViewCell.reuseId, for: indexPath) as! PokeCollectionViewCell
-        
-        print("indexPath NO DATA:", indexPath)
         cell.transform = CGAffineTransform(scaleX: 0.01, y: 0.01)
         
         if let pokemon = encounteredId[indexPath.item] {
@@ -201,33 +211,13 @@ extension PokedexVC: UICollectionViewDataSource {
             cell.transform = .identity
         }
     }
-    
-    // overriding method to animate cell collapse
-    func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
-        collectionView.deselectItem(at: indexPath, animated: true)
-        // update the collectionview with multiple animations(add remove etc) at once
-        collectionView.performBatchUpdates(nil)
-        return true
-    }
-    
-    // overriding method to animate unwrapping of cell ?
-    func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        collectionView.selectItem(at: indexPath, animated: true, scrollPosition: [])
-        collectionView.performBatchUpdates(nil)
-        
-        // scroll that when cell expands, it is visible
-        DispatchQueue.main.async {
-            guard let attributes = collectionView.collectionViewLayout.layoutAttributesForItem(at: indexPath) else {
-                return
-            }
-            
-            let desiredOffset = attributes.frame.origin.y - 20
-            let contentHeight = collectionView.collectionViewLayout.collectionViewContentSize.height
-            let maxPossibleOffset = contentHeight - collectionView.bounds.height
-            let finalOffset = max(min(desiredOffset, maxPossibleOffset), 0)
-            
-            collectionView.setContentOffset(CGPoint(x: 0, y: finalOffset), animated: true)
+}
+
+extension PokedexVC: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        if selectedIndexPath == indexPath {
+            return CGSize(width: collectionView.frame.width, height: 300)
         }
-        return true
+        return CGSize(width: 100, height: 100)
     }
 }

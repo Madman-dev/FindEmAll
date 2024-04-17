@@ -10,64 +10,63 @@ import UIKit
 class PokeCollectionViewCell: UICollectionViewCell {
     
     static let reuseId = "PokeCollectionViewCell"
-    // MARK: - expanded State
-    private var expandedConstraint: NSLayoutConstraint!
     
-    // MARK: - collapsed State
-    private var collapsedConstraint: NSLayoutConstraint!
+    // cell in closed state
+    var stackView: UIStackView = {
+        let closedStack = UIStackView()
+        closedStack.frame = .zero
+        closedStack.axis = .vertical
+        closedStack.alignment = .center
+        closedStack.distribution = .fillProportionally
+        closedStack.translatesAutoresizingMaskIntoConstraints = false
+        return closedStack
+    }()
     
+    // properties
     let pokeImage = ImageView(frame: .zero)
     let nameLabel = TitleLabel(textAlignment: .center, fontSize: 18)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        configure()
-        configureImage()
-    }
-    
-    override var isSelected: Bool {
-        didSet {
-            updateAppearance()
-        }
+        layout()
+        configureClosedStack()
     }
     
     func set(data: Pokemon) {
         DispatchQueue.main.async {
-            self.backgroundColor = .white.withAlphaComponent(0.7)
+            self.backgroundColor = .white
             self.bringSubviewToFront(self.pokeImage)
             self.bringSubviewToFront(self.nameLabel)
             self.nameLabel.text = data.name
             self.pokeImage.downloadImageUrl(from: data.sprites.frontDefault)
         }
     }
-        
-    private func configure() {
+    
+    private func layout() {
         backgroundColor = .clear
         layer.cornerRadius = 10
-        clipsToBounds = true
     }
     
-    private func configureImage() {
-        addSubview(pokeImage)
-        addSubview(nameLabel)
+    // NO distribution == no nameLabel
+    private func configureClosedStack() {
+        addSubviews(stackView)
+        stackView.addArrangedSubview(pokeImage)
+        stackView.addArrangedSubview(nameLabel)
+        
+        // update from layoutMargin, after iOS 11
+        stackView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0)
+        stackView.isLayoutMarginsRelativeArrangement = true
         
         NSLayoutConstraint.activate([
-            pokeImage.centerXAnchor.constraint(equalTo: centerXAnchor),
-            pokeImage.centerYAnchor.constraint(equalTo: centerYAnchor),
-            pokeImage.heightAnchor.constraint(equalToConstant: 40),
-            pokeImage.widthAnchor.constraint(equalToConstant: 40),
+            stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            stackView.topAnchor.constraint(equalTo: topAnchor),
+            stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
             
-            nameLabel.topAnchor.constraint(equalTo: pokeImage.bottomAnchor, constant: 8),
-            nameLabel.centerXAnchor.constraint(equalTo: centerXAnchor)
+            pokeImage.topAnchor.constraint(equalTo: stackView.topAnchor),
+            pokeImage.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
+            pokeImage.trailingAnchor.constraint(equalTo: stackView.trailingAnchor)
         ])
-    }
-    
-    //MARK: - when cell selection state changes, toggle constraint and animate the rotation of the arrow
-    private func updateAppearance() {
-        collapsedConstraint.isActive = !isSelected
-        expandedConstraint.isActive = isSelected
-        
-        // animating the arrow image - which I don't have
     }
     
     override func prepareForReuse() {
