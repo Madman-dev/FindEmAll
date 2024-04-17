@@ -185,8 +185,6 @@ extension PokedexVC: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PokeCollectionViewCell.reuseId, for: indexPath) as! PokeCollectionViewCell
-        
-        print("indexPath NO DATA:", indexPath)
         cell.transform = CGAffineTransform(scaleX: 0.01, y: 0.01)
         
         if let pokemon = encounteredId[indexPath.item] {

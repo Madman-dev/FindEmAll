@@ -53,8 +53,8 @@ class PokeCollectionViewCell: UICollectionViewCell {
         stackView.addArrangedSubview(pokeImage)
         stackView.addArrangedSubview(nameLabel)
         
-        // give nameLabel a padding at bttom
-        stackView.layoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: 10, right: 0)
+        // update from layoutMargin, after iOS 11
+        stackView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0)
         stackView.isLayoutMarginsRelativeArrangement = true
         
         NSLayoutConstraint.activate([
