@@ -15,6 +15,7 @@ class PokedexVC: UIViewController {
     var collectionView: UICollectionView!
     var encounteredId: [Int: Pokemon] = [:]
     let expandableCell = PokeCollectionViewCell()
+    var selectedIndexPath = IndexPath()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -164,16 +165,8 @@ class PokedexVC: UIViewController {
 
 extension PokedexVC: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let item = collectionView.cellForItem(at: indexPath) as! PokeCollectionViewCell
-        item.backgroundColor = .black
-        
-        UIView.animate(withDuration: 1.0) {
-            self.view.bringSubviewToFront(collectionView)
-            collectionView.bringSubviewToFront(item)
-            item.frame.origin = self.view.frame.origin
-            item.frame.size.width = self.view.frame.width
-            item.frame.size.height = self.view.frame.height
-        }
+        selectedIndexPath = indexPath
+        collectionView.reloadData()
     }
 }
 
@@ -186,6 +179,7 @@ extension PokedexVC: UICollectionViewDataSource {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PokeCollectionViewCell.reuseId, for: indexPath) as! PokeCollectionViewCell
         cell.transform = CGAffineTransform(scaleX: 0.01, y: 0.01)
+        cell.isSelected = indexPath == selectedIndexPath
         
         if let pokemon = encounteredId[indexPath.item] {
             cell.set(data: pokemon)
@@ -208,6 +202,16 @@ extension PokedexVC: UICollectionViewDataSource {
         ) {
             cell.backgroundColor = UIColor.black.withAlphaComponent(0.1)
             cell.transform = .identity
+        }
+    }
+}
+
+extension PokedexVC: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        if let cell = collectionView.cellForItem(at: indexPath) as? PokeCollectionViewCell, cell.isSelected {
+            return CGSize(width: collectionView.frame.width, height: 300)
+        } else {
+            return CGSize(width: 100, height: 100)
         }
     }
 }
