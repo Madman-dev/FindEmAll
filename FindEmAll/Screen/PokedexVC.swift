@@ -172,8 +172,6 @@ extension PokedexVC: UICollectionViewDelegate {
         } else {
             selectedIndexPath = indexPath
         }
-        
-//        collectionView.reloadData()
         collectionView.performBatchUpdates(nil)
     }
 }
@@ -215,9 +213,15 @@ extension PokedexVC: UICollectionViewDataSource {
 
 extension PokedexVC: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let width = view.bounds.width
+        let padding: CGFloat = 10
+        let minimumSpacing: CGFloat = 5
+        let availableWidth = width - (padding * 2) - (minimumSpacing * 2)
+        let itemWidth = availableWidth / 3
+        
         if selectedIndexPath == indexPath {
-            return CGSize(width: collectionView.frame.width, height: 300)
+            return CGSize(width: collectionView.frame.width, height: 500)
         }
-        return CGSize(width: 100, height: 100)
+        return CGSize(width: itemWidth - padding, height: itemWidth)
     }
 }
