@@ -38,7 +38,6 @@ class QuizVC: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
-        populateViews()
         fetchData()
     }
     
@@ -64,17 +63,18 @@ class QuizVC: UIViewController {
             guard let self = self else { return }
             guard let image = image else { return }
             DispatchQueue.main.async {
+                self.populateViews(pokemon: data)
                 self.pokeImageview.image = image
                 self.pokeImageview.contentMode = .scaleAspectFill
             }
         }
     }
     
-    private func populateViews() {
-        addChild(childVC: PokeInfoVC(), to: self.firstInfo)
-        addChild(childVC: PokeInfoVC(), to: self.secondInfo)
-        addChild(childVC: PokeInfoVC(), to: self.thirdInfo)
-        addChild(childVC: PokeInfoVC(), to: self.fourthInfo)
+    private func populateViews(pokemon: Pokemon) {
+        addChild(childVC: PokeInfoVC(pokemon: pokemon, for: .height), to: self.firstInfo)
+        addChild(childVC: PokeInfoVC(pokemon: pokemon, for: .move), to: self.secondInfo)
+        addChild(childVC: PokeInfoVC(pokemon: pokemon, for: .weight), to: self.thirdInfo)
+        addChild(childVC: PokeInfoVC(pokemon: pokemon, for: .type),  to: self.fourthInfo)
     }
     
     private func addChild(childVC: UIViewController, to container: UIView) {
