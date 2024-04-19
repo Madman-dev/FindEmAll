@@ -14,6 +14,7 @@ class StartingVC: UIViewController {
     let bottomAnimatingView = AnimatingView(color: Color.PokeGrey)
     let actionButton = PokeButton(color: .white)
     let pokedexButton = PokeButton(color: .green)
+    var feedbackGenerator: UIImpactFeedbackGenerator? = nil
     
     //MARK: - LifeCycle
     override func viewDidLoad() {
@@ -89,8 +90,15 @@ class StartingVC: UIViewController {
     }
     
     //MARK: - Methods
+    func prepareFeedback() {
+        feedbackGenerator = UIImpactFeedbackGenerator(style: .heavy)
+        feedbackGenerator?.prepare()
+    }
+    
     @objc func actionButtonTapped() {
+        self.prepareFeedback()
         let destinationVC = QuizVC()
+        feedbackGenerator?.impactOccurred()
         dismissAndAnimateTo(VC: destinationVC)
     }
     
