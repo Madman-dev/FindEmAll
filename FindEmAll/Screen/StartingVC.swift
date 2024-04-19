@@ -95,11 +95,13 @@ class StartingVC: UIViewController {
         feedbackGenerator?.prepare()
     }
     
-    @objc func actionButtonTapped() {
+    @objc func actionButtonTapped(_ sender: UIButton) {
         self.prepareFeedback()
         let destinationVC = QuizVC()
-        feedbackGenerator?.impactOccurred()
-        dismissAndAnimateTo(VC: destinationVC)
+        sender.tapAnimation {
+            self.feedbackGenerator?.impactOccurred()
+            self.dismissAndAnimateTo(VC: destinationVC)
+        }
     }
     
     @objc func pokedexButtonTapped() {
