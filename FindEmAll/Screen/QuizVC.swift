@@ -43,13 +43,19 @@ class QuizVC: UIViewController {
     }
     
     private func checkIfMatching(name: String, userInput: String?) {
-        guard !(guessingTextfield.text?.isEmpty ?? true) else { return } // 에러핸들링 - 에러 메시지
+        guard !(guessingTextfield.text?.isEmpty ?? true) else {
+            presentPokeAlert(title: "빈 칸", message: "빈 내용", buttonTitle: "ok")
+            return
+        }
         
-        let writtenAnswer = guessingTextfield.text
         if name == userInput {
-            print("맞췄어요!")
+            presentPokeAlert(title: PokeInputTitle.correctTitle.text,
+                             message: PokeInputMessage.correctMessage.text,
+                             buttonTitle: "ok")
         } else {
-            print("다시 한번 생각해봐요!")
+            presentPokeAlert(title: PokeInputTitle.wrongTitle.text,
+                             message: PokeInputMessage.wrongMessage.text,
+                             buttonTitle: "ok")
         }
     }
     
