@@ -39,6 +39,7 @@ class Textfield: UITextField {
         
         minimumFontSize = 24
         autocorrectionType = .no
+        spellCheckingType = .no
         clearButtonMode = .whileEditing
         
         returnKeyType = .go
