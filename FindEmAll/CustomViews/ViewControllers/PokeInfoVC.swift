@@ -37,7 +37,8 @@ class PokeInfoVC: UIViewController {
         case .move:
             itemInfoView.textLabel.text = "It learns \(pokemon.moves[0].move.name)"
         case .type:
-            itemInfoView.textLabel.text = ""
+            let types = pokemon.types.map { $0.type.name }.joined(separator: ", ")
+            itemInfoView.textLabel.text = "It is \(types) type"
         }
     }
     

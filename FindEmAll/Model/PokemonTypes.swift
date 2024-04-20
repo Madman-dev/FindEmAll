@@ -8,12 +8,12 @@
 import Foundation
 
 extension Pokemon {
-    struct PokemonTypes {
+    struct PokemonTypes: Decodable {
         let slot: Int
         let type: PokemonType
     }
     
-    struct PokemonType {
+    struct PokemonType: Decodable {
         let name: String
         let url: URL
     }

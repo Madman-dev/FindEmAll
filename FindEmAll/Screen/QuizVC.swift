@@ -19,6 +19,7 @@ class QuizVC: UIViewController {
     private let fourthInfo = UIView()
     private var infoViews = [UIView]()
     private var originalPosition = [UIView: CGPoint]()
+    private let height = (UIScreen.main.bounds.height/2) - 15
     private let padding: CGFloat = 20
     private var pokemonName: String!
     
@@ -170,12 +171,12 @@ class QuizVC: UIViewController {
             topAnimatingView.topAnchor.constraint(equalTo: view.topAnchor),
             topAnimatingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             topAnimatingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            topAnimatingView.heightAnchor.constraint(equalToConstant: 410),
+            topAnimatingView.heightAnchor.constraint(equalToConstant: height),
             
             bottomAnimatingView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             bottomAnimatingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             bottomAnimatingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            bottomAnimatingView.heightAnchor.constraint(equalToConstant: 410)
+            bottomAnimatingView.heightAnchor.constraint(equalToConstant: height)
         ])
     }
     
