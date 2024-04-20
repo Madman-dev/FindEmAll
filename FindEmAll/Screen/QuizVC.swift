@@ -20,6 +20,7 @@ class QuizVC: UIViewController {
     private var infoViews = [UIView]()
     private var originalPosition = [UIView: CGPoint]()
     private let padding: CGFloat = 20
+    private var pokemonName: String!
     
     //MARK: - LifeCycle
     override func viewDidLoad() {
@@ -41,6 +42,23 @@ class QuizVC: UIViewController {
         fetchData()
     }
     
+    private func checkIfMatching(name: String, userInput: String?) {
+        guard !(guessingTextfield.text?.isEmpty ?? true) else {
+            presentPokeAlert(title: "빈 칸", message: "빈 내용", buttonTitle: "ok")
+            return
+        }
+        
+        if name == userInput {
+            presentPokeAlert(title: PokeInputTitle.correctTitle.text,
+                             message: PokeInputMessage.correctMessage.text,
+                             buttonTitle: "ok")
+        } else {
+            presentPokeAlert(title: PokeInputTitle.wrongTitle.text,
+                             message: PokeInputMessage.wrongMessage.text,
+                             buttonTitle: "ok")
+        }
+    }
+    
     private func fetchData() {
         NetworkManager.shared.fetchPokemon() { pokemon, errorMessage in
             if let error = errorMessage {
@@ -54,6 +72,7 @@ class QuizVC: UIViewController {
             }
             
             PersistenceManager.shared.savePokeData(pokemon.id)
+            self.pokemonName = pokemon.name
             self.setData(data: pokemon)
         }
     }
@@ -226,6 +245,7 @@ extension QuizVC: UITextFieldDelegate {
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        checkIfMatching(name: pokemonName, userInput: textField.text)
         returnBack()
         guessingTextfield.resignFirstResponder()
         return true
