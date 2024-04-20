@@ -15,6 +15,7 @@ class StartingVC: UIViewController {
     let actionButton = PokeButton(color: .white)
     let pokedexButton = PokeButton(color: .green)
     var feedbackGenerator: UIImpactFeedbackGenerator? = nil
+    private let height = (UIScreen.main.bounds.height/2) - 15
     
     //MARK: - LifeCycle
     override func viewDidLoad() {
@@ -47,17 +48,17 @@ class StartingVC: UIViewController {
             topAnimatingView.topAnchor.constraint(equalTo: view.topAnchor),
             topAnimatingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             topAnimatingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            topAnimatingView.heightAnchor.constraint(equalToConstant: 410),
+            topAnimatingView.heightAnchor.constraint(equalToConstant: height),
             
             bottomAnimatingView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             bottomAnimatingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             bottomAnimatingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            bottomAnimatingView.heightAnchor.constraint(equalToConstant: 410)
+            bottomAnimatingView.heightAnchor.constraint(equalToConstant: height)
         ])
     }
     
     private func configureTitleView() {
-        titleView.text = "Welcome Aboard"
+        titleView.text = "Find'em All"
         
         NSLayoutConstraint.activate([
             titleView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
