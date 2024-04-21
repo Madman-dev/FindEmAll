@@ -39,7 +39,7 @@ extension UIView {
             [weak self] in
             guard let self = self else { return }
             let scaleValue: CGFloat = 0.95
-            let scaledSize = CGSize(width: originalSize.width * scaleValue, height: originalSize.height * scaleValue)
+            let scaledSize = CGSize(width: originalSize.width, height: originalSize.height * scaleValue)
             let translation = CGPoint(x: (originalSize.width - scaledSize.width), y: (originalSize.height - scaledSize.height))
             
             let transform = CGAffineTransform.identity

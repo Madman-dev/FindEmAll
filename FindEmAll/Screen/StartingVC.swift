@@ -105,9 +105,11 @@ class StartingVC: UIViewController {
         }
     }
     
-    @objc func pokedexButtonTapped() {
+    @objc func pokedexButtonTapped(sender: UIButton) {
         let destinationVC = PokedexVC()
-        dismissAndAnimateTo(VC: destinationVC)
+        sender.tapAnimation {
+            self.dismissAndAnimateTo(VC: destinationVC)
+        }
     }
     
     private func loadAnimatingView() {
