@@ -83,8 +83,7 @@ class QuizVC: UIViewController {
             guard let self = self else { return }
             guard let image = image else { return }
             DispatchQueue.main.async {
-                let imageStroke = image.colorized(with: .black)
-                
+                let imageStroke = image.createOutline()
                 self.populateViews(pokemon: data)
                 self.pokeImageview.image = imageStroke
                 self.pokeImageview.contentMode = .scaleAspectFit
