@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		BD0C436A2BAACA0D00D0E9B3 /* PokeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD0C43692BAACA0D00D0E9B3 /* PokeCollectionViewCell.swift */; };
 		BD0C436D2BAACB9F00D0E9B3 /* UIHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD0C436C2BAACB9F00D0E9B3 /* UIHelpers.swift */; };
+		BD0DF1A72BD47C9C00FE47C4 /* UIImage + Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD0DF1A62BD47C9C00FE47C4 /* UIImage + Ext.swift */; };
 		BD20E0B12B95CAD700BF44BD /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD20E0B02B95CAD700BF44BD /* NetworkManager.swift */; };
 		BD2753142BD2685A00308F56 /* PokeInputs.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2753132BD2685A00308F56 /* PokeInputs.swift */; };
 		BD2753162BD2698E00308F56 /* UIViewController + Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2753152BD2698E00308F56 /* UIViewController + Ext.swift */; };
@@ -61,6 +62,7 @@
 /* Begin PBXFileReference section */
 		BD0C43692BAACA0D00D0E9B3 /* PokeCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokeCollectionViewCell.swift; sourceTree = "<group>"; };
 		BD0C436C2BAACB9F00D0E9B3 /* UIHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIHelpers.swift; sourceTree = "<group>"; };
+		BD0DF1A62BD47C9C00FE47C4 /* UIImage + Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage + Ext.swift"; sourceTree = "<group>"; };
 		BD20E0B02B95CAD700BF44BD /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		BD2753132BD2685A00308F56 /* PokeInputs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokeInputs.swift; sourceTree = "<group>"; };
 		BD2753152BD2698E00308F56 /* UIViewController + Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController + Ext.swift"; sourceTree = "<group>"; };
@@ -295,6 +297,7 @@
 				BDC31A5E2BD0FD9200D1AB89 /* Double + Ext.swift */,
 				BDE8E5532BC7A949003C7127 /* UIColor+Ext.swift */,
 				BD2753152BD2698E00308F56 /* UIViewController + Ext.swift */,
+				BD0DF1A62BD47C9C00FE47C4 /* UIImage + Ext.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -425,6 +428,7 @@
 				BDF6233E2BA2B9E600D534BA /* ImageView.swift in Sources */,
 				BDFCDC222B95C726004DD56C /* PokemonMoves.swift in Sources */,
 				BDFCDC282B95C7BB004DD56C /* PokemonTypes.swift in Sources */,
+				BD0DF1A72BD47C9C00FE47C4 /* UIImage + Ext.swift in Sources */,
 				BD2753142BD2685A00308F56 /* PokeInputs.swift in Sources */,
 				BD0C436D2BAACB9F00D0E9B3 /* UIHelpers.swift in Sources */,
 				BDF021142BA958E300EB5260 /* PokedexVC.swift in Sources */,
