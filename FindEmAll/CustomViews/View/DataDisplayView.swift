@@ -13,13 +13,12 @@ enum DisplayItem {
 
 class DataDisplayView: UIView {
     
-    private let titleLabel = TitleLabel(textAlignment: .center, fontSize: 15)
-    private let dataLabel = BodyLabel(textAlignment: .left)
+    private let titleLabel = PokeTitleLabel(textAlignment: .center, fontSize: 15)
+    private let dataLabel = PokeBodyLabel(textAlignment: .left)
     
     override init(frame: CGRect) {
         super.init(frame: .zero)
-        translatesAutoresizingMaskIntoConstraints = false
-        configure()
+        configureLayout()
         configureLabels()
     }
     
@@ -27,11 +26,12 @@ class DataDisplayView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func configure() {
+    private func configureLayout() {
         backgroundColor = .white
         layer.cornerRadius = 10
         layer.borderWidth = 1
         layer.borderColor = UIColor.black.cgColor
+        translatesAutoresizingMaskIntoConstraints = false
     }
     
     private func configureLabels() {

@@ -7,18 +7,18 @@
 
 import Foundation
 
-enum PokeInputTitle: String {
-    case correctTitle
-    case wrongTitle
-    case noValue
+enum PokeInputError: String {
+    case caughtTitle
+    case missedTitle
+    case blankTitle
     
     var text: String {
         switch self {
-        case .correctTitle:
+        case .caughtTitle:
             return "You caught it!"
-        case .noValue:
+        case .blankTitle:
             return "Make a guess!"
-        case .wrongTitle:
+        case .missedTitle:
             return "That was close!"
         }
     }

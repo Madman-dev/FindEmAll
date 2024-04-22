@@ -1,5 +1,5 @@
 //
-//  QuestionView.swift
+//  PokeInfoView.swift
 //  FindEmAll
 //
 //  Created by Porori on 3/12/24.
@@ -9,19 +9,19 @@ import UIKit
 
 class PokeInfoView: UIView {
     
-    let textLabel = BodyLabel(textAlignment: .left)
+    let textLabel = PokeBodyLabel(textAlignment: .left)
     let padding: CGFloat = 10
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        configure()
+        configureLayout()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func configure() {
+    private func configureLayout() {
         addSubview(textLabel)
         textLabel.text = "테스트"
         

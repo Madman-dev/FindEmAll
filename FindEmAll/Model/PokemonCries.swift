@@ -9,7 +9,6 @@ import Foundation
 
 extension Pokemon {
     struct PokemonCries {
-        // cries are in ogg file
         let latest: String
         let legacy: String
     }

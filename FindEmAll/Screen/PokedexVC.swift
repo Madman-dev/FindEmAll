@@ -10,16 +10,15 @@ import UIKit
 class PokedexVC: UIViewController {
     let bottomAnimatingView = AnimatingView(color: Color.PokeGrey)
     let returnButton = PokeButton(color: .white)
-    let firstDisplayView = DataDisplayView()
-    let secondDisplayView = DataDisplayView()
+    let seenDisplayView = DataDisplayView()
+    let caughtDisplayView = DataDisplayView()
     var collectionView: UICollectionView!
     var encounteredId: [Int: Pokemon] = [:]
-    let expandableCell = PokeCollectionViewCell()
     var selectedIndexPath: IndexPath?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        configure()
+        configureLayout()
         configureAnimatingViews()
         
         // animatingView 이후 호출될 수 있도록 시점 변경
@@ -27,7 +26,7 @@ class PokedexVC: UIViewController {
         configureDataDisplay()
         configureCollectionView()
         configureReturnButton()
-        configureDisplayData()
+        setDisplayViews()
         fetchEncountered()
     }
     
@@ -40,13 +39,13 @@ class PokedexVC: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func configureDisplayData() {
+    private func setDisplayViews() {
         let totalSeen = PersistenceManager.shared.fetchEncounteredId()
-        firstDisplayView.set(item: .seen, withCount: totalSeen.count)
-        secondDisplayView.set(item: .captured, withCount: 0)
+        seenDisplayView.set(item: .seen, withCount: totalSeen.count)
+        caughtDisplayView.set(item: .captured, withCount: 0)
     }
     
-    private func configure() {
+    private func configureLayout() {
         view.backgroundColor = Color.PokeRed
         navigationItem.setHidesBackButton(true, animated: false)
     }
@@ -69,7 +68,7 @@ class PokedexVC: UIViewController {
         collectionView.dataSource = self
         
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: firstDisplayView.bottomAnchor, constant: 35),
+            collectionView.topAnchor.constraint(equalTo: seenDisplayView.bottomAnchor, constant: 35),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 5),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -5),
             collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
@@ -77,19 +76,19 @@ class PokedexVC: UIViewController {
     }
     
     private func configureDataDisplay() {
-        view.addSubview(firstDisplayView)
-        view.addSubview(secondDisplayView)
+        view.addSubview(seenDisplayView)
+        view.addSubview(caughtDisplayView)
         
         NSLayoutConstraint.activate([
-            firstDisplayView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            firstDisplayView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            firstDisplayView.heightAnchor.constraint(equalToConstant: 50),
-            firstDisplayView.widthAnchor.constraint(equalToConstant: view.frame.width/2 - 10),
+            seenDisplayView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            seenDisplayView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            seenDisplayView.heightAnchor.constraint(equalToConstant: 50),
+            seenDisplayView.widthAnchor.constraint(equalToConstant: view.frame.width/2 - 10),
             
-            secondDisplayView.centerYAnchor.constraint(equalTo: firstDisplayView.centerYAnchor),
-            secondDisplayView.leadingAnchor.constraint(equalTo: firstDisplayView.trailingAnchor),
-            secondDisplayView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            secondDisplayView.heightAnchor.constraint(equalToConstant: 50),
+            caughtDisplayView.centerYAnchor.constraint(equalTo: seenDisplayView.centerYAnchor),
+            caughtDisplayView.leadingAnchor.constraint(equalTo: seenDisplayView.trailingAnchor),
+            caughtDisplayView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            caughtDisplayView.heightAnchor.constraint(equalToConstant: 50),
         ])
     }
     
@@ -131,7 +130,7 @@ class PokedexVC: UIViewController {
         dispatchGroup.enter()
         
         dispatchGroup.enter()
-        bottomAnimatingView.animateFull(to: .up) {
+        bottomAnimatingView.animateFull(position: .up) {
             dispatchGroup.leave()
         }
     }
@@ -140,7 +139,7 @@ class PokedexVC: UIViewController {
         let encounteredId = PersistenceManager.shared.fetchEncounteredId().sorted()
         
         for id in encounteredId {
-            NetworkManager.shared.fetchPokemonWithId(id: id) { pokemon, errorMessage in
+            NetworkManager.shared.fetchPokemonWithId(number: id) { pokemon, errorMessage in
                 if let pokemon = pokemon {
                     self.encounteredId[id - 1] = pokemon
                 }
@@ -149,11 +148,10 @@ class PokedexVC: UIViewController {
                 }
             }
         }
-        
     }
     
     private func dismissView() {
-        bottomAnimatingView.animateFull(to: .down) {
+        bottomAnimatingView.animateFull(position: .down) {
             self.navigationController?.popViewController(animated: false)
         }
     }
@@ -188,7 +186,6 @@ extension PokedexVC: UICollectionViewDataSource {
         
         if let pokemon = encounteredId[indexPath.item] {
             cell.set(data: pokemon)
-            print("indexPath PokeData:", indexPath)
         } else {
             cell.pokeImage.set(img: "clipboard.fill")
         }

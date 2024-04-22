@@ -65,9 +65,9 @@ class NetworkManager {
         task.resume()
     }
     
-    func fetchPokemonWithId(id: Int, completion: @escaping (Pokemon?, String?) -> Void?) {
+    func fetchPokemonWithId(number: Int, completion: @escaping (Pokemon?, String?) -> Void?) {
         // basePoint
-        let endPoint = baseUrl + "\(id)"
+        let endPoint = baseUrl + "\(number)"
         
         // url이 있는지 확인 (endpoint)
         guard let url = URL(string: endPoint) else {

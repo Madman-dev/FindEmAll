@@ -11,12 +11,12 @@ class QuizVC: UIViewController {
     
     private let topAnimatingView = AnimatingView(color: Color.PokeRed)
     private let bottomAnimatingView = AnimatingView(color: Color.PokeGrey)
-    private let guessingTextfield = Textfield(withSpace: true)
-    private let pokeImageview = ImageView(frame: .zero)
-    private let firstInfo = UIView() // VC로 옮겨서 하나로 만들 수 있는지 시도해보자
-    private let secondInfo = UIView()
-    private let thirdInfo = UIView()
-    private let fourthInfo = UIView()
+    private let inputTextfield = PokeTextfield(withSpace: true)
+    private let pokeImageview = PokeImageView(frame: .zero)
+    private let firstInfoview = UIView() // VC로 옮겨서 하나로 만들 수 있는지 시도해보자
+    private let secondInfoview = UIView()
+    private let thirdInfoview = UIView()
+    private let fourthInfoview = UIView()
     private var infoViews = [UIView]()
     private var originalPosition = [UIView: CGPoint]()
     private let height = (UIScreen.main.bounds.height/2) - 15
@@ -26,7 +26,7 @@ class QuizVC: UIViewController {
     //MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        layoutUI()
+        configureLayout()
         configureTextfield()
         createDismissKeyboardGesture()
         configureReturnButton()
@@ -35,7 +35,7 @@ class QuizVC: UIViewController {
     override func viewIsAppearing(_ animated: Bool) {
         super.viewIsAppearing(animated)
         configureAnimatingViews()
-        loadingView()
+        loadAnimatingView()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -44,19 +44,19 @@ class QuizVC: UIViewController {
     }
     
     private func checkIfMatching(name: String, userInput: String?) {
-        guard !(guessingTextfield.text?.isEmpty ?? true) else {
-            presentPokeAlert(title: PokeInputTitle.noValue.text,
+        guard !(inputTextfield.text?.isEmpty ?? true) else {
+            presentPokeAlert(title: PokeInputError.blankTitle.text,
                              buttonTitle: "ok")
             return
         }
         
         if name == userInput {
-            presentPokeAlert(title: PokeInputTitle.correctTitle.text,
+            presentPokeAlert(title: PokeInputError.caughtTitle.text,
                              buttonTitle: "ok")
         } else {
             self.returnBack()
-            self.guessingTextfield.resignFirstResponder()
-            presentPokeAlert(title: PokeInputTitle.wrongTitle.text,
+            self.inputTextfield.resignFirstResponder()
+            presentPokeAlert(title: PokeInputError.missedTitle.text,
                              buttonTitle: "ok")
         }
     }
@@ -75,28 +75,28 @@ class QuizVC: UIViewController {
             
             PersistenceManager.shared.savePokeData(pokemon.id)
             self.pokemonName = pokemon.name
-            self.setData(data: pokemon)
+            self.setImage(with: pokemon)
         }
     }
     
-    private func setData(data: Pokemon) {
+    private func setImage(with data: Pokemon) {
         NetworkManager.shared.downloadImage(from: data.sprites.frontDefault) { [weak self] image in
             guard let self = self else { return }
             guard let image = image else { return }
             DispatchQueue.main.async {
-                let imageStroke = image.createOutline()
-                self.populateViews(pokemon: data)
+                let imageStroke = image.createSilhouette()
+                self.populateInfoviews(pokemon: data)
                 self.pokeImageview.image = imageStroke
                 self.pokeImageview.contentMode = .scaleAspectFit
             }
         }
     }
     
-    private func populateViews(pokemon: Pokemon) {
-        addChild(childVC: PokeInfoVC(pokemon: pokemon, for: .height), to: self.firstInfo)
-        addChild(childVC: PokeInfoVC(pokemon: pokemon, for: .move), to: self.secondInfo)
-        addChild(childVC: PokeInfoVC(pokemon: pokemon, for: .weight), to: self.thirdInfo)
-        addChild(childVC: PokeInfoVC(pokemon: pokemon, for: .type),  to: self.fourthInfo)
+    private func populateInfoviews(pokemon: Pokemon) {
+        addChild(childVC: PokeInfoVC(pokemon: pokemon, for: .height), to: self.firstInfoview)
+        addChild(childVC: PokeInfoVC(pokemon: pokemon, for: .move), to: self.secondInfoview)
+        addChild(childVC: PokeInfoVC(pokemon: pokemon, for: .weight), to: self.thirdInfoview)
+        addChild(childVC: PokeInfoVC(pokemon: pokemon, for: .type),  to: self.fourthInfoview)
     }
     
     private func addChild(childVC: UIViewController, to container: UIView) {
@@ -108,14 +108,14 @@ class QuizVC: UIViewController {
     }
     
     //MARK: - UILayout
-    private func layoutUI() {
-        view.backgroundColor = Color.PitchBlack
+    private func configureLayout() {
+        view.backgroundColor = Color.PokeBlack
         
         view.addSubviews(topAnimatingView, bottomAnimatingView, pokeImageview)
-        infoViews = [firstInfo, secondInfo, thirdInfo, fourthInfo]
-        pokeImageview.backgroundColor = Color.PitchBlack
+        infoViews = [firstInfoview, secondInfoview, thirdInfoview, fourthInfoview]
+        pokeImageview.backgroundColor = Color.PokeBlack
         pokeImageview.set(img: "lasso")
-        pokeImageview.setBorder()
+        pokeImageview.makeBorder()
         
         for infoView in infoViews {
             view.addSubview(infoView)
@@ -134,10 +134,10 @@ class QuizVC: UIViewController {
             pokeImageview.heightAnchor.constraint(equalToConstant: 350),
             pokeImageview.widthAnchor.constraint(equalToConstant: 350),
             
-            firstInfo.topAnchor.constraint(equalTo: view.topAnchor, constant: 250),
-            secondInfo.topAnchor.constraint(equalTo: firstInfo.bottomAnchor, constant: 10),
-            thirdInfo.topAnchor.constraint(equalTo: secondInfo.bottomAnchor, constant: 10),
-            fourthInfo.topAnchor.constraint(equalTo: thirdInfo.bottomAnchor, constant: 10)
+            firstInfoview.topAnchor.constraint(equalTo: view.topAnchor, constant: 250),
+            secondInfoview.topAnchor.constraint(equalTo: firstInfoview.bottomAnchor, constant: 10),
+            thirdInfoview.topAnchor.constraint(equalTo: secondInfoview.bottomAnchor, constant: 10),
+            fourthInfoview.topAnchor.constraint(equalTo: thirdInfoview.bottomAnchor, constant: 10)
         ])
     }
     
@@ -155,14 +155,14 @@ class QuizVC: UIViewController {
     }
     
     private func configureTextfield() {
-        view.addSubview(guessingTextfield)
-        guessingTextfield.delegate = self
+        view.addSubview(inputTextfield)
+        inputTextfield.delegate = self
         
         NSLayoutConstraint.activate([
-            guessingTextfield.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50),
-            guessingTextfield.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: padding),
-            guessingTextfield.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -padding),
-            guessingTextfield.heightAnchor.constraint(equalToConstant: 80)
+            inputTextfield.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50),
+            inputTextfield.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: padding),
+            inputTextfield.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -padding),
+            inputTextfield.heightAnchor.constraint(equalToConstant: 80)
         ])
     }
     
@@ -183,38 +183,39 @@ class QuizVC: UIViewController {
     //MARK: - Methods
     @objc func backButtonTapped() {
         print("데이터가 보내졌습니다.")
-        dismissView()
+        dismissAnimatingView()
     }
     
     private func returnBack() {
-        firstInfo.animateBack(to: originalPosition[firstInfo]!)
-        secondInfo.animateBack(to: originalPosition[secondInfo]!)
-        thirdInfo.animateBack(to: originalPosition[thirdInfo]!)
-        fourthInfo.animateBack(to: originalPosition[fourthInfo]!)
+        firstInfoview.animateBack(to: originalPosition[firstInfoview]!)
+        secondInfoview.animateBack(to: originalPosition[secondInfoview]!)
+        thirdInfoview.animateBack(to: originalPosition[thirdInfoview]!)
+        fourthInfoview.animateBack(to: originalPosition[fourthInfoview]!)
     }
     
-    private func loadingView() {
+    // create a ViewController to subclass into
+    private func loadAnimatingView() {
         let dispatchGroup = DispatchGroup()
         dispatchGroup.enter()
-        topAnimatingView.animate(to: .down) {
+        topAnimatingView.animate(position: .down) {
             dispatchGroup.leave()
         }
         
         dispatchGroup.enter()
-        bottomAnimatingView.animate(to: .up) {
+        bottomAnimatingView.animate(position: .up) {
             dispatchGroup.leave()
         }
     }
     
-    private func dismissView() {
+    private func dismissAnimatingView() {
         let dispatchGroup = DispatchGroup()
         dispatchGroup.enter()
-        topAnimatingView.animate(to: .up) {
+        topAnimatingView.animate(position: .up) {
             dispatchGroup.leave()
         }
         
         dispatchGroup.enter()
-        bottomAnimatingView.animate(to: .down) {
+        bottomAnimatingView.animate(position: .down) {
             dispatchGroup.leave()
         }
         
@@ -236,15 +237,15 @@ class QuizVC: UIViewController {
 // MARK: - TextfieldDelegate
 extension QuizVC: UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        originalPosition[firstInfo] = firstInfo.frame.origin
-        originalPosition[secondInfo] = secondInfo.frame.origin
-        originalPosition[thirdInfo] = thirdInfo.frame.origin
-        originalPosition[fourthInfo] = fourthInfo.frame.origin
+        originalPosition[firstInfoview] = firstInfoview.frame.origin
+        originalPosition[secondInfoview] = secondInfoview.frame.origin
+        originalPosition[thirdInfoview] = thirdInfoview.frame.origin
+        originalPosition[fourthInfoview] = fourthInfoview.frame.origin
         
-        firstInfo.animateToCenter(of: self.view, origin: originalPosition[firstInfo]!)
-        secondInfo.animateToCenter(of: self.view, origin: originalPosition[secondInfo]!)
-        thirdInfo.animateToCenter(of: self.view, origin: originalPosition[thirdInfo]!)
-        fourthInfo.animateToCenter(of: self.view, origin: originalPosition[fourthInfo]!)
+        firstInfoview.animateToCenter(of: self.view, origin: originalPosition[firstInfoview]!)
+        secondInfoview.animateToCenter(of: self.view, origin: originalPosition[secondInfoview]!)
+        thirdInfoview.animateToCenter(of: self.view, origin: originalPosition[thirdInfoview]!)
+        fourthInfoview.animateToCenter(of: self.view, origin: originalPosition[fourthInfoview]!)
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
