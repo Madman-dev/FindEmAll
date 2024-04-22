@@ -7,18 +7,17 @@
 
 import UIKit
 
-// PokeAlert container
 class AlertContainerView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
-        configure()
+        configureLayout()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func configure() {
+    private func configureLayout() {
         backgroundColor = .blue
         layer.cornerRadius = 15
         layer.borderWidth = 2

@@ -7,11 +7,11 @@
 
 import UIKit
 
-class ImageView: UIImageView {
+class PokeImageView: UIImageView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        configure()
+        configureLayout()
     }
     
     required init?(coder: NSCoder) {
@@ -23,8 +23,9 @@ class ImageView: UIImageView {
         image = UIImage(systemName: withImage)?.withTintColor(.black, renderingMode: .alwaysOriginal)
     }
     
-    func setBorder() {
-        layer.borderColor = Color.PitchBlack.cgColor
+    // duplicate exists in codebase
+    func makeBorder() {
+        layer.borderColor = Color.PokeBlack.cgColor
         layer.borderWidth = 8
     }
     
@@ -41,7 +42,7 @@ class ImageView: UIImageView {
         contentMode = .scaleAspectFit
     }
     
-    private func configure() {
+    private func configureLayout() {
         translatesAutoresizingMaskIntoConstraints = false
     }
     

@@ -10,7 +10,7 @@ import UIKit
 extension UIImage {
     
     //MARK: - previous bitmap workaround deprecated - Update to iOS 10
-    func createOutline(color: UIColor = .white) -> UIImage {
+    func createSilhouette(color: UIColor = .white) -> UIImage {
         
         // create an instance of UIGrpahicImageRender
         let renderer = UIGraphicsImageRenderer(size: size)

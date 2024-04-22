@@ -8,7 +8,7 @@
 import Foundation
 
 extension Int {
-    func updateValue() -> Double {
+    func decimalValue() -> Double {
         return Double(self)/10
     }
     

@@ -9,10 +9,10 @@ import UIKit
 
 class StartingVC: UIViewController {
     
-    let titleView = TitleLabel(textAlignment: .center, fontSize: 30)
+    let titleLabel = PokeTitleLabel(textAlignment: .center, fontSize: 30)
     let topAnimatingView = AnimatingView(color: Color.PokeRed)
     let bottomAnimatingView = AnimatingView(color: Color.PokeGrey)
-    let actionButton = PokeButton(color: .white)
+    let enterGameButton = PokeButton(color: .white)
     let pokedexButton = PokeButton(color: .green)
     var feedbackGenerator: UIImpactFeedbackGenerator? = nil
     private let height = (UIScreen.main.bounds.height/2) - 15
@@ -20,16 +20,11 @@ class StartingVC: UIViewController {
     //MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        layoutUI()
+        configureLayout()
         configureAnimatingViews()
         configureTitleView()
         configureButton()
-        configurePokeDex()
-    }
-    
-    override func viewIsAppearing(_ animated: Bool) {
-        super.viewIsAppearing(animated)
-//        loadingView()
+        configurePokedex()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -38,9 +33,9 @@ class StartingVC: UIViewController {
     }
     
     //MARK: - UILayout
-    private func layoutUI() {
-        view.backgroundColor = Color.PitchBlack
-        view.addSubviews(topAnimatingView, bottomAnimatingView, titleView, actionButton, pokedexButton)
+    private func configureLayout() {
+        view.backgroundColor = Color.PokeBlack
+        view.addSubviews(topAnimatingView, bottomAnimatingView, titleLabel, enterGameButton, pokedexButton)
     }
     
     private func configureAnimatingViews() {
@@ -58,27 +53,27 @@ class StartingVC: UIViewController {
     }
     
     private func configureTitleView() {
-        titleView.text = "Find'em All"
+        titleLabel.text = "Find'em All"
         
         NSLayoutConstraint.activate([
-            titleView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            titleView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -200)
+            titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            titleLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -200)
         ])
     }
     
     private func configureButton() {
-        actionButton.addTarget(self, action: #selector(actionButtonTapped), for: .touchUpInside)
-        actionButton.addBorder(color: Color.PitchBlack)
+        enterGameButton.addTarget(self, action: #selector(actionButtonTapped), for: .touchUpInside)
+        enterGameButton.addBorder(color: Color.PokeBlack)
         
         NSLayoutConstraint.activate([
-            actionButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            actionButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            actionButton.heightAnchor.constraint(equalToConstant: 101),
-            actionButton.widthAnchor.constraint(equalToConstant: 101)
+            enterGameButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            enterGameButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            enterGameButton.heightAnchor.constraint(equalToConstant: 101),
+            enterGameButton.widthAnchor.constraint(equalToConstant: 101)
         ])
     }
     
-    private func configurePokeDex() {
+    private func configurePokedex() {
         pokedexButton.addTarget(self, action: #selector(pokedexButtonTapped), for: .touchUpInside)
         pokedexButton.addBorder(color: .white)
         
@@ -115,12 +110,12 @@ class StartingVC: UIViewController {
     private func loadAnimatingView() {
         let dispatchGroup = DispatchGroup()
         dispatchGroup.enter()
-        topAnimatingView.animate(to: .down) {
+        topAnimatingView.animate(position: .down) {
             dispatchGroup.leave()
         }
         
         dispatchGroup.enter()
-        bottomAnimatingView.animate(to: .up) {
+        bottomAnimatingView.animate(position: .up) {
             dispatchGroup.leave()
         }
     }
@@ -130,12 +125,12 @@ class StartingVC: UIViewController {
         let dispatchGroup = DispatchGroup()
         
         dispatchGroup.enter()
-        topAnimatingView.animate(to: .up) {
+        topAnimatingView.animate(position: .up) {
             dispatchGroup.leave()
         }
         
         dispatchGroup.enter()
-        bottomAnimatingView.animate(to: .down) {
+        bottomAnimatingView.animate(position: .down) {
             dispatchGroup.leave()
         }
         

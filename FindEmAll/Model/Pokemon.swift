@@ -13,6 +13,6 @@ struct Pokemon: Decodable {
     let height: Int
     let weight: Int
     let moves: [Move]
-    let sprites: PokemonSprites // unable to fetch data due to wrong naming
+    let sprites: PokemonSprites
     let types: [PokemonTypes]
 }

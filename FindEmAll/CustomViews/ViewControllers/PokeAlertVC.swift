@@ -10,7 +10,7 @@ import UIKit
 class PokeAlertVC: UIViewController {
     
     private let containerView = AlertContainerView()
-    private let titleLabel = TitleLabel(textAlignment: .center, fontSize: 25)
+    private let titleLabel = PokeTitleLabel(textAlignment: .center, fontSize: 25)
     private let actionName = PokeButton(color: .white)
     
     private var alertTitle: String?
@@ -30,7 +30,6 @@ class PokeAlertVC: UIViewController {
         super.viewDidLoad()
         configureContainer()
         configureTitle()
-//        configureMessage()
         configureButton()
     }
     

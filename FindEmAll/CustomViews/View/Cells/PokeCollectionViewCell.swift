@@ -23,12 +23,12 @@ class PokeCollectionViewCell: UICollectionViewCell {
     }()
     
     // properties
-    let pokeImage = ImageView(frame: .zero)
-    let nameLabel = TitleLabel(textAlignment: .center, fontSize: 18)
+    let pokeImage = PokeImageView(frame: .zero)
+    let nameLabel = PokeTitleLabel(textAlignment: .center, fontSize: 18)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        layout()
+        configureLayout()
         configureClosedStack()
     }
     
@@ -42,7 +42,7 @@ class PokeCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    private func layout() {
+    private func configureLayout() {
         backgroundColor = .clear
         layer.cornerRadius = 10
     }

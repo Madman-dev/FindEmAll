@@ -1,5 +1,5 @@
 //
-//  InfoVC.swift
+//  PokeInfoVC.swift
 //  FindEmAll
 //
 //  Created by Porori on 2/29/24.
@@ -22,7 +22,7 @@ class PokeInfoVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureBackground()
-        layoutUI()
+        configureLayout()
     }
     
     init(pokemon: Pokemon, for displayType: PokeData) {
@@ -31,9 +31,9 @@ class PokeInfoVC: UIViewController {
         
         switch displayType {
         case .height:
-            itemInfoView.textLabel.text = "It is \(pokemon.height.updateValue())m tall, \(pokemon.height.roundToFeet())\" in feets"
+            itemInfoView.textLabel.text = "It is \(pokemon.height.decimalValue())m tall, \(pokemon.height.roundToFeet())\" in feets"
         case .weight:
-            itemInfoView.textLabel.text = "It weighs \(pokemon.weight.updateValue())kg"
+            itemInfoView.textLabel.text = "It weighs \(pokemon.weight.decimalValue())kg"
         case .move:
             itemInfoView.textLabel.text = "It learns \(pokemon.moves[0].move.name)"
         case .type:
@@ -53,7 +53,7 @@ class PokeInfoVC: UIViewController {
         view.layer.backgroundColor = UIColor.white.withAlphaComponent(0.9).cgColor
     }
     
-    private func layoutUI() {
+    private func configureLayout() {
         view.addSubview(itemInfoView)
         itemInfoView.translatesAutoresizingMaskIntoConstraints = false
         
