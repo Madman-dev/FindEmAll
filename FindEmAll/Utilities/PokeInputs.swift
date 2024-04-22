@@ -10,27 +10,16 @@ import Foundation
 enum PokeInputTitle: String {
     case correctTitle
     case wrongTitle
+    case noValue
     
     var text: String {
         switch self {
         case .correctTitle:
-            return "Congrats!"
+            return "You caught it!"
+        case .noValue:
+            return "Make a guess!"
         case .wrongTitle:
-            return "Nearly got it"
-        }
-    }
-}
-
-enum PokeInputMessage {
-    case correctMessage
-    case wrongMessage
-    
-    var text: String {
-        switch self {
-        case .correctMessage:
-            return "You caught the Pokemon!"
-        case .wrongMessage:
-            return "Think one more time"
+            return "That was close!"
         }
     }
 }
