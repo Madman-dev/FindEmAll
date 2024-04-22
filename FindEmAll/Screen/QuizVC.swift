@@ -45,17 +45,18 @@ class QuizVC: UIViewController {
     
     private func checkIfMatching(name: String, userInput: String?) {
         guard !(guessingTextfield.text?.isEmpty ?? true) else {
-            presentPokeAlert(title: "빈 칸", message: "빈 내용", buttonTitle: "ok")
+            presentPokeAlert(title: PokeInputTitle.noValue.text,
+                             buttonTitle: "ok")
             return
         }
         
         if name == userInput {
             presentPokeAlert(title: PokeInputTitle.correctTitle.text,
-                             message: PokeInputMessage.correctMessage.text,
                              buttonTitle: "ok")
         } else {
+            self.returnBack()
+            self.guessingTextfield.resignFirstResponder()
             presentPokeAlert(title: PokeInputTitle.wrongTitle.text,
-                             message: PokeInputMessage.wrongMessage.text,
                              buttonTitle: "ok")
         }
     }
@@ -248,8 +249,6 @@ extension QuizVC: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         checkIfMatching(name: pokemonName, userInput: textField.text)
-        returnBack()
-        guessingTextfield.resignFirstResponder()
         return true
     }
 }

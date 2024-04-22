@@ -11,17 +11,14 @@ class PokeAlertVC: UIViewController {
     
     private let containerView = AlertContainerView()
     private let titleLabel = TitleLabel(textAlignment: .center, fontSize: 25)
-    private let messageLabel = BodyLabel(textAlignment: .left)
-    private let actionName = PokeButton(color: .black)
+    private let actionName = PokeButton(color: .white)
     
     private var alertTitle: String?
-    private var alertMessage: String?
     private var buttonTitle: String?
     
-    init(title: String, message: String, buttonTitle: String) {
+    init(title: String, buttonTitle: String) {
         super.init(nibName: nil, bundle: nil)
         self.alertTitle = title
-        self.alertMessage = message
         self.buttonTitle = buttonTitle
     }
     
@@ -33,19 +30,20 @@ class PokeAlertVC: UIViewController {
         super.viewDidLoad()
         configureContainer()
         configureTitle()
-        configureMessage()
+//        configureMessage()
         configureButton()
     }
     
     private func configureContainer() {
-        view.backgroundColor = .black.withAlphaComponent(0.5)
-        view.addSubviews(containerView, titleLabel, messageLabel, actionName)
+        view.backgroundColor = .black.withAlphaComponent(0.7)
+        view.addSubviews(containerView, titleLabel, actionName)
+        let width: CGFloat = UIScreen.main.bounds.width
         
         NSLayoutConstraint.activate([
             containerView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             containerView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            containerView.heightAnchor.constraint(equalToConstant: 300),
-            containerView.widthAnchor.constraint(equalToConstant: 300)
+            containerView.heightAnchor.constraint(equalToConstant: width/2),
+            containerView.widthAnchor.constraint(equalToConstant: width/1.5)
         ])
     }
     
@@ -60,19 +58,20 @@ class PokeAlertVC: UIViewController {
         ])
     }
     
-    private func configureMessage() {
-        messageLabel.text = alertMessage ?? "No... Seriously...😢"
-        
-        NSLayoutConstraint.activate([
-            messageLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 5),
-            messageLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
-            messageLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20),
-            messageLabel.heightAnchor.constraint(equalToConstant: 80)
-        ])
-    }
+//    private func configureMessage() {
+//        messageLabel.text = alertMessage ?? "No... Seriously...😢"
+//        
+//        NSLayoutConstraint.activate([
+//            messageLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 5),
+//            messageLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
+//            messageLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20),
+//            messageLabel.heightAnchor.constraint(equalToConstant: 80)
+//        ])
+//    }
     
     private func configureButton() {
         actionName.setTitle(buttonTitle ?? "Pass!", for: .normal)
+        actionName.setTitleColor(.black, for: .normal)
         
         // button is dismissed when tapped
         let action = UIAction { [weak self] action in self?.dismiss(animated: true) }
