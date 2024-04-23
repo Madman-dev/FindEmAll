@@ -85,8 +85,9 @@ class QuizVC: UIViewController {
             guard let image = image else { return }
             DispatchQueue.main.async {
                 let imageStroke = image.createSilhouette()
-                self.populateInfoviews(pokemon: data)
+//                self.populateInfoviews(pokemon: data)
                 self.pokeImageview.image = imageStroke
+                self.pokeImageview.countDownTimer()
                 self.pokeImageview.contentMode = .scaleAspectFit
             }
         }
@@ -115,7 +116,6 @@ class QuizVC: UIViewController {
         infoViews = [firstInfoview, secondInfoview, thirdInfoview, fourthInfoview]
         pokeImageview.backgroundColor = Color.PokeBlack
         pokeImageview.set(img: "lasso")
-        pokeImageview.makeBorder()
         
         for infoView in infoViews {
             view.addSubview(infoView)
@@ -143,10 +143,8 @@ class QuizVC: UIViewController {
     
     private func configureReturnButton() {
         let backButton = UIBarButtonItem(
-            image: UIImage(
-                systemName: "arrowshape.backward.fill")?
-                .withTintColor(.white, renderingMode: .alwaysOriginal
-                ),
+            image: UIImage(systemName: "arrowshape.backward.fill")?
+                .withTintColor(.white, renderingMode: .alwaysOriginal),
             style: .plain,
             target: self,
             action: #selector(backButtonTapped)

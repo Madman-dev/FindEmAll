@@ -15,4 +15,8 @@ extension Int {
     func roundToFeet() -> Double {
         return ((Double(self)/10) * 3.28084).rounded(toPlaces: 2)
     }
+    
+    var degreesToRadians: CGFloat {
+            return CGFloat(self) * .pi / 180
+        }
 }
