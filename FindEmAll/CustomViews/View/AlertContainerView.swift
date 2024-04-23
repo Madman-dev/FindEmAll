@@ -18,10 +18,18 @@ class AlertContainerView: UIView {
     }
     
     private func configureLayout() {
-        backgroundColor = .blue
-        layer.cornerRadius = 15
+        backgroundColor = .systemBackground
+        layer.cornerRadius = 20
         layer.borderWidth = 2
         layer.borderColor = UIColor.white.cgColor
         translatesAutoresizingMaskIntoConstraints = false
     }
+    
+    // changing borderColor when darkmode
+//    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+//        super.traitCollectionDidChange(previousTraitCollection)
+//        if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
+//            layer.borderColor = UIColor.black.cgColor
+//        }
+//    }
 }

@@ -25,7 +25,7 @@ class PokeImageView: UIImageView {
     
     // duplicate exists in codebase
     func makeBorder() {
-        layer.borderColor = Color.PokeBlack.cgColor
+        layer.borderColor = PokeColor.PokeBlack.cgColor
         layer.borderWidth = 8
     }
     
