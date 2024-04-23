@@ -87,8 +87,9 @@ class QuizVC: UIViewController {
                 let imageStroke = image.createSilhouette()
 //                self.populateInfoviews(pokemon: data)
                 self.pokeImageview.image = imageStroke
-                self.pokeImageview.countDownTimer()
+                self.pokeImageview.delegate = self
                 self.pokeImageview.contentMode = .scaleAspectFit
+                self.pokeImageview.countDownTimer()
             }
         }
     }
@@ -249,5 +250,13 @@ extension QuizVC: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         checkIfMatching(name: pokemonName, userInput: textField.text)
         return true
+    }
+}
+
+extension QuizVC: PokeImageDelegate {
+    func isCountdownValid(complete: Bool) {
+        if complete {
+            presentPokeAlert(title: "이렇게", buttonTitle: "ok")
+        }
     }
 }

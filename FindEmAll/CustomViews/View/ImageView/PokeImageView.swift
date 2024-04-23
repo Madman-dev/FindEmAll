@@ -7,14 +7,20 @@
 
 import UIKit
 
+protocol PokeImageDelegate: AnyObject {
+    func isCountdownValid(complete: Bool)
+}
+
 // 메모리 효율성에도 도움이 된다?
-final class PokeImageView: UIImageView {
+class PokeImageView: UIImageView {
     
     private let timeShapeLayer = CAShapeLayer()
     private let timeLeftShapeLayer = CAShapeLayer()
-    private let strokeIt = CABasicAnimation(keyPath: "strokeEnd")
-    private var timeLeft: TimeInterval = 30
-    // var timer = Timer() // > 필요한가...
+    private let countStroke = CABasicAnimation(keyPath: "strokeEnd")
+    private var timeLeft: TimeInterval = 5
+    private var timer = Timer()
+    private var isTimeOver: Bool = false
+    var delegate: PokeImageDelegate?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -31,9 +37,20 @@ final class PokeImageView: UIImageView {
     }
     
     func countDownTimer() {
+        timer = Timer.scheduledTimer(timeInterval: timeLeft,
+                                     target: self,
+                                     selector: #selector(timeIsOver),
+                                     userInfo: nil,
+                                     repeats: false)
+        
         addTimer(subLayer: timeShapeLayer, color: .green)
         addTimer(subLayer: timeLeftShapeLayer, color: .white)
         runTimer()
+    }
+    
+    @objc func timeIsOver() {
+        isTimeOver = true
+        delegate?.isCountdownValid(complete: isTimeOver)
     }
     
     private func addTimer(subLayer: CAShapeLayer, color: UIColor) {
@@ -44,10 +61,10 @@ final class PokeImageView: UIImageView {
     }
     
     private func runTimer() {
-        strokeIt.fromValue = 0
-        strokeIt.toValue = 1
-        strokeIt.duration = timeLeft
-        timeLeftShapeLayer.add(strokeIt, forKey: nil)
+        countStroke.fromValue = 0
+        countStroke.toValue = 1
+        countStroke.duration = timeLeft
+        timeLeftShapeLayer.add(countStroke, forKey: nil)
     }
     
     // duplicate exists in codebase
