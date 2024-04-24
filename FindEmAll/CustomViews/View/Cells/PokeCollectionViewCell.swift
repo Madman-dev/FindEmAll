@@ -35,8 +35,6 @@ class PokeCollectionViewCell: UICollectionViewCell {
     func set(data: Pokemon) {
         DispatchQueue.main.async {
             self.backgroundColor = .white
-            self.bringSubviewToFront(self.pokeImage)
-            self.bringSubviewToFront(self.nameLabel)
             self.nameLabel.text = data.name
             self.pokeImage.downloadImageUrl(from: data.sprites.frontDefault)
         }

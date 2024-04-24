@@ -7,7 +7,27 @@
 
 import UIKit
 
+protocol PokeImageDelegate: AnyObject {
+    func isTimeOver(_ complete: Bool)
+}
+
+// 메모리 효율성에도 도움이 된다?
 class PokeImageView: UIImageView {
+    
+    private let timeShapeLayer = CAShapeLayer()
+    private let timeLeftShapeLayer = CAShapeLayer()
+    private let countStroke = CABasicAnimation(keyPath: "strokeEnd")
+    private var timeLeft: TimeInterval = 30
+    private var timer = Timer()
+    private var isTimeOver: Bool = false
+    var delegate: PokeImageDelegate?
+    
+    override var bounds: CGRect {
+        didSet {
+            layer.cornerRadius = bounds.width/2
+            print(bounds.size)
+        }
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -23,11 +43,42 @@ class PokeImageView: UIImageView {
         image = UIImage(systemName: withImage)?.withTintColor(.black, renderingMode: .alwaysOriginal)
     }
     
-    // duplicate exists in codebase
-    func makeBorder() {
-        layer.borderColor = PokeColor.PokeBlack.cgColor
-        layer.borderWidth = 8
+    func countDownTimer() {
+        timer = Timer.scheduledTimer(timeInterval: timeLeft,
+                                     target: self,
+                                     selector: #selector(timeIsOver),
+                                     userInfo: nil,
+                                     repeats: false)
+        
+        addTimer(subLayer: timeShapeLayer, color: .green)
+        addTimer(subLayer: timeLeftShapeLayer, color: .white)
+        runTimer()
     }
+    
+    @objc func timeIsOver() {
+        isTimeOver = true
+        delegate?.isTimeOver(isTimeOver)
+    }
+    
+    private func addTimer(subLayer: CAShapeLayer, color: UIColor) {
+        layer.addSublayer(subLayer)
+        subLayer.strokeColor = color.cgColor
+        subLayer.fillColor = UIColor.clear.cgColor
+        subLayer.lineWidth = 8
+    }
+    
+    private func runTimer() {
+        countStroke.fromValue = 0
+        countStroke.toValue = 1
+        countStroke.duration = timeLeft
+        timeLeftShapeLayer.add(countStroke, forKey: nil)
+    }
+    
+    // duplicate exists in codebase
+//    func makeBorder() {
+//        layer.borderColor = Color.PokeBlack.cgColor
+//        layer.borderWidth = 8
+//    }
     
     func downloadImageUrl(from url: String) {
         NetworkManager.shared.downloadImage(from: url) { image in
@@ -49,6 +100,15 @@ class PokeImageView: UIImageView {
     // create circular imageView
     override func layoutSubviews() {
         super.layoutSubviews()
-        layer.cornerRadius = layer.frame.width/2
+        
+        let path = UIBezierPath()
+        path.addArc(withCenter: CGPoint(x: bounds.midX, y: bounds.midY),
+                    radius: bounds.width/2,
+                    startAngle: -90.degreesToRadians,
+                    endAngle: 270.degreesToRadians,
+                    clockwise: true)
+        
+        timeLeftShapeLayer.path = path.cgPath
+        timeShapeLayer.path = path.cgPath
     }
 }

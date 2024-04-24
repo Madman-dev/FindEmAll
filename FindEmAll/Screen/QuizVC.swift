@@ -88,6 +88,7 @@ class QuizVC: UIViewController {
                 self.populateInfoviews(pokemon: data)
                 self.pokeImageview.image = imageStroke
                 self.pokeImageview.contentMode = .scaleAspectFit
+                self.pokeImageview.countDownTimer()
             }
         }
     }
@@ -113,9 +114,9 @@ class QuizVC: UIViewController {
         
         view.addSubviews(topAnimatingView, bottomAnimatingView, pokeImageview)
         infoViews = [firstInfoview, secondInfoview, thirdInfoview, fourthInfoview]
-        pokeImageview.backgroundColor = PokeColor.PokeBlack
+        pokeImageview.backgroundColor = Color.PokeBlack
+        pokeImageview.delegate = self
         pokeImageview.set(img: "lasso")
-        pokeImageview.makeBorder()
         
         for infoView in infoViews {
             view.addSubview(infoView)
@@ -143,10 +144,8 @@ class QuizVC: UIViewController {
     
     private func configureReturnButton() {
         let backButton = UIBarButtonItem(
-            image: UIImage(
-                systemName: "arrowshape.backward.fill")?
-                .withTintColor(.white, renderingMode: .alwaysOriginal
-                ),
+            image: UIImage(systemName: "arrowshape.backward.fill")?
+                .withTintColor(.white, renderingMode: .alwaysOriginal),
             style: .plain,
             target: self,
             action: #selector(backButtonTapped)
@@ -251,5 +250,13 @@ extension QuizVC: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         checkIfMatching(name: pokemonName, userInput: textField.text)
         return true
+    }
+}
+
+extension QuizVC: PokeImageDelegate {
+    func isTimeOver(_ complete: Bool) {
+        if complete {
+            presentPokeAlert(title: "이렇게", buttonTitle: "ok")
+        }
     }
 }
