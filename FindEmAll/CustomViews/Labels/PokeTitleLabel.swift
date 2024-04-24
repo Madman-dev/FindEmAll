@@ -24,7 +24,7 @@ class PokeTitleLabel: UILabel {
     }
     
     private func configureLayout() {
-        textColor = .secondaryLabel
+        textColor = .label
         adjustsFontForContentSizeCategory = true
         translatesAutoresizingMaskIntoConstraints = false
     }

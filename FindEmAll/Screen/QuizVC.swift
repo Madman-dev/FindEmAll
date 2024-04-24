@@ -9,8 +9,8 @@ import UIKit
 
 class QuizVC: UIViewController {
     
-    private let topAnimatingView = AnimatingView(color: Color.PokeRed)
-    private let bottomAnimatingView = AnimatingView(color: Color.PokeGrey)
+    private let topAnimatingView = AnimatingView(color: PokeColor.PokeRed)
+    private let bottomAnimatingView = AnimatingView(color: PokeColor.PokeGrey)
     private let inputTextfield = PokeTextfield(withSpace: true)
     private let pokeImageview = PokeImageView(frame: .zero)
     private let firstInfoview = UIView() // VC로 옮겨서 하나로 만들 수 있는지 시도해보자
@@ -109,11 +109,11 @@ class QuizVC: UIViewController {
     
     //MARK: - UILayout
     private func configureLayout() {
-        view.backgroundColor = Color.PokeBlack
+        view.backgroundColor = PokeColor.PokeBlack
         
         view.addSubviews(topAnimatingView, bottomAnimatingView, pokeImageview)
         infoViews = [firstInfoview, secondInfoview, thirdInfoview, fourthInfoview]
-        pokeImageview.backgroundColor = Color.PokeBlack
+        pokeImageview.backgroundColor = PokeColor.PokeBlack
         pokeImageview.set(img: "lasso")
         pokeImageview.makeBorder()
         

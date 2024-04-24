@@ -8,7 +8,7 @@
 import UIKit
 
 class PokedexVC: UIViewController {
-    let bottomAnimatingView = AnimatingView(color: Color.PokeGrey)
+    let bottomAnimatingView = AnimatingView(color: PokeColor.PokeGrey)
     let returnButton = PokeButton(color: .white)
     let seenDisplayView = DataDisplayView()
     let caughtDisplayView = DataDisplayView()
@@ -46,7 +46,7 @@ class PokedexVC: UIViewController {
     }
     
     private func configureLayout() {
-        view.backgroundColor = Color.PokeRed
+        view.backgroundColor = PokeColor.PokeRed
         navigationItem.setHidesBackButton(true, animated: false)
     }
     
