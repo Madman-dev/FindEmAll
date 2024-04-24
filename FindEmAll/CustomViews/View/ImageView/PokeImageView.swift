@@ -8,7 +8,7 @@
 import UIKit
 
 protocol PokeImageDelegate: AnyObject {
-    func isCountdownValid(complete: Bool)
+    func isTimeOver(_ complete: Bool)
 }
 
 // 메모리 효율성에도 도움이 된다?
@@ -17,10 +17,17 @@ class PokeImageView: UIImageView {
     private let timeShapeLayer = CAShapeLayer()
     private let timeLeftShapeLayer = CAShapeLayer()
     private let countStroke = CABasicAnimation(keyPath: "strokeEnd")
-    private var timeLeft: TimeInterval = 5
+    private var timeLeft: TimeInterval = 30
     private var timer = Timer()
     private var isTimeOver: Bool = false
     var delegate: PokeImageDelegate?
+    
+    override var bounds: CGRect {
+        didSet {
+            layer.cornerRadius = bounds.width/2
+            print(bounds.size)
+        }
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -50,7 +57,7 @@ class PokeImageView: UIImageView {
     
     @objc func timeIsOver() {
         isTimeOver = true
-        delegate?.isCountdownValid(complete: isTimeOver)
+        delegate?.isTimeOver(isTimeOver)
     }
     
     private func addTimer(subLayer: CAShapeLayer, color: UIColor) {
@@ -93,7 +100,6 @@ class PokeImageView: UIImageView {
     // create circular imageView
     override func layoutSubviews() {
         super.layoutSubviews()
-        layer.cornerRadius = layer.frame.width/2
         
         let path = UIBezierPath()
         path.addArc(withCenter: CGPoint(x: bounds.midX, y: bounds.midY),

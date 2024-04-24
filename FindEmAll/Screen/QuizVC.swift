@@ -85,9 +85,8 @@ class QuizVC: UIViewController {
             guard let image = image else { return }
             DispatchQueue.main.async {
                 let imageStroke = image.createSilhouette()
-//                self.populateInfoviews(pokemon: data)
+                self.populateInfoviews(pokemon: data)
                 self.pokeImageview.image = imageStroke
-                self.pokeImageview.delegate = self
                 self.pokeImageview.contentMode = .scaleAspectFit
                 self.pokeImageview.countDownTimer()
             }
@@ -116,6 +115,7 @@ class QuizVC: UIViewController {
         view.addSubviews(topAnimatingView, bottomAnimatingView, pokeImageview)
         infoViews = [firstInfoview, secondInfoview, thirdInfoview, fourthInfoview]
         pokeImageview.backgroundColor = Color.PokeBlack
+        pokeImageview.delegate = self
         pokeImageview.set(img: "lasso")
         
         for infoView in infoViews {
@@ -254,7 +254,7 @@ extension QuizVC: UITextFieldDelegate {
 }
 
 extension QuizVC: PokeImageDelegate {
-    func isCountdownValid(complete: Bool) {
+    func isTimeOver(_ complete: Bool) {
         if complete {
             presentPokeAlert(title: "이렇게", buttonTitle: "ok")
         }
