@@ -10,8 +10,8 @@ import UIKit
 class StartingVC: UIViewController {
     
     let titleLabel = PokeTitleLabel(textAlignment: .center, fontSize: 30)
-    let topAnimatingView = AnimatingView(color: Color.PokeRed)
-    let bottomAnimatingView = AnimatingView(color: Color.PokeGrey)
+    let topAnimatingView = AnimatingView(color: PokeColor.PokeRed)
+    let bottomAnimatingView = AnimatingView(color: PokeColor.PokeGrey)
     let enterGameButton = PokeButton(color: .white)
     let pokedexButton = PokeButton(color: .green)
     var feedbackGenerator: UIImpactFeedbackGenerator? = nil
@@ -34,7 +34,7 @@ class StartingVC: UIViewController {
     
     //MARK: - UILayout
     private func configureLayout() {
-        view.backgroundColor = Color.PokeBlack
+        view.backgroundColor = PokeColor.PokeBlack
         view.addSubviews(topAnimatingView, bottomAnimatingView, titleLabel, enterGameButton, pokedexButton)
     }
     
@@ -63,7 +63,7 @@ class StartingVC: UIViewController {
     
     private func configureButton() {
         enterGameButton.addTarget(self, action: #selector(actionButtonTapped), for: .touchUpInside)
-        enterGameButton.addBorder(color: Color.PokeBlack)
+        enterGameButton.addBorder(color: PokeColor.PokeBlack)
         
         NSLayoutConstraint.activate([
             enterGameButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),

@@ -11,7 +11,7 @@ class PokeAlertVC: UIViewController {
     
     private let containerView = AlertContainerView()
     private let titleLabel = PokeTitleLabel(textAlignment: .center, fontSize: 25)
-    private let actionName = PokeButton(color: .white)
+    private let actionName = PokeButton(color: PokeColor.PokeRed)
     
     private var alertTitle: String?
     private var buttonTitle: String?
@@ -34,8 +34,9 @@ class PokeAlertVC: UIViewController {
     }
     
     private func configureContainer() {
-        view.backgroundColor = .black.withAlphaComponent(0.7)
-        view.addSubviews(containerView, titleLabel, actionName)
+        view.backgroundColor = .black.withAlphaComponent(0.5)
+        view.addSubviews(containerView)
+        containerView.addSubviews(titleLabel, actionName)
         let width: CGFloat = UIScreen.main.bounds.width
         
         NSLayoutConstraint.activate([
@@ -57,20 +58,9 @@ class PokeAlertVC: UIViewController {
         ])
     }
     
-//    private func configureMessage() {
-//        messageLabel.text = alertMessage ?? "No... Seriously...😢"
-//        
-//        NSLayoutConstraint.activate([
-//            messageLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 5),
-//            messageLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
-//            messageLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20),
-//            messageLabel.heightAnchor.constraint(equalToConstant: 80)
-//        ])
-//    }
-    
     private func configureButton() {
         actionName.setTitle(buttonTitle ?? "Pass!", for: .normal)
-        actionName.setTitleColor(.black, for: .normal)
+        actionName.setTitleColor(.systemBackground, for: .normal)
         
         // button is dismissed when tapped
         let action = UIAction { [weak self] action in self?.dismiss(animated: true) }
@@ -78,9 +68,9 @@ class PokeAlertVC: UIViewController {
         
         NSLayoutConstraint.activate([
             actionName.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-            actionName.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -10),
+            actionName.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -20),
             actionName.heightAnchor.constraint(equalToConstant: 50),
-            actionName.widthAnchor.constraint(equalToConstant: 80)
+            actionName.widthAnchor.constraint(equalToConstant: 150)
         ])
     }
 }
