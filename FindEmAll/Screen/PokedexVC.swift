@@ -18,11 +18,9 @@ class PokedexVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureLayout()
         configureAnimatingViews()
-        
-        // animatingView 이후 호출될 수 있도록 시점 변경
         loadAnimatingView()
+        
         configureDataDisplay()
         configureCollectionView()
         configureReturnButton()
@@ -30,19 +28,18 @@ class PokedexVC: UIViewController {
         fetchEncountered()
     }
     
-    init() {
-        super.init(nibName: nil, bundle: nil)
-        
+    override func viewIsAppearing(_ animated: Bool) {
+        super.viewIsAppearing(animated)
+        configureLayout()
     }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+
     
     private func setDisplayViews() {
         let totalSeen = PersistenceManager.shared.fetchEncounteredId()
         seenDisplayView.set(item: .seen, withCount: totalSeen.count)
         caughtDisplayView.set(item: .captured, withCount: 0)
+        seenDisplayView.setBorder()
+        caughtDisplayView.setBorder()
     }
     
     private func configureLayout() {
@@ -142,9 +139,10 @@ class PokedexVC: UIViewController {
             NetworkManager.shared.fetchPokemonWithId(number: id) { pokemon, errorMessage in
                 if let pokemon = pokemon {
                     self.encounteredId[id - 1] = pokemon
-                }
-                DispatchQueue.main.async {
-                    self.collectionView.reloadData()
+                    DispatchQueue.main.async {
+                        // collectionview loads twice
+                        self.collectionView.reloadData()
+                    }
                 }
             }
         }
@@ -163,14 +161,31 @@ class PokedexVC: UIViewController {
 
 extension PokedexVC: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("indexPath가 눌렸어요", indexPath)
-        
-        if selectedIndexPath != nil && selectedIndexPath == indexPath {
-            selectedIndexPath = nil
-        } else {
-            selectedIndexPath = indexPath
+        if let cell = collectionView.cellForItem(at: indexPath) as? PokeCollectionViewCell {
+            
+            // print("셀 정보", cell)
+            // print("패스", indexPath)
+            // when indexPath is selected, update the cell within > need to remove data to make it small.
+            if selectedIndexPath?.row == indexPath.row {
+                print("줄었습니다.")
+                cell.configureOpenedStack(show: false)
+                selectedIndexPath = nil
+            } else {
+                print("키웠습니다.")
+                cell.configureOpenedStack(show: true)
+                selectedIndexPath = indexPath
+            }
+            
+            // update the collectionview layout?
+            collectionView.performBatchUpdates(nil)
         }
-        collectionView.performBatchUpdates(nil)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        if let cell = collectionView.cellForItem(at: indexPath) as? PokeCollectionViewCell {
+            print("다른 셀을 눌렀습니다")
+            cell.configureOpenedStack(show: false)
+        }
     }
 }
 
@@ -198,10 +213,11 @@ extension PokedexVC: UICollectionViewDataSource {
         let delayBase: Double = 0.2
         let delay = Double(indexPath.row) * delayBase
         
-        UIView.animate(withDuration: animationDuration, delay: delay,
-                       usingSpringWithDamping: 0.8, initialSpringVelocity: 4,
-                       options: []
-        ) {
+        UIView.animate(withDuration: animationDuration,
+                       delay: delay,
+                       usingSpringWithDamping: 0.8,
+                       initialSpringVelocity: 4,
+                       options: []) {
             cell.backgroundColor = UIColor.black.withAlphaComponent(0.1)
             cell.transform = .identity
         }
@@ -216,9 +232,11 @@ extension PokedexVC: UICollectionViewDelegateFlowLayout {
         let availableWidth = width - (padding * 2) - (minimumSpacing * 2)
         let itemWidth = availableWidth / 3
         
+        // 셀이 키워졌을 경우의 값
         if selectedIndexPath == indexPath {
-            return CGSize(width: collectionView.frame.width, height: 500)
+            return CGSize(width: availableWidth, height: availableWidth)
         }
+        // 기본 셀 사이즈 지정
         return CGSize(width: itemWidth - padding, height: itemWidth)
     }
 }

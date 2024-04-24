@@ -25,6 +25,8 @@ class PokeCollectionViewCell: UICollectionViewCell {
     // properties
     let pokeImage = PokeImageView(frame: .zero)
     let nameLabel = PokeTitleLabel(textAlignment: .center, fontSize: 18)
+    let dataLabel = DataDisplayView()
+    let dataLabel2 = DataDisplayView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -36,6 +38,8 @@ class PokeCollectionViewCell: UICollectionViewCell {
         DispatchQueue.main.async {
             self.backgroundColor = .white
             self.nameLabel.text = data.name
+            self.dataLabel.set(item: .type, text: "빈 칸")
+            self.dataLabel2.set(item: .captured, text: "몇 개더라..")
             self.pokeImage.downloadImageUrl(from: data.sprites.frontDefault)
         }
     }
@@ -65,6 +69,29 @@ class PokeCollectionViewCell: UICollectionViewCell {
             pokeImage.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
             pokeImage.trailingAnchor.constraint(equalTo: stackView.trailingAnchor)
         ])
+    }
+    
+    func configureOpenedStack(show: Bool) {
+        if show {
+            stackView.addArrangedSubview(dataLabel)
+            stackView.addArrangedSubview(dataLabel2)
+            
+            NSLayoutConstraint.activate([
+                dataLabel.topAnchor.constraint(equalTo: pokeImage.bottomAnchor),
+                dataLabel.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
+                dataLabel.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
+                
+                dataLabel2.topAnchor.constraint(equalTo: dataLabel.bottomAnchor),
+                dataLabel2.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
+                dataLabel2.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
+            ])
+            
+            dataLabel.isHidden = false
+            dataLabel2.isHidden = false
+        } else {
+            dataLabel.isHidden = true
+            dataLabel2.isHidden = true
+        }
     }
     
     override func prepareForReuse() {
