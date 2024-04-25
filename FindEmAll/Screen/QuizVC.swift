@@ -13,11 +13,11 @@ class QuizVC: UIViewController {
     private let bottomAnimatingView = AnimatingView(color: PokeColor.PokeGrey)
     private let inputTextfield = PokeTextfield(withSpace: true)
     private let pokeImageview = PokeImageView(frame: .zero)
-    private let firstInfoview = UIView() // VC로 옮겨서 하나로 만들 수 있는지 시도해보자
-    private let secondInfoview = UIView()
-    private let thirdInfoview = UIView()
-    private let fourthInfoview = UIView()
-    private var infoViews = [UIView]()
+    private let firstInfoview = PokeInfoView() // VC로 옮겨서 하나로 만들 수 있는지 시도해보자
+    private let secondInfoview = PokeInfoView()
+    private let thirdInfoview = PokeInfoView()
+    private let fourthInfoview = PokeInfoView()
+    private var infoViews = [PokeInfoView]()
     private var originalPosition = [UIView: CGPoint]()
     private let height = (UIScreen.main.bounds.height/2) - 15
     private let padding: CGFloat = 20
@@ -85,7 +85,7 @@ class QuizVC: UIViewController {
             guard let image = image else { return }
             DispatchQueue.main.async {
                 let imageStroke = image.createSilhouette()
-                self.populateInfoviews(pokemon: data)
+                self.populateInfoViews(pokemon: data)
                 self.pokeImageview.image = imageStroke
                 self.pokeImageview.contentMode = .scaleAspectFit
                 self.pokeImageview.countDownTimer()
@@ -93,19 +93,11 @@ class QuizVC: UIViewController {
         }
     }
     
-    private func populateInfoviews(pokemon: Pokemon) {
-        addChild(childVC: PokeInfoVC(pokemon: pokemon, for: .height), to: self.firstInfoview)
-        addChild(childVC: PokeInfoVC(pokemon: pokemon, for: .move), to: self.secondInfoview)
-        addChild(childVC: PokeInfoVC(pokemon: pokemon, for: .weight), to: self.thirdInfoview)
-        addChild(childVC: PokeInfoVC(pokemon: pokemon, for: .type),  to: self.fourthInfoview)
-    }
-    
-    private func addChild(childVC: UIViewController, to container: UIView) {
-        addChild(childVC)
-        container.addSubview(childVC.view)
-        
-        childVC.view.frame = container.bounds
-        childVC.didMove(toParent: self)
+    private func populateInfoViews(pokemon: Pokemon) {
+        firstInfoview.updateView(data: pokemon, dataType: .height)
+        secondInfoview.updateView(data: pokemon, dataType: .move)
+        thirdInfoview.updateView(data: pokemon, dataType: .type)
+        fourthInfoview.updateView(data: pokemon, dataType: .weight)
     }
     
     //MARK: - UILayout
@@ -114,7 +106,7 @@ class QuizVC: UIViewController {
         
         view.addSubviews(topAnimatingView, bottomAnimatingView, pokeImageview)
         infoViews = [firstInfoview, secondInfoview, thirdInfoview, fourthInfoview]
-        pokeImageview.backgroundColor = Color.PokeBlack
+        pokeImageview.backgroundColor = PokeColor.PokeBlack
         pokeImageview.delegate = self
         pokeImageview.set(img: "lasso")
         

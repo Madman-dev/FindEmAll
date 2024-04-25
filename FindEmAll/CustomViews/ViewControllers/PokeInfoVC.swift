@@ -7,15 +7,9 @@
 
 import UIKit
 
-enum PokeData {
-    case height
-    case weight
-    case move
-    case type
-}
-
 class PokeInfoVC: UIViewController {
-    // infoVC에는 더 많은 콘텐츠를 담을 것이기 때문에 infoView를 적용했다.
+    // PokeInfoVC는 모든 데이터를 담는 방식으로 전환
+    // PokeInfoView는 텍스트 레이블 한 줄만
     let itemInfoView = PokeInfoView()
     var pokemon: Pokemon!
     
@@ -25,21 +19,9 @@ class PokeInfoVC: UIViewController {
         configureLayout()
     }
     
-    init(pokemon: Pokemon, for displayType: PokeData) {
+    init(pokemon: Pokemon) {
         super.init(nibName: nil, bundle: nil)
         self.pokemon = pokemon
-        
-        switch displayType {
-        case .height:
-            itemInfoView.textLabel.text = "It is \(pokemon.height.decimalValue())m tall, \(pokemon.height.roundToFeet())\" in feets"
-        case .weight:
-            itemInfoView.textLabel.text = "It weighs \(pokemon.weight.decimalValue())kg"
-        case .move:
-            itemInfoView.textLabel.text = "It learns \(pokemon.moves[0].move.name)"
-        case .type:
-            let types = pokemon.types.map { $0.type.name }.joined(separator: ", ")
-            itemInfoView.textLabel.text = "It is \(types) type"
-        }
     }
     
     required init?(coder: NSCoder) {
