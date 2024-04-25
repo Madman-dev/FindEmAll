@@ -7,21 +7,17 @@
 
 import UIKit
 
-class StartingVC: UIViewController {
+class StartingVC: AnimatingVC {
     
     let titleLabel = PokeTitleLabel(textAlignment: .center, fontSize: 30)
-    let topAnimatingView = AnimatingView(color: PokeColor.PokeRed)
-    let bottomAnimatingView = AnimatingView(color: PokeColor.PokeGrey)
     let enterGameButton = PokeButton(color: .white)
     let pokedexButton = PokeButton(color: .green)
     var feedbackGenerator: UIImpactFeedbackGenerator? = nil
-    private let height = (UIScreen.main.bounds.height/2) - 15
     
     //MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         configureLayout()
-        configureAnimatingViews()
         configureTitleView()
         configureButton()
         configurePokedex()
@@ -35,21 +31,7 @@ class StartingVC: UIViewController {
     //MARK: - UILayout
     private func configureLayout() {
         view.backgroundColor = PokeColor.PokeBlack
-        view.addSubviews(topAnimatingView, bottomAnimatingView, titleLabel, enterGameButton, pokedexButton)
-    }
-    
-    private func configureAnimatingViews() {
-        NSLayoutConstraint.activate([
-            topAnimatingView.topAnchor.constraint(equalTo: view.topAnchor),
-            topAnimatingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            topAnimatingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            topAnimatingView.heightAnchor.constraint(equalToConstant: height),
-            
-            bottomAnimatingView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            bottomAnimatingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            bottomAnimatingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            bottomAnimatingView.heightAnchor.constraint(equalToConstant: height)
-        ])
+        view.addSubviews(titleLabel, enterGameButton, pokedexButton)
     }
     
     private func configureTitleView() {
@@ -104,38 +86,6 @@ class StartingVC: UIViewController {
         let destinationVC = PokedexVC()
         sender.tapAnimation {
             self.dismissAndAnimateTo(VC: destinationVC)
-        }
-    }
-    
-    private func loadAnimatingView() {
-        let dispatchGroup = DispatchGroup()
-        dispatchGroup.enter()
-        topAnimatingView.animate(position: .down) {
-            dispatchGroup.leave()
-        }
-        
-        dispatchGroup.enter()
-        bottomAnimatingView.animate(position: .up) {
-            dispatchGroup.leave()
-        }
-    }
-    
-    private func dismissAndAnimateTo(VC destination: UIViewController) {
-        // moving the views at once
-        let dispatchGroup = DispatchGroup()
-        
-        dispatchGroup.enter()
-        topAnimatingView.animate(position: .up) {
-            dispatchGroup.leave()
-        }
-        
-        dispatchGroup.enter()
-        bottomAnimatingView.animate(position: .down) {
-            dispatchGroup.leave()
-        }
-        
-        dispatchGroup.notify(queue: .main) {
-            self.navigationController?.pushViewController(destination, animated: false)
         }
     }
     
