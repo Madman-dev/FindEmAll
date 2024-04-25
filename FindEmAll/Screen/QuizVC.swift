@@ -7,17 +7,15 @@
 
 import UIKit
 
-class QuizVC: UIViewController {
+class QuizVC: AnimatingVC {
     
-    private let topAnimatingView = AnimatingView(color: PokeColor.PokeRed)
-    private let bottomAnimatingView = AnimatingView(color: PokeColor.PokeGrey)
     private let inputTextfield = PokeTextfield(withSpace: true)
     private let pokeImageview = PokeImageView(frame: .zero)
-    private let firstInfoview = UIView() // VC로 옮겨서 하나로 만들 수 있는지 시도해보자
-    private let secondInfoview = UIView()
-    private let thirdInfoview = UIView()
-    private let fourthInfoview = UIView()
-    private var infoViews = [UIView]()
+    private let firstInfoview = PokeInfoView() // VC로 옮겨서 하나로 만들 수 있는지 시도해보자
+    private let secondInfoview = PokeInfoView()
+    private let thirdInfoview = PokeInfoView()
+    private let fourthInfoview = PokeInfoView()
+    private var infoViews = [PokeInfoView]()
     private var originalPosition = [UIView: CGPoint]()
     private let height = (UIScreen.main.bounds.height/2) - 15
     private let padding: CGFloat = 20
@@ -34,7 +32,6 @@ class QuizVC: UIViewController {
     
     override func viewIsAppearing(_ animated: Bool) {
         super.viewIsAppearing(animated)
-        configureAnimatingViews()
         loadAnimatingView()
     }
     
@@ -85,7 +82,7 @@ class QuizVC: UIViewController {
             guard let image = image else { return }
             DispatchQueue.main.async {
                 let imageStroke = image.createSilhouette()
-                self.populateInfoviews(pokemon: data)
+                self.populateInfoViews(pokemon: data)
                 self.pokeImageview.image = imageStroke
                 self.pokeImageview.contentMode = .scaleAspectFit
                 self.pokeImageview.countDownTimer()
@@ -93,26 +90,18 @@ class QuizVC: UIViewController {
         }
     }
     
-    private func populateInfoviews(pokemon: Pokemon) {
-        addChild(childVC: PokeInfoVC(pokemon: pokemon, for: .height), to: self.firstInfoview)
-        addChild(childVC: PokeInfoVC(pokemon: pokemon, for: .move), to: self.secondInfoview)
-        addChild(childVC: PokeInfoVC(pokemon: pokemon, for: .weight), to: self.thirdInfoview)
-        addChild(childVC: PokeInfoVC(pokemon: pokemon, for: .type),  to: self.fourthInfoview)
-    }
-    
-    private func addChild(childVC: UIViewController, to container: UIView) {
-        addChild(childVC)
-        container.addSubview(childVC.view)
-        
-        childVC.view.frame = container.bounds
-        childVC.didMove(toParent: self)
+    private func populateInfoViews(pokemon: Pokemon) {
+        firstInfoview.updateView(data: pokemon, dataType: .height)
+        secondInfoview.updateView(data: pokemon, dataType: .move)
+        thirdInfoview.updateView(data: pokemon, dataType: .type)
+        fourthInfoview.updateView(data: pokemon, dataType: .weight)
     }
     
     //MARK: - UILayout
     private func configureLayout() {
         view.backgroundColor = PokeColor.PokeBlack
         
-        view.addSubviews(topAnimatingView, bottomAnimatingView, pokeImageview)
+        view.addSubview(pokeImageview)
         infoViews = [firstInfoview, secondInfoview, thirdInfoview, fourthInfoview]
         pokeImageview.backgroundColor = PokeColor.PokeBlack
         pokeImageview.delegate = self
@@ -165,20 +154,6 @@ class QuizVC: UIViewController {
         ])
     }
     
-    private func configureAnimatingViews() {
-        NSLayoutConstraint.activate([
-            topAnimatingView.topAnchor.constraint(equalTo: view.topAnchor),
-            topAnimatingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            topAnimatingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            topAnimatingView.heightAnchor.constraint(equalToConstant: height),
-            
-            bottomAnimatingView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            bottomAnimatingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            bottomAnimatingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            bottomAnimatingView.heightAnchor.constraint(equalToConstant: height)
-        ])
-    }
-    
     //MARK: - Methods
     @objc func backButtonTapped() {
         print("데이터가 보내졌습니다.")
@@ -190,37 +165,6 @@ class QuizVC: UIViewController {
         secondInfoview.animateBack(to: originalPosition[secondInfoview]!)
         thirdInfoview.animateBack(to: originalPosition[thirdInfoview]!)
         fourthInfoview.animateBack(to: originalPosition[fourthInfoview]!)
-    }
-    
-    // create a ViewController to subclass into
-    private func loadAnimatingView() {
-        let dispatchGroup = DispatchGroup()
-        dispatchGroup.enter()
-        topAnimatingView.animate(position: .down) {
-            dispatchGroup.leave()
-        }
-        
-        dispatchGroup.enter()
-        bottomAnimatingView.animate(position: .up) {
-            dispatchGroup.leave()
-        }
-    }
-    
-    private func dismissAnimatingView() {
-        let dispatchGroup = DispatchGroup()
-        dispatchGroup.enter()
-        topAnimatingView.animate(position: .up) {
-            dispatchGroup.leave()
-        }
-        
-        dispatchGroup.enter()
-        bottomAnimatingView.animate(position: .down) {
-            dispatchGroup.leave()
-        }
-        
-        dispatchGroup.notify(queue: .main) {
-            self.navigationController?.popViewController(animated: false)
-        }
     }
     
     private func createDismissKeyboardGesture() {
