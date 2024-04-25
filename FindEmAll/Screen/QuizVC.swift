@@ -114,7 +114,7 @@ class QuizVC: UIViewController {
         
         view.addSubviews(topAnimatingView, bottomAnimatingView, pokeImageview)
         infoViews = [firstInfoview, secondInfoview, thirdInfoview, fourthInfoview]
-        pokeImageview.backgroundColor = Color.PokeBlack
+        pokeImageview.backgroundColor = PokeColor.PokeBlack
         pokeImageview.delegate = self
         pokeImageview.set(img: "lasso")
         
