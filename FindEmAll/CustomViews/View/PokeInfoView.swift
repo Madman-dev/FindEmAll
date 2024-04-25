@@ -30,15 +30,19 @@ class PokeInfoView: UIView {
     }
     
     func updateView(data: Pokemon, dataType: PokeData) {
+        let decimalHeight = data.height.decimalValue()
+        let heightRoundedDown = data.height.roundToFeet()
+        let decimalWeight = data.weight.decimalValue()
+        let types = data.types.map { $0.type.name }.joined(separator: ", ")
+        
         switch dataType {
         case .height:
-            textLabel.text = "It is \(data.height.decimalValue())m tall, \(data.height.roundToFeet())\" in feets"
+            textLabel.text = "It is \(decimalHeight)m tall, \(heightRoundedDown)\" in feets"
         case .weight:
-            textLabel.text = "It weighs \(data.weight.decimalValue())kg"
+            textLabel.text = "It weighs \(decimalWeight)kg"
         case .move:
             textLabel.text = "It learns \(data.moves[0].move.name)"
         case .type:
-            let types = data.types.map { $0.type.name }.joined(separator: ", ")
             textLabel.text = "It is \(types) type"
         }
     }
@@ -52,7 +56,7 @@ class PokeInfoView: UIView {
     
     private func configureAutoLayout() {
         addSubview(textLabel)
-        textLabel.text = "테스트"
+        textLabel.text = "updating data..."
         
         NSLayoutConstraint.activate([
             textLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
