@@ -17,7 +17,7 @@ class PokeCollectionViewCell: UICollectionViewCell {
         closedStack.frame = .zero
         closedStack.axis = .vertical
         closedStack.alignment = .center
-        closedStack.distribution = .fillProportionally
+        closedStack.distribution = .fill
         closedStack.translatesAutoresizingMaskIntoConstraints = false
         return closedStack
     }()
@@ -52,6 +52,7 @@ class PokeCollectionViewCell: UICollectionViewCell {
     // NO distribution == no nameLabel
     private func configureClosedStack() {
         addSubviews(stackView)
+        stackView.backgroundColor = .yellow
         stackView.addArrangedSubview(pokeImage)
         stackView.addArrangedSubview(nameLabel)
         
@@ -63,11 +64,7 @@ class PokeCollectionViewCell: UICollectionViewCell {
             stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
             stackView.topAnchor.constraint(equalTo: topAnchor),
-            stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            
-            pokeImage.topAnchor.constraint(equalTo: stackView.topAnchor),
-            pokeImage.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
-            pokeImage.trailingAnchor.constraint(equalTo: stackView.trailingAnchor)
+            stackView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
     }
     
@@ -76,14 +73,17 @@ class PokeCollectionViewCell: UICollectionViewCell {
             stackView.addArrangedSubview(dataLabel)
             stackView.addArrangedSubview(dataLabel2)
             
+            pokeImage.contentCompressionResistancePriority(for: .horizontal)
+            pokeImage.contentCompressionResistancePriority(for: .vertical)
+//            nameLabel.setContentHuggingPriority(.defaultLow, for: .vertical)
+            
             NSLayoutConstraint.activate([
-                dataLabel.topAnchor.constraint(equalTo: pokeImage.bottomAnchor),
-                dataLabel.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
-                dataLabel.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
+                pokeImage.topAnchor.constraint(equalTo: stackView.topAnchor),
+                pokeImage.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
+                pokeImage.heightAnchor.constraint(equalToConstant: 150),
                 
-                dataLabel2.topAnchor.constraint(equalTo: dataLabel.bottomAnchor),
-                dataLabel2.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
-                dataLabel2.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
+                dataLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor),
+                dataLabel.leadingAnchor.constraint(equalTo: stackView.leadingAnchor)
             ])
             
             dataLabel.isHidden = false

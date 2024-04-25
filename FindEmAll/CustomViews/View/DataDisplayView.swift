@@ -36,14 +36,11 @@ class DataDisplayView: UIView {
         switch item {
         case .seen: titleLabel.text = "본 포켓몬 수:"
         case .captured: titleLabel.text = "잡은 포켓몬 수:"
-        case .type: titleLabel.text = "타입:"
+        case .type: titleLabel.text = "타입"
         }
         
-        if let value = value {
-            dataLabel.text = String(value)
-        } else if let text = text {
-            dataLabel.text = text
-        }
+        if let value = value { dataLabel.text = String(value) }
+        else if let text = text { dataLabel.text = text }
     }
     
     private func configureLayout() {

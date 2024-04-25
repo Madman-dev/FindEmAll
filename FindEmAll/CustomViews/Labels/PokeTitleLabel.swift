@@ -21,6 +21,7 @@ class PokeTitleLabel: UILabel {
         self.init(frame: .zero)
         self.textAlignment = textAlignment
         self.font = UIFont.systemFont(ofSize: fontSize, weight: .heavy)
+        self.numberOfLines = 0
     }
     
     private func configureLayout() {
