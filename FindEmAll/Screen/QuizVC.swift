@@ -105,7 +105,7 @@ class QuizVC: AnimatingVC {
         infoViews = [firstInfoview, secondInfoview, thirdInfoview, fourthInfoview]
         pokeImageview.backgroundColor = PokeColor.PokeBlack
         pokeImageview.delegate = self
-        pokeImageview.set(img: "lasso")
+        pokeImageview.image = UIImage(systemName: "lasso")
         
         for infoView in infoViews {
             view.addSubview(infoView)
@@ -156,7 +156,6 @@ class QuizVC: AnimatingVC {
     
     //MARK: - Methods
     @objc func backButtonTapped() {
-        print("데이터가 보내졌습니다.")
         dismissAnimatingView()
     }
     

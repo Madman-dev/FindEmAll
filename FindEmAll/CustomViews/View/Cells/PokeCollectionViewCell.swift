@@ -14,7 +14,6 @@ class PokeCollectionViewCell: UICollectionViewCell {
     // cell in closed state
     var stackView: UIStackView = {
         let closedStack = UIStackView()
-        closedStack.frame = .zero
         closedStack.axis = .vertical
         closedStack.alignment = .center
         closedStack.distribution = .fill
@@ -24,9 +23,8 @@ class PokeCollectionViewCell: UICollectionViewCell {
     
     // properties
     let pokeImage = PokeImageView(frame: .zero)
-    let nameLabel = PokeTitleLabel(textAlignment: .center, fontSize: 18)
+    let nameLabel = PokeTitleLabel(textAlignment: .center, fontSize: 16)
     let dataLabel = DataDisplayView()
-    let dataLabel2 = DataDisplayView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -39,7 +37,6 @@ class PokeCollectionViewCell: UICollectionViewCell {
             self.backgroundColor = .white
             self.nameLabel.text = data.name
             self.dataLabel.set(item: .type, text: "빈 칸")
-            self.dataLabel2.set(item: .captured, text: "몇 개더라..")
             self.pokeImage.downloadImageUrl(from: data.sprites.frontDefault)
         }
     }
@@ -52,45 +49,40 @@ class PokeCollectionViewCell: UICollectionViewCell {
     // NO distribution == no nameLabel
     private func configureClosedStack() {
         addSubviews(stackView)
-        stackView.backgroundColor = .yellow
         stackView.addArrangedSubview(pokeImage)
         stackView.addArrangedSubview(nameLabel)
+        
+        pokeImage.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
         
         // update from layoutMargin, after iOS 11
         stackView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0)
         stackView.isLayoutMarginsRelativeArrangement = true
         
         NSLayoutConstraint.activate([
-            stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            stackView.topAnchor.constraint(equalTo: topAnchor),
-            stackView.bottomAnchor.constraint(equalTo: bottomAnchor)
+            stackView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            stackView.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
     }
     
     func configureOpenedStack(show: Bool) {
         if show {
             stackView.addArrangedSubview(dataLabel)
-            stackView.addArrangedSubview(dataLabel2)
-            
-            pokeImage.contentCompressionResistancePriority(for: .horizontal)
-            pokeImage.contentCompressionResistancePriority(for: .vertical)
-//            nameLabel.setContentHuggingPriority(.defaultLow, for: .vertical)
+            stackView.distribution = .fillProportionally
             
             NSLayoutConstraint.activate([
+                stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
+                stackView.topAnchor.constraint(equalTo: topAnchor),
+                
                 pokeImage.topAnchor.constraint(equalTo: stackView.topAnchor),
                 pokeImage.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
-                pokeImage.heightAnchor.constraint(equalToConstant: 150),
                 
                 dataLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor),
-                dataLabel.leadingAnchor.constraint(equalTo: stackView.leadingAnchor)
+                dataLabel.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
             ])
             
             dataLabel.isHidden = false
-            dataLabel2.isHidden = false
         } else {
             dataLabel.isHidden = true
-            dataLabel2.isHidden = true
         }
     }
     

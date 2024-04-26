@@ -25,7 +25,7 @@ class PokeImageView: UIImageView {
     override var bounds: CGRect {
         didSet {
             layer.cornerRadius = bounds.width/2
-            print(bounds.size)
+            print("bound size",bounds.size)
         }
     }
     
@@ -86,11 +86,6 @@ class PokeImageView: UIImageView {
                 self.image = image
             }
         }
-    }
-    
-    func set(img: String) {
-        image = UIImage(systemName: img)
-        contentMode = .scaleAspectFit
     }
     
     private func configureLayout() {

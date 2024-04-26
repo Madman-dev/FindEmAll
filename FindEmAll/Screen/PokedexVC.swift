@@ -117,7 +117,6 @@ class PokedexVC: UIViewController {
     }
     
     @objc func backButtonTapped() {
-        print("뒤돌아가기 버튼이 눌렸습니다.")
         dismissView()
     }
     
@@ -167,10 +166,12 @@ extension PokedexVC: UICollectionViewDelegate {
             // print("패스", indexPath)
             // when indexPath is selected, update the cell within > need to remove data to make it small.
             if selectedIndexPath?.row == indexPath.row {
+                // 셀 다시 선택한 상황
                 print("줄었습니다.")
                 cell.configureOpenedStack(show: false)
                 selectedIndexPath = nil
             } else {
+                // 셀 선택 상황
                 print("키웠습니다.")
                 cell.configureOpenedStack(show: true)
                 selectedIndexPath = indexPath
@@ -185,6 +186,7 @@ extension PokedexVC: UICollectionViewDelegate {
         if let cell = collectionView.cellForItem(at: indexPath) as? PokeCollectionViewCell {
             print("다른 셀을 눌렀습니다")
             cell.configureOpenedStack(show: false)
+            cell.nameLabel.text = "안눌렸데"
         }
     }
 }
@@ -200,9 +202,12 @@ extension PokedexVC: UICollectionViewDataSource {
         cell.transform = CGAffineTransform(scaleX: 0.01, y: 0.01)
         
         if let pokemon = encounteredId[indexPath.item] {
+            // 기본 세팅 상화
             cell.set(data: pokemon)
         } else {
-            cell.pokeImage.set(img: "clipboard.fill")
+            // 기본 세팅 상화
+            cell.pokeImage.image = UIImage(systemName: "clipboard.fill")
+            cell.pokeImage.contentMode = .scaleAspectFit
         }
         return cell
     }
