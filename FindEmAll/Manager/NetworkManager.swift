@@ -108,6 +108,51 @@ class NetworkManager {
         task.resume()
     }
     
+//    func fetchFlavorText(of id: Int, completion: @escaping (Pokemon?, String?) -> Void) {
+//
+//        // check if id has value
+//        guard id >= 0 else {
+//            print("아이디 값이 없습니다.")
+//            return }
+//
+//        // create end point
+//        let endpoint = commonBaseUrl+"\(id)"
+//
+//        // create url && check if correct
+//        guard let url = URL(string: endpoint) else {
+//            completion(nil, "URL이 없습니다.")
+//            return
+//        }
+//
+//        // create task
+//        let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
+//            guard let self = self else { return }
+//
+//            if error != nil {
+//                completion(nil, "올바른 데이터가 아닙니다.")
+//                return
+//            }
+//
+//            guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
+//                print("데이터 파싱에서 오류가 발생했어요")
+//                return
+//            }
+//
+//            guard let data = data else {
+//                print("데이터가 없어요!")
+//                return
+//            }
+//
+//            do {
+//                let pokemonData = try decoder.decode(Pokemon.self, from: data)
+//                completion(pokemonData, nil)
+//            } catch {
+//                completion(nil, "플레이버 텍스트를 가져오지 못했습니다.")
+//            }
+//        }
+//        task.resume()
+//    }
+    
     // 이미지를 던지는 이유는?
     func downloadImage(from dataString: String, completed: @escaping (UIImage?) -> Void) {
         

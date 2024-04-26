@@ -186,7 +186,6 @@ extension PokedexVC: UICollectionViewDelegate {
         if let cell = collectionView.cellForItem(at: indexPath) as? PokeCollectionViewCell {
             print("다른 셀을 눌렀습니다")
             cell.configureOpenedStack(show: false)
-            cell.nameLabel.text = "안눌렸데"
         }
     }
 }

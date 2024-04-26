@@ -9,7 +9,7 @@ import UIKit
 
 class StartingVC: AnimatingVC {
     
-    let titleLabel = PokeTitleLabel(textAlignment: .center, fontSize: 30)
+    let titleLabel = PokeTitleLabel(textAlignment: .center, fontSize: 40)
     let enterGameButton = PokeButton(color: .white)
     let pokedexButton = PokeButton(color: .green)
     var feedbackGenerator: UIImpactFeedbackGenerator? = nil
