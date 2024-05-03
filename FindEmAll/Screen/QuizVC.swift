@@ -66,8 +66,10 @@ class QuizVC: AnimatingVC {
                 self.pokemonName = pokemon.name
                 self.setImage(with: pokemon)
                 
+            case .failure(let error as NetworkError):
+                print("네트워크 오류가 발생했어요. \(error.localizedDescription)")
             case .failure(let error):
-                print("오류가 발생했어요. \(error.localizedDescription)")
+                print("예상 범위를 벗어난 에러가 발생했어요. \(error.localizedDescription)")
             }
         }
     }

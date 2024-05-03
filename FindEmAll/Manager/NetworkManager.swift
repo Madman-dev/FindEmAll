@@ -19,7 +19,7 @@ class NetworkManager {
     }
     
     // 리턴 타입 PokemonType으로 진행
-    func fetchPokemon(completion: @escaping (Result<Pokemon, NetworkError>) -> Void) {
+    func fetchPokemon(completion: @escaping (Result<Pokemon, Error>) -> Void) {
         // randomPokemon check
         let pokemonIndex = Int.random(in: 1...4)
         
@@ -28,7 +28,7 @@ class NetworkManager {
         
         // url이 있는지 확인 (endpoint)
         guard let url = URL(string: endPoint) else {
-            completion(.failure(.invalidURL))
+            completion(.failure(NetworkError.invalidURL))
             return
         }
         
@@ -40,26 +40,25 @@ class NetworkManager {
             }
             
             if let _ = error {
-                completion(.failure(.networkError))
+                completion(.failure(NetworkError.networkError))
                 return
             }
             
             guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-                completion(.failure(.invalidResponse))
+                completion(.failure(NetworkError.invalidResponse))
                 return
             }
             
             guard let data = data else {
-                completion(.failure(.noDataReturned))
+                completion(.failure(NetworkError.noDataReturned))
                 return
             }
             
             do {
-                // 받아온 데이터 decode
                 let pokemonData = try decoder.decode(Pokemon.self, from: data)
                 completion(.success(pokemonData))
             } catch {
-                completion(.failure(.invalidDataFormat))
+                completion(.failure(NetworkError.invalidDataFormat))
             }
         }
         task.resume()
