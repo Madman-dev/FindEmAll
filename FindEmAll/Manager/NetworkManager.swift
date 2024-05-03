@@ -19,7 +19,7 @@ class NetworkManager {
     }
     
     // 리턴 타입 PokemonType으로 진행
-    func fetchPokemon(completion: @escaping (Pokemon?, String?) -> Void) {
+    func fetchPokemon(completion: @escaping (Result<Pokemon, NetworkError>) -> Void) {
         // randomPokemon check
         let pokemonIndex = Int.random(in: 1...4)
         
@@ -28,7 +28,7 @@ class NetworkManager {
         
         // url이 있는지 확인 (endpoint)
         guard let url = URL(string: endPoint) else {
-            completion(nil, "없는 URL입니다.")
+            completion(.failure(.invalidURL))
             return
         }
         
@@ -40,26 +40,26 @@ class NetworkManager {
             }
             
             if let _ = error {
-                completion(nil, "데이터 호출 오류가 발생했습니다.")
+                completion(.failure(.networkError))
                 return
             }
             
             guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-                completion(nil, "서버에서 받은 데이터에 오류가 있습니다.")
+                completion(.failure(.invalidResponse))
                 return
             }
             
             guard let data = data else {
-                completion(nil, "데이터 파싱이 잘못되었습니다.")
+                completion(.failure(.noDataReturned))
                 return
             }
             
             do {
                 // 받아온 데이터 decode
                 let pokemonData = try decoder.decode(Pokemon.self, from: data)
-                completion(pokemonData, nil)
+                completion(.success(pokemonData))
             } catch {
-                completion(nil, "데이터는 올바르게 왔습니다만... \(error).")
+                completion(.failure(.invalidDataFormat))
             }
         }
         task.resume()

@@ -11,7 +11,7 @@ class StartingVC: AnimatingVC {
     
     let titleLabel = PokeTitleLabel(textAlignment: .center, fontSize: 30)
     let enterGameButton = PokeButton(color: .white)
-    let pokedexButton = PokeButton(color: .green)
+    let pokedexButton = PokeButton(color: PokeColor.PokeBlack)
     var feedbackGenerator: UIImpactFeedbackGenerator? = nil
     
     //MARK: - LifeCycle

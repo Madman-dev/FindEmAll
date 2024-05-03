@@ -59,20 +59,16 @@ class QuizVC: AnimatingVC {
     }
     
     private func fetchData() {
-        NetworkManager.shared.fetchPokemon() { pokemon, errorMessage in
-            if let error = errorMessage {
-                print("호출 에러 문제 발생",error)
-                return
+        NetworkManager.shared.fetchPokemon() { result in
+            switch result {
+            case .success(let pokemon):
+                PersistenceManager.shared.savePokeData(pokemon.id)
+                self.pokemonName = pokemon.name
+                self.setImage(with: pokemon)
+                
+            case .failure(let error):
+                print("오류가 발생했어요. \(error.localizedDescription)")
             }
-            
-            guard let pokemon = pokemon else {
-                print("Error Occurs here")
-                return
-            }
-            
-            PersistenceManager.shared.savePokeData(pokemon.id)
-            self.pokemonName = pokemon.name
-            self.setImage(with: pokemon)
         }
     }
     
