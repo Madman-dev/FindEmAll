@@ -18,22 +18,20 @@ class NetworkManager {
         decoder.keyDecodingStrategy = .convertFromSnakeCase
     }
     
-    // 리턴 타입 PokemonType으로 진행µ
+    // 리턴 타입 PokemonType으로 진행
     func fetchPokemon(completion: @escaping (Result<Pokemon, Error>) -> Void) {
         // randomPokemon check
         let pokemonIndex = Int.random(in: 1...4)
-        
-        // basePoint
         let endPoint = baseUrl + "\(pokemonIndex)"
         
-        // url이 있는지 확인 (endpoint)
         guard let url = URL(string: endPoint) else {
             completion(.failure(NetworkError.invalidURL))
             return
         }
         
-        // task 생성 - data, response, error 처리
-        let task = URLSession.shared.dataTask(with: url) { data, response, error in
+        let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
+            
+            guard let self = self else { return }
             
             if let _ = error {
                 completion(.failure(NetworkError.networkError))
@@ -51,7 +49,7 @@ class NetworkManager {
             }
             
             do {
-                let pokemonData = try self.decoder.decode(Pokemon.self, from: data)
+                let pokemonData = try decoder.decode(Pokemon.self, from: data)
                 completion(.success(pokemonData))
             } catch {
                 completion(.failure(NetworkError.invalidDataFormat))
@@ -61,17 +59,17 @@ class NetworkManager {
     }
     
     func fetchPokemonWithId(number: Int, completion: @escaping (Result<Pokemon, Error>) -> Void) {
-        // basePoint
-        let endPoint = baseUrl + "\(number)"
         
-        // url이 있는지 확인 (endpoint)
+        let endPoint = baseUrl + "\(number)"
         guard let url = URL(string: endPoint) else {
             completion(.failure(NetworkError.invalidURL))
             return
         }
         
-        // task 생성 - data, response, error 처리
-        let task = URLSession.shared.dataTask(with: url) { data, response, error in
+        let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
+            
+            // check to maintain weak reference to self.
+            guard let self = self else { return }
             
             if let _ = error {
                 completion(.failure(NetworkError.networkError))
@@ -89,8 +87,7 @@ class NetworkManager {
             }
             
             do {
-                // 받아온 데이터 decode
-                let pokemonData = try self.decoder.decode(Pokemon.self, from: data)
+                let pokemonData = try decoder.decode(Pokemon.self, from: data)
                 completion(.success(pokemonData))
             } catch {
                 completion(.failure(NetworkError.invalidDataFormat))
@@ -123,8 +120,9 @@ class NetworkManager {
         let task = URLSession.shared.dataTask(with: url) { data, response, error in
             
             // check for error
-            if let error = error {
-                print("에러가 발생했습니다.")
+            if let _ = error {
+                print(NetworkError.networkError)
+                return
             }
             
             // check for correct response
