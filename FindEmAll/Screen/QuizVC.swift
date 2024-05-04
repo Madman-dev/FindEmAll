@@ -75,15 +75,18 @@ class QuizVC: AnimatingVC {
     }
     
     private func setImage(with data: Pokemon) {
-        NetworkManager.shared.downloadImage(from: data.sprites.frontDefault) { [weak self] image in
-            guard let self = self else { return }
-            guard let image = image else { return }
-            DispatchQueue.main.async {
-                let imageStroke = image.createSilhouette()
-                self.populateInfoViews(pokemon: data)
-                self.pokeImageview.image = imageStroke
-                self.pokeImageview.contentMode = .scaleAspectFit
-                self.pokeImageview.countDownTimer()
+        NetworkManager.shared.downloadImage(from: data.sprites.frontDefault) { result in
+            switch result {
+            case .success(let image):
+                DispatchQueue.main.async {
+                    let imageStroke = image.createSilhouette()
+                    self.populateInfoViews(pokemon: data)
+                    self.pokeImageview.image = imageStroke
+                    self.pokeImageview.contentMode = .scaleAspectFit
+                    self.pokeImageview.countDownTimer()
+                }
+            case .failure(let error):
+                print(error)
             }
         }
     }

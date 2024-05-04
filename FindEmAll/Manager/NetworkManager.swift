@@ -18,7 +18,7 @@ class NetworkManager {
         decoder.keyDecodingStrategy = .convertFromSnakeCase
     }
     
-    // 리턴 타입 PokemonType으로 진행
+    // 리턴 타입 PokemonType으로 진행µ
     func fetchPokemon(completion: @escaping (Result<Pokemon, Error>) -> Void) {
         // randomPokemon check
         let pokemonIndex = Int.random(in: 1...4)
@@ -33,11 +33,7 @@ class NetworkManager {
         }
         
         // task 생성 - data, response, error 처리
-        let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
-            
-            guard let self = self else {
-                return
-            }
+        let task = URLSession.shared.dataTask(with: url) { data, response, error in
             
             if let _ = error {
                 completion(.failure(NetworkError.networkError))
@@ -55,7 +51,7 @@ class NetworkManager {
             }
             
             do {
-                let pokemonData = try decoder.decode(Pokemon.self, from: data)
+                let pokemonData = try self.decoder.decode(Pokemon.self, from: data)
                 completion(.success(pokemonData))
             } catch {
                 completion(.failure(NetworkError.invalidDataFormat))
@@ -75,11 +71,7 @@ class NetworkManager {
         }
         
         // task 생성 - data, response, error 처리
-        let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
-            
-            guard let self = self else {
-                return
-            }
+        let task = URLSession.shared.dataTask(with: url) { data, response, error in
             
             if let _ = error {
                 completion(.failure(NetworkError.networkError))
@@ -98,7 +90,7 @@ class NetworkManager {
             
             do {
                 // 받아온 데이터 decode
-                let pokemonData = try decoder.decode(Pokemon.self, from: data)
+                let pokemonData = try self.decoder.decode(Pokemon.self, from: data)
                 completion(.success(pokemonData))
             } catch {
                 completion(.failure(NetworkError.invalidDataFormat))
@@ -108,7 +100,7 @@ class NetworkManager {
     }
     
     // 이미지를 던지는 이유는?
-    func downloadImage(from dataString: String, completed: @escaping (UIImage?) -> Void) {
+    func downloadImage(from dataString: String, completed: @escaping (Result<UIImage, Error>) -> Void) {
         
         /// cache check
         // convert String to cacheKey
@@ -117,22 +109,18 @@ class NetworkManager {
         // check if cache has image
         if let image = cache.object(forKey: cacheKey) {
             // if yes, load image
-            completed(image)
+            completed(.success(image))
             return
         }
         
         // check if URL is valid
         guard let url = URL(string: dataString) else {
-            completed(nil)
+            completed(.failure(NetworkError.invalidURL))
             return
         }
         
         // parse url into data
-        let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
-            guard let self = self else {
-                completed(nil)
-                return
-            }
+        let task = URLSession.shared.dataTask(with: url) { data, response, error in
             
             // check for error
             if let error = error {
@@ -141,16 +129,16 @@ class NetworkManager {
             
             // check for correct response
             guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-                completed(nil)
+                completed(.failure(NetworkError.invalidResponse))
                 return
             }
             
             // check if data is correct and convert to image
             guard let data = data, let image = UIImage(data: data) else {
-                completed(nil)
+                completed(.failure(NetworkError.invalidDataFormat))
                 return
             }
-            completed(image)
+            completed(.success(image))
         }
         task.resume()
     }
