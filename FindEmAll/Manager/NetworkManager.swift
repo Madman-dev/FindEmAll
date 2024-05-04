@@ -64,13 +64,13 @@ class NetworkManager {
         task.resume()
     }
     
-    func fetchPokemonWithId(number: Int, completion: @escaping (Pokemon?, String?) -> Void?) {
+    func fetchPokemonWithId(number: Int, completion: @escaping (Result<Pokemon, Error>) -> Void) {
         // basePoint
         let endPoint = baseUrl + "\(number)"
         
         // url이 있는지 확인 (endpoint)
         guard let url = URL(string: endPoint) else {
-            completion(nil, "없는 URL입니다.")
+            completion(.failure(NetworkError.invalidURL))
             return
         }
         
@@ -82,26 +82,26 @@ class NetworkManager {
             }
             
             if let _ = error {
-                completion(nil, "데이터 호출 오류가 발생했습니다.")
+                completion(.failure(NetworkError.networkError))
                 return
             }
             
             guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-                completion(nil, "서버에서 받은 데이터에 오류가 있습니다.")
+                completion(.failure(NetworkError.invalidResponse))
                 return
             }
             
             guard let data = data else {
-                completion(nil, "데이터 파싱이 잘못되었습니다.")
+                completion(.failure(NetworkError.noDataReturned))
                 return
             }
             
             do {
                 // 받아온 데이터 decode
                 let pokemonData = try decoder.decode(Pokemon.self, from: data)
-                completion(pokemonData, nil)
+                completion(.success(pokemonData))
             } catch {
-                completion(nil, "데이터는 올바르게 왔습니다만... \(error).")
+                completion(.failure(NetworkError.invalidDataFormat))
             }
         }
         task.resume()
