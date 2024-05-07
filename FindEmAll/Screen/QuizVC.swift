@@ -62,9 +62,8 @@ class QuizVC: AnimatingVC {
         Task {
             do {
                 let pokemonData = try await NetworkManager.shared.fetchPokemon()
-                PersistenceManager.shared.savePokeData(pokemonData.id)
-                self.pokemonName = pokemonData.name
-                self.setImage(with: pokemonData)
+                savePokemon(with:pokemonData.id)
+                updateUI(with: pokemonData)
             } catch let error {
                 if let error = error as? NetworkError {
                     print("네트워크 오류가 발생했습니다.")
@@ -75,17 +74,31 @@ class QuizVC: AnimatingVC {
         }
     }
     
-    private func setImage(with data: Pokemon) {
-        NetworkManager.shared.downloadImage(from: data.sprites.frontDefault) { result in
+    private func updateUI(with id: Pokemon) {
+        self.pokemonName = id.name
+        loadImage(with: id)
+    }
+    
+    private func savePokemon(with id: Int) {
+        PersistenceManager.shared.savePokeData(id)
+    }
+    
+    private func handleSuccessfulDownload(_ image: UIImage, for pokemon: Pokemon) {
+        DispatchQueue.main.async {
+            let imageStroke = image.createSilhouette()
+            self.populateInfoViews(pokemon: pokemon)
+            self.pokeImageview.image = imageStroke
+            self.pokeImageview.contentMode = .scaleAspectFit
+            self.pokeImageview.countDownTimer()
+        }
+    }
+    
+    private func loadImage(with data: Pokemon) {
+        NetworkManager.shared.downloadImage(from: data.sprites.frontDefault) { [weak self] result in
+            guard let self = self else { return }
             switch result {
             case .success(let image):
-                DispatchQueue.main.async {
-                    let imageStroke = image.createSilhouette()
-                    self.populateInfoViews(pokemon: data)
-                    self.pokeImageview.image = imageStroke
-                    self.pokeImageview.contentMode = .scaleAspectFit
-                    self.pokeImageview.countDownTimer()
-                }
+                handleSuccessfulDownload(image, for: data)
             case .failure(let error):
                 print(error)
             }

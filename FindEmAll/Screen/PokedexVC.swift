@@ -32,7 +32,24 @@ class PokedexVC: UIViewController {
         super.viewIsAppearing(animated)
         configureLayout()
     }
-
+    
+    private func fetchEncountered() {
+        let encounteredId = PersistenceManager.shared.fetchEncounteredId().sorted()
+        
+        for id in encounteredId {
+            Task {
+                do {
+                    let pokemonData = try await NetworkManager.shared.fetchPokemonWithId(number: id)
+                    self.encounteredId[id - 1] = pokemonData
+                    DispatchQueue.main.async {
+                        self.collectionView.reloadData()
+                    }
+                } catch {
+                    throw NetworkError.noDataReturned
+                }
+            }
+        }
+    }
     
     private func setDisplayViews() {
         let totalSeen = PersistenceManager.shared.fetchEncounteredId()
@@ -129,24 +146,6 @@ class PokedexVC: UIViewController {
         dispatchGroup.enter()
         bottomAnimatingView.animateFull(position: .up) {
             dispatchGroup.leave()
-        }
-    }
-    
-    private func fetchEncountered() {
-        let encounteredId = PersistenceManager.shared.fetchEncounteredId().sorted()
-        
-        for id in encounteredId {
-            Task {
-                do {
-                    let pokemonData = try await NetworkManager.shared.fetchPokemonWithId(number: id)
-                    self.encounteredId[id - 1] = pokemonData
-                    DispatchQueue.main.async {
-                        self.collectionView.reloadData()
-                    }
-                } catch {
-                    throw NetworkError.noDataReturned
-                }
-            }
         }
     }
     
