@@ -59,17 +59,18 @@ class QuizVC: AnimatingVC {
     }
     
     private func fetchData() {
-        NetworkManager.shared.fetchPokemon() { result in
-            switch result {
-            case .success(let pokemon):
-                PersistenceManager.shared.savePokeData(pokemon.id)
-                self.pokemonName = pokemon.name
-                self.setImage(with: pokemon)
-                
-            case .failure(let error as NetworkError):
-                print("네트워크 오류가 발생했어요. \(error.localizedDescription)")
-            case .failure(let error):
-                print("예상 범위를 벗어난 에러가 발생했어요. \(error.localizedDescription)")
+        Task {
+            do {
+                let pokemonData = try await NetworkManager.shared.fetchPokemon()
+                PersistenceManager.shared.savePokeData(pokemonData.id)
+                self.pokemonName = pokemonData.name
+                self.setImage(with: pokemonData)
+            } catch let error {
+                if let error = error as? NetworkError {
+                    print("네트워크 오류가 발생했습니다.")
+                } else {
+                    print("예측 불가능한 에러가 발생했어요.")
+                }
             }
         }
     }

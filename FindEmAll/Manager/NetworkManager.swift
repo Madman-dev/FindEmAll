@@ -19,81 +19,48 @@ class NetworkManager {
     }
     
     // 리턴 타입 PokemonType으로 진행
-    func fetchPokemon(completion: @escaping (Result<Pokemon, Error>) -> Void) {
+    func fetchPokemon() async throws -> Pokemon {
         // randomPokemon check
-        let pokemonIndex = Int.random(in: 1...4)
+        let pokemonIndex = Int.random(in: PokemonGenerationEnum.firstGen)
         let endPoint = baseUrl + "\(pokemonIndex)"
         
+        // async takes care using throw
         guard let url = URL(string: endPoint) else {
-            completion(.failure(NetworkError.invalidURL))
-            return
+            throw NetworkError.invalidURL
         }
         
-        let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
-            
-            guard let self = self else { return }
-            
-            if let _ = error {
-                completion(.failure(NetworkError.networkError))
-                return
-            }
-            
-            guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-                completion(.failure(NetworkError.invalidResponse))
-                return
-            }
-            
-            guard let data = data else {
-                completion(.failure(NetworkError.noDataReturned))
-                return
-            }
-            
-            do {
-                let pokemonData = try decoder.decode(Pokemon.self, from: data)
-                completion(.success(pokemonData))
-            } catch {
-                completion(.failure(NetworkError.invalidDataFormat))
-            }
+        // async doesn't require data, response, error type - it removes errors to the end.
+        // do try catch는 error 또는 실제 값을 받은 이후 처리하는 과정
+        let (data, response) = try await URLSession.shared.data(from: url)
+        guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
+            throw NetworkError.invalidResponse
         }
-        task.resume()
+        
+        // take care of final piece of data
+        do {
+            return try decoder.decode(Pokemon.self, from: data)
+        } catch {
+            throw NetworkError.invalidDataFormat
+        }
     }
     
-    func fetchPokemonWithId(number: Int, completion: @escaping (Result<Pokemon, Error>) -> Void) {
+    func fetchPokemonWithId(number: Int) async throws -> Pokemon {
         
         let endPoint = baseUrl + "\(number)"
         guard let url = URL(string: endPoint) else {
-            completion(.failure(NetworkError.invalidURL))
-            return
+            throw NetworkError.invalidURL
         }
         
-        let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
-            
-            // check to maintain weak reference to self.
-            guard let self = self else { return }
-            
-            if let _ = error {
-                completion(.failure(NetworkError.networkError))
-                return
-            }
-            
-            guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-                completion(.failure(NetworkError.invalidResponse))
-                return
-            }
-            
-            guard let data = data else {
-                completion(.failure(NetworkError.noDataReturned))
-                return
-            }
-            
-            do {
-                let pokemonData = try decoder.decode(Pokemon.self, from: data)
-                completion(.success(pokemonData))
-            } catch {
-                completion(.failure(NetworkError.invalidDataFormat))
-            }
+        let (data, response) = try await URLSession.shared.data(from: url)
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw NetworkError.invalidResponse
         }
-        task.resume()
+        
+        do {
+            return try decoder.decode(Pokemon.self, from: data)
+        } catch {
+            throw NetworkError.invalidDataFormat
+        }
     }
     
     // 이미지를 던지는 이유는?
