@@ -19,97 +19,85 @@ class NetworkManager {
     }
     
     // 리턴 타입 PokemonType으로 진행
-    func fetchPokemon(completion: @escaping (Pokemon?, String?) -> Void) {
+    func fetchPokemon(completion: @escaping (Result<Pokemon, Error>) -> Void) {
         // randomPokemon check
         let pokemonIndex = Int.random(in: 1...4)
-        
-        // basePoint
         let endPoint = baseUrl + "\(pokemonIndex)"
         
-        // url이 있는지 확인 (endpoint)
         guard let url = URL(string: endPoint) else {
-            completion(nil, "없는 URL입니다.")
+            completion(.failure(NetworkError.invalidURL))
             return
         }
         
-        // task 생성 - data, response, error 처리
         let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
             
-            guard let self = self else {
-                return
-            }
+            guard let self = self else { return }
             
             if let _ = error {
-                completion(nil, "데이터 호출 오류가 발생했습니다.")
+                completion(.failure(NetworkError.networkError))
                 return
             }
             
             guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-                completion(nil, "서버에서 받은 데이터에 오류가 있습니다.")
+                completion(.failure(NetworkError.invalidResponse))
                 return
             }
             
             guard let data = data else {
-                completion(nil, "데이터 파싱이 잘못되었습니다.")
+                completion(.failure(NetworkError.noDataReturned))
                 return
             }
             
             do {
-                // 받아온 데이터 decode
                 let pokemonData = try decoder.decode(Pokemon.self, from: data)
-                completion(pokemonData, nil)
+                completion(.success(pokemonData))
             } catch {
-                completion(nil, "데이터는 올바르게 왔습니다만... \(error).")
+                completion(.failure(NetworkError.invalidDataFormat))
             }
         }
         task.resume()
     }
     
-    func fetchPokemonWithId(number: Int, completion: @escaping (Pokemon?, String?) -> Void?) {
-        // basePoint
-        let endPoint = baseUrl + "\(number)"
+    func fetchPokemonWithId(number: Int, completion: @escaping (Result<Pokemon, Error>) -> Void) {
         
-        // url이 있는지 확인 (endpoint)
+        let endPoint = baseUrl + "\(number)"
         guard let url = URL(string: endPoint) else {
-            completion(nil, "없는 URL입니다.")
+            completion(.failure(NetworkError.invalidURL))
             return
         }
         
-        // task 생성 - data, response, error 처리
         let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
             
-            guard let self = self else {
-                return
-            }
+            // check to maintain weak reference to self.
+            guard let self = self else { return }
             
             if let _ = error {
-                completion(nil, "데이터 호출 오류가 발생했습니다.")
+                completion(.failure(NetworkError.networkError))
                 return
             }
             
             guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-                completion(nil, "서버에서 받은 데이터에 오류가 있습니다.")
+                completion(.failure(NetworkError.invalidResponse))
                 return
             }
             
             guard let data = data else {
-                completion(nil, "데이터 파싱이 잘못되었습니다.")
+                completion(.failure(NetworkError.noDataReturned))
                 return
             }
             
             do {
-                // 받아온 데이터 decode
                 let pokemonData = try decoder.decode(Pokemon.self, from: data)
-                completion(pokemonData, nil)
+                completion(.success(pokemonData))
             } catch {
-                completion(nil, "데이터는 올바르게 왔습니다만... \(error).")
+                completion(.failure(NetworkError.invalidDataFormat))
             }
         }
         task.resume()
     }
     
     // 이미지를 던지는 이유는?
-    func downloadImage(from dataString: String, completed: @escaping (UIImage?) -> Void) {
+    func downloadImage(from dataString: String, completed: @escaping (Result<UIImage, Error>) -> Void) {
         
         /// cache check
         // convert String to cacheKey
@@ -118,40 +106,37 @@ class NetworkManager {
         // check if cache has image
         if let image = cache.object(forKey: cacheKey) {
             // if yes, load image
-            completed(image)
+            completed(.success(image))
             return
         }
         
         // check if URL is valid
         guard let url = URL(string: dataString) else {
-            completed(nil)
+            completed(.failure(NetworkError.invalidURL))
             return
         }
         
         // parse url into data
-        let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
-            guard let self = self else {
-                completed(nil)
-                return
-            }
+        let task = URLSession.shared.dataTask(with: url) { data, response, error in
             
             // check for error
-            if let error = error {
-                print("에러가 발생했습니다.")
+            if let _ = error {
+                print(NetworkError.networkError)
+                return
             }
             
             // check for correct response
             guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-                completed(nil)
+                completed(.failure(NetworkError.invalidResponse))
                 return
             }
             
             // check if data is correct and convert to image
             guard let data = data, let image = UIImage(data: data) else {
-                completed(nil)
+                completed(.failure(NetworkError.invalidDataFormat))
                 return
             }
-            completed(image)
+            completed(.success(image))
         }
         task.resume()
     }

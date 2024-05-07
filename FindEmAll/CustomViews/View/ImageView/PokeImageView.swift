@@ -81,9 +81,14 @@ class PokeImageView: UIImageView {
 //    }
     
     func downloadImageUrl(from url: String) {
-        NetworkManager.shared.downloadImage(from: url) { image in
-            DispatchQueue.main.async {
-                self.image = image
+        NetworkManager.shared.downloadImage(from: url) { result in
+            switch result {
+            case .success(let image):
+                DispatchQueue.main.async {
+                    self.image = image
+                }
+            case .failure(let error):
+                print(error)
             }
         }
     }

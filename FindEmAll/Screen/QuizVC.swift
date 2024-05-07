@@ -59,33 +59,34 @@ class QuizVC: AnimatingVC {
     }
     
     private func fetchData() {
-        NetworkManager.shared.fetchPokemon() { pokemon, errorMessage in
-            if let error = errorMessage {
-                print("호출 에러 문제 발생",error)
-                return
+        NetworkManager.shared.fetchPokemon() { result in
+            switch result {
+            case .success(let pokemon):
+                PersistenceManager.shared.savePokeData(pokemon.id)
+                self.pokemonName = pokemon.name
+                self.setImage(with: pokemon)
+                
+            case .failure(let error as NetworkError):
+                print("네트워크 오류가 발생했어요. \(error.localizedDescription)")
+            case .failure(let error):
+                print("예상 범위를 벗어난 에러가 발생했어요. \(error.localizedDescription)")
             }
-            
-            guard let pokemon = pokemon else {
-                print("Error Occurs here")
-                return
-            }
-            
-            PersistenceManager.shared.savePokeData(pokemon.id)
-            self.pokemonName = pokemon.name
-            self.setImage(with: pokemon)
         }
     }
     
     private func setImage(with data: Pokemon) {
-        NetworkManager.shared.downloadImage(from: data.sprites.frontDefault) { [weak self] image in
-            guard let self = self else { return }
-            guard let image = image else { return }
-            DispatchQueue.main.async {
-                let imageStroke = image.createSilhouette()
-                self.populateInfoViews(pokemon: data)
-                self.pokeImageview.image = imageStroke
-                self.pokeImageview.contentMode = .scaleAspectFit
-                self.pokeImageview.countDownTimer()
+        NetworkManager.shared.downloadImage(from: data.sprites.frontDefault) { result in
+            switch result {
+            case .success(let image):
+                DispatchQueue.main.async {
+                    let imageStroke = image.createSilhouette()
+                    self.populateInfoViews(pokemon: data)
+                    self.pokeImageview.image = imageStroke
+                    self.pokeImageview.contentMode = .scaleAspectFit
+                    self.pokeImageview.countDownTimer()
+                }
+            case .failure(let error):
+                print(error)
             }
         }
     }
