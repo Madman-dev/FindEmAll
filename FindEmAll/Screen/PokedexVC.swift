@@ -136,14 +136,15 @@ class PokedexVC: UIViewController {
         let encounteredId = PersistenceManager.shared.fetchEncounteredId().sorted()
         
         for id in encounteredId {
-            NetworkManager.shared.fetchPokemonWithId(number: id) { result in
-                switch result {
-                case .success(let data):
-                    self.encounteredId[id - 1] = data
+            Task {
+                do {
+                    let pokemonData = try await NetworkManager.shared.fetchPokemonWithId(number: id)
+                    self.encounteredId[id - 1] = pokemonData
                     DispatchQueue.main.async {
                         self.collectionView.reloadData()
                     }
-                case .failure(let error): print(error)
+                } catch {
+                    throw NetworkError.noDataReturned
                 }
             }
         }
