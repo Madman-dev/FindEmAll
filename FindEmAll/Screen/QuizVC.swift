@@ -9,6 +9,7 @@ import UIKit
 
 class QuizVC: AnimatingVC {
     
+    //MARK: - Property
     private let inputTextfield = PokeTextfield(withSpace: true)
     private let pokeImageview = PokeImageView(frame: .zero)
     private let firstInfoview = PokeInfoView() // VC로 옮겨서 하나로 만들 수 있는지 시도해보자
@@ -40,6 +41,7 @@ class QuizVC: AnimatingVC {
         fetchData()
     }
     
+    //MARK: - Methods
     private func checkIfMatching(name: String, userInput: String?) {
         guard !(inputTextfield.text?.isEmpty ?? true) else {
             presentPokeAlert(title: PokeInputError.blankTitle.text,
@@ -51,7 +53,7 @@ class QuizVC: AnimatingVC {
             presentPokeAlert(title: PokeInputError.caughtTitle.text,
                              buttonTitle: "ok")
         } else {
-            self.returnBack()
+            self.returnViewsToOrigin()
             self.inputTextfield.resignFirstResponder()
             presentPokeAlert(title: PokeInputError.missedTitle.text,
                              buttonTitle: "ok")
@@ -62,10 +64,9 @@ class QuizVC: AnimatingVC {
         Task {
             do {
                 let pokemonData = try await NetworkManager.shared.fetchPokemon()
-                PersistenceManager.shared.savePokeData(pokemonData.id)
-                self.pokemonName = pokemonData.name
-                self.setImage(with: pokemonData)
-            } catch let error {
+                savePokemon(with:pokemonData.id)
+                updateUI(with: pokemonData)
+            } catch {
                 if let error = error as? NetworkError {
                     print("네트워크 오류가 발생했습니다.")
                 } else {
@@ -75,23 +76,37 @@ class QuizVC: AnimatingVC {
         }
     }
     
-    private func setImage(with data: Pokemon) {
-        NetworkManager.shared.downloadImage(from: data.sprites.frontDefault) { result in
+    private func updateUI(with id: Pokemon) {
+        self.pokemonName = id.name
+        loadImage(with: id)
+    }
+    
+    private func savePokemon(with id: Int) {
+        PersistenceManager.shared.savePokeData(id)
+    }
+    
+    private func loadImage(with data: Pokemon) {
+        NetworkManager.shared.downloadImage(from: data.sprites.frontDefault) { [weak self] result in
+            guard let self = self else { return }
             switch result {
             case .success(let image):
-                DispatchQueue.main.async {
-                    let imageStroke = image.createSilhouette()
-                    self.populateInfoViews(pokemon: data)
-                    self.pokeImageview.image = imageStroke
-                    self.pokeImageview.contentMode = .scaleAspectFit
-                    self.pokeImageview.countDownTimer()
-                }
+                handleSuccessfulDownload(image, for: data)
             case .failure(let error):
                 print(error)
             }
         }
     }
     
+    private func handleSuccessfulDownload(_ image: UIImage, for pokemon: Pokemon) {
+        DispatchQueue.main.async {
+            let imageStroke = image.createSilhouette()
+            self.populateInfoViews(pokemon: pokemon)
+            self.pokeImageview.image = imageStroke
+            self.pokeImageview.contentMode = .scaleAspectFit
+            self.pokeImageview.countDownTimer()
+        }
+    }
+
     private func populateInfoViews(pokemon: Pokemon) {
         firstInfoview.updateView(data: pokemon, dataType: .height)
         secondInfoview.updateView(data: pokemon, dataType: .move)
@@ -99,7 +114,24 @@ class QuizVC: AnimatingVC {
         fourthInfoview.updateView(data: pokemon, dataType: .weight)
     }
     
-    //MARK: - UILayout
+    @objc func backButtonTapped() {
+        print("데이터가 보내졌습니다.")
+        dismissAnimatingView()
+    }
+    
+    private func returnViewsToOrigin() {
+        firstInfoview.animateBack(to: originalPosition[firstInfoview]!)
+        secondInfoview.animateBack(to: originalPosition[secondInfoview]!)
+        thirdInfoview.animateBack(to: originalPosition[thirdInfoview]!)
+        fourthInfoview.animateBack(to: originalPosition[fourthInfoview]!)
+    }
+    
+    private func createDismissKeyboardGesture() {
+        let tap = UITapGestureRecognizer(target: view, action: #selector(UIView.endEditing))
+        view.addGestureRecognizer(tap)
+    }
+    
+    //MARK: - Autolayout && UI
     private func configureLayout() {
         view.backgroundColor = PokeColor.PokeBlack
         
@@ -134,6 +166,12 @@ class QuizVC: AnimatingVC {
     }
     
     private func configureReturnButton() {
+//        let image = UIImage(systemName: "arrowshape.backward.fill")?
+//            .withTintColor(.white, renderingMode: .alwaysOriginal)
+//        let backAction = UIButton(type: .custom, primaryAction: UIAction(handler: { _ in
+//            self.dismissAnimatingView()
+//        }))
+        
         let backButton = UIBarButtonItem(
             image: UIImage(systemName: "arrowshape.backward.fill")?
                 .withTintColor(.white, renderingMode: .alwaysOriginal),
@@ -154,24 +192,6 @@ class QuizVC: AnimatingVC {
             inputTextfield.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -padding),
             inputTextfield.heightAnchor.constraint(equalToConstant: 80)
         ])
-    }
-    
-    //MARK: - Methods
-    @objc func backButtonTapped() {
-        print("데이터가 보내졌습니다.")
-        dismissAnimatingView()
-    }
-    
-    private func returnBack() {
-        firstInfoview.animateBack(to: originalPosition[firstInfoview]!)
-        secondInfoview.animateBack(to: originalPosition[secondInfoview]!)
-        thirdInfoview.animateBack(to: originalPosition[thirdInfoview]!)
-        fourthInfoview.animateBack(to: originalPosition[fourthInfoview]!)
-    }
-    
-    private func createDismissKeyboardGesture() {
-        let tap = UITapGestureRecognizer(target: view, action: #selector(UIView.endEditing))
-        view.addGestureRecognizer(tap)
     }
     
     deinit {
