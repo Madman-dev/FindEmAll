@@ -8,6 +8,7 @@
 import UIKit
 
 class PokedexVC: UIViewController {
+    //MARK: - Property
     let bottomAnimatingView = AnimatingView(color: PokeColor.PokeGrey)
     let returnButton = PokeButton(color: .white)
     let seenDisplayView = DataDisplayView()
@@ -15,7 +16,9 @@ class PokedexVC: UIViewController {
     var collectionView: UICollectionView!
     var encounteredId: [Int: Pokemon] = [:]
     var selectedIndexPath: IndexPath?
+    let padding: CGFloat = 50
     
+    //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         configureAnimatingViews()
@@ -33,6 +36,7 @@ class PokedexVC: UIViewController {
         configureLayout()
     }
     
+    //MARK: - Methods
     private func fetchEncountered() {
         let encounteredId = PersistenceManager.shared.fetchEncounteredId().sorted()
         
@@ -59,6 +63,7 @@ class PokedexVC: UIViewController {
         caughtDisplayView.setBorder()
     }
     
+    //MARK: - Autolayout && UI
     private func configureLayout() {
         view.backgroundColor = PokeColor.PokeRed
         navigationItem.setHidesBackButton(true, animated: false)
@@ -96,17 +101,16 @@ class PokedexVC: UIViewController {
         NSLayoutConstraint.activate([
             seenDisplayView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             seenDisplayView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            seenDisplayView.heightAnchor.constraint(equalToConstant: 50),
+            seenDisplayView.heightAnchor.constraint(equalToConstant: padding),
             seenDisplayView.widthAnchor.constraint(equalToConstant: view.frame.width/2 - 10),
             
             caughtDisplayView.centerYAnchor.constraint(equalTo: seenDisplayView.centerYAnchor),
             caughtDisplayView.leadingAnchor.constraint(equalTo: seenDisplayView.trailingAnchor),
             caughtDisplayView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            caughtDisplayView.heightAnchor.constraint(equalToConstant: 50),
+            caughtDisplayView.heightAnchor.constraint(equalToConstant: padding),
         ])
     }
     
-    // 추가 수정할 필요없는 UI
     private func configureAnimatingViews() {
         view.addSubview(bottomAnimatingView)
         
@@ -119,11 +123,12 @@ class PokedexVC: UIViewController {
     }
     
     private func configureReturnButton() {
-        let padding: CGFloat = 50
-        
         view.addSubview(returnButton)
+        let returnAction = UIAction { _ in
+            self.dismissView()
+        }
         returnButton.setImage(UIImage(systemName: "arrowshape.backward.fill"), for: .normal)
-        returnButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        returnButton.addAction(returnAction, for: .touchUpInside)
         
         NSLayoutConstraint.activate([
             returnButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -padding),
@@ -132,14 +137,8 @@ class PokedexVC: UIViewController {
             returnButton.widthAnchor.constraint(equalToConstant: padding)
         ])
     }
-    
-    @objc func backButtonTapped() {
-        print("뒤돌아가기 버튼이 눌렸습니다.")
-        dismissView()
-    }
-    
+
     private func loadAnimatingView() {
-        // pokedex는 어떻게 등장하더라?
         let dispatchGroup = DispatchGroup()
         dispatchGroup.enter()
         
