@@ -67,7 +67,7 @@ class QuizVC: AnimatingVC {
                 savePokemon(with:pokemonData.id)
                 updateUI(with: pokemonData)
             } catch {
-                if let error = error as? NetworkError {
+                if let _ = error as? NetworkError {
                     print("네트워크 오류가 발생했습니다.")
                 } else {
                     print("예측 불가능한 에러가 발생했어요.")
@@ -85,28 +85,24 @@ class QuizVC: AnimatingVC {
         PersistenceManager.shared.savePokeData(id)
     }
     
+    // does not throw an error
     private func loadImage(with data: Pokemon) {
-        NetworkManager.shared.downloadImage(from: data.sprites.frontDefault) { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .success(let image):
-                handleSuccessfulDownload(image, for: data)
-            case .failure(let error):
-                print(error)
+        Task {
+            do {
+                let image = await NetworkManager.shared.downloadImage(from: data.sprites.frontDefault)
+                handleDownload(image, for: data)
             }
         }
     }
     
-    private func handleSuccessfulDownload(_ image: UIImage, for pokemon: Pokemon) {
-        DispatchQueue.main.async {
-            let imageStroke = image.createSilhouette()
-            self.populateInfoViews(pokemon: pokemon)
-            self.pokeImageview.image = imageStroke
-            self.pokeImageview.contentMode = .scaleAspectFit
-            self.pokeImageview.countDownTimer()
-        }
+    private func handleDownload(_ image: UIImage?, for pokemon: Pokemon) {
+        let imageStroke = image?.createSilhouette()
+        self.populateInfoViews(pokemon: pokemon)
+        self.pokeImageview.image = imageStroke
+        self.pokeImageview.contentMode = .scaleAspectFit
+        self.pokeImageview.countDownTimer()
     }
-
+    
     private func populateInfoViews(pokemon: Pokemon) {
         firstInfoview.updateView(data: pokemon, dataType: .height)
         secondInfoview.updateView(data: pokemon, dataType: .move)
@@ -165,13 +161,7 @@ class QuizVC: AnimatingVC {
         ])
     }
     
-    private func configureReturnButton() {
-//        let image = UIImage(systemName: "arrowshape.backward.fill")?
-//            .withTintColor(.white, renderingMode: .alwaysOriginal)
-//        let backAction = UIButton(type: .custom, primaryAction: UIAction(handler: { _ in
-//            self.dismissAnimatingView()
-//        }))
-        
+    private func configureReturnButton() {        
         let backButton = UIBarButtonItem(
             image: UIImage(systemName: "arrowshape.backward.fill")?
                 .withTintColor(.white, renderingMode: .alwaysOriginal),

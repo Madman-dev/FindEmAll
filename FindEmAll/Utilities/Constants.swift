@@ -12,3 +12,7 @@ enum PokeColor {
     static let PokeGrey = UIColor(hexCode: "F1F1F1")
     static let PokeBlack = UIColor(hexCode: "333333")
 }
+
+enum PokeImage {
+    static let placeHolder = UIImage(systemName: "questionmark")
+}
