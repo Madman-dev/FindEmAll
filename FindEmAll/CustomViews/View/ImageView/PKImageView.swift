@@ -1,5 +1,5 @@
 //
-//  PokeImageView.swift
+//  PKImageView.swift
 //  FindEmAll
 //
 //  Created by Porori on 3/14/24.
@@ -12,7 +12,7 @@ protocol PokeImageDelegate: AnyObject {
 }
 
 // 메모리 효율성에도 도움이 된다?
-class PokeImageView: UIImageView {
+class PKImageView: UIImageView {
     
     private let timeShapeLayer = CAShapeLayer()
     private let timeLeftShapeLayer = CAShapeLayer()
@@ -20,7 +20,7 @@ class PokeImageView: UIImageView {
     private var timeLeft: TimeInterval = 30
     private var timer = Timer()
     private var isTimeOver: Bool = false
-    private var placeHolder = PokeImage.placeHolder
+    private var placeHolder = PKImage.placeHolder
     var delegate: PokeImageDelegate?
     
     override var bounds: CGRect {

@@ -1,5 +1,5 @@
 //
-//  PokeInputTitle.swift
+//  PKInputError.swift
 //  FindEmAll
 //
 //  Created by Porori on 4/19/24.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum PokeInputError: String {
+enum PKInputError: String {
     case caughtTitle
     case missedTitle
     case blankTitle

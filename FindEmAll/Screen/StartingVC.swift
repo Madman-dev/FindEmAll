@@ -9,9 +9,9 @@ import UIKit
 
 class StartingVC: AnimatingVC {
     
-    let titleLabel = PokeTitleLabel(textAlignment: .center, fontSize: 30)
-    let enterGameButton = PokeButton(color: .white)
-    let pokedexButton = PokeButton(color: PokeColor.PokeBlack)
+    let titleLabel = PKTitleLabel(textAlignment: .center, fontSize: 30)
+    let enterGameButton = PKButton(color: .white)
+    let pokedexButton = PKButton(color: PKColor.PokeBlack)
     var feedbackGenerator: UIImpactFeedbackGenerator? = nil
     
     //MARK: - LifeCycle
@@ -30,7 +30,7 @@ class StartingVC: AnimatingVC {
     
     //MARK: - UILayout
     private func configureLayout() {
-        view.backgroundColor = PokeColor.PokeBlack
+        view.backgroundColor = PKColor.PokeBlack
         view.addSubviews(titleLabel, enterGameButton, pokedexButton)
     }
     
@@ -45,7 +45,7 @@ class StartingVC: AnimatingVC {
     
     private func configureButton() {
         enterGameButton.addTarget(self, action: #selector(actionButtonTapped), for: .touchUpInside)
-        enterGameButton.addBorder(color: PokeColor.PokeBlack)
+        enterGameButton.addBorder(color: PKColor.PokeBlack)
         
         NSLayoutConstraint.activate([
             enterGameButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -76,7 +76,7 @@ class StartingVC: AnimatingVC {
     @objc func actionButtonTapped(_ sender: UIButton) {
         self.prepareFeedback()
         let destinationVC = QuizVC()
-        sender.tapAnimation {
+        sender.animatedWhenTapped {
             self.feedbackGenerator?.impactOccurred()
             self.dismissAndAnimateTo(VC: destinationVC)
         }
@@ -84,7 +84,7 @@ class StartingVC: AnimatingVC {
     
     @objc func pokedexButtonTapped(sender: UIButton) {
         let destinationVC = PokedexVC()
-        sender.tapAnimation {
+        sender.animatedWhenTapped {
             self.dismissAndAnimateTo(VC: destinationVC)
         }
     }

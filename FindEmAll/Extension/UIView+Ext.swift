@@ -23,7 +23,7 @@ extension UIView {
         }
     }
     
-    func animateBack(to position: CGPoint) {
+    func animateToOrigin(_ position: CGPoint) {
         DispatchQueue.main.async {
             UIView.animate(withDuration: 0.5) {
                 self.frame.origin = position
@@ -31,7 +31,7 @@ extension UIView {
         }
     }
     
-    func tapAnimation(_ completion: @escaping () -> Void) {
+    func animatedWhenTapped(_ completion: @escaping () -> Void) {
         isUserInteractionEnabled = false
         let originalSize = self.frame.size
         

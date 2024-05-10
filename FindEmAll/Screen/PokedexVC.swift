@@ -9,10 +9,10 @@ import UIKit
 
 class PokedexVC: UIViewController {
     //MARK: - Property
-    let bottomAnimatingView = AnimatingView(color: PokeColor.PokeGrey)
-    let returnButton = PokeButton(color: .white)
-    let seenDisplayView = DataDisplayView()
-    let caughtDisplayView = DataDisplayView()
+    let bottomAnimatingView = AnimatingView(color: PKColor.PokeGrey)
+    let returnButton = PKButton(color: .white)
+    let seenDisplayView = DataView()
+    let caughtDisplayView = DataView()
     var collectionView: UICollectionView!
     var encounteredId: [Int: Pokemon] = [:]
     var selectedIndexPath: IndexPath?
@@ -65,7 +65,7 @@ class PokedexVC: UIViewController {
     
     //MARK: - Autolayout && UI
     private func configureLayout() {
-        view.backgroundColor = PokeColor.PokeRed
+        view.backgroundColor = PKColor.PokeRed
         navigationItem.setHidesBackButton(true, animated: false)
     }
     
@@ -80,8 +80,8 @@ class PokedexVC: UIViewController {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         
         collectionView.register(
-            PokeCollectionViewCell.self,
-            forCellWithReuseIdentifier: PokeCollectionViewCell.reuseId
+            PKCollectionViewCell.self,
+            forCellWithReuseIdentifier: PKCollectionViewCell.reuseId
         )
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -161,7 +161,7 @@ class PokedexVC: UIViewController {
 
 extension PokedexVC: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if let cell = collectionView.cellForItem(at: indexPath) as? PokeCollectionViewCell {
+        if let cell = collectionView.cellForItem(at: indexPath) as? PKCollectionViewCell {
             
             // print("셀 정보", cell)
             // print("패스", indexPath)
@@ -182,7 +182,7 @@ extension PokedexVC: UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        if let cell = collectionView.cellForItem(at: indexPath) as? PokeCollectionViewCell {
+        if let cell = collectionView.cellForItem(at: indexPath) as? PKCollectionViewCell {
             print("다른 셀을 눌렀습니다")
             cell.configureOpenedStack(show: false)
         }
@@ -196,7 +196,7 @@ extension PokedexVC: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PokeCollectionViewCell.reuseId, for: indexPath) as! PokeCollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PKCollectionViewCell.reuseId, for: indexPath) as! PKCollectionViewCell
         cell.transform = CGAffineTransform(scaleX: 0.01, y: 0.01)
         
         if let pokemon = encounteredId[indexPath.item] {

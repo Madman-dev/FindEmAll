@@ -21,7 +21,7 @@ class NetworkManager {
     // 리턴 타입 PokemonType으로 진행
     func fetchPokemon() async throws -> Pokemon {
         // randomPokemon check
-        let pokemonIndex = Int.random(in: PokemonGenerationEnum.firstGen)
+        let pokemonIndex = Int.random(in: GenerationEnum.firstGen)
         let endPoint = baseUrl + "\(pokemonIndex)"
         
         // async takes care using throw

@@ -10,13 +10,13 @@ import UIKit
 class QuizVC: AnimatingVC {
     
     //MARK: - Property
-    private let inputTextfield = PokeTextfield(withSpace: true)
-    private let pokeImageview = PokeImageView(frame: .zero)
-    private let firstInfoview = PokeInfoView() // VC로 옮겨서 하나로 만들 수 있는지 시도해보자
-    private let secondInfoview = PokeInfoView()
-    private let thirdInfoview = PokeInfoView()
-    private let fourthInfoview = PokeInfoView()
-    private var infoViews = [PokeInfoView]()
+    private let inputTextfield = PKTextfield(withSpace: true)
+    private let pokeImageview = PKImageView(frame: .zero)
+    private let firstInfoview = PKInfoView() // VC로 옮겨서 하나로 만들 수 있는지 시도해보자
+    private let secondInfoview = PKInfoView()
+    private let thirdInfoview = PKInfoView()
+    private let fourthInfoview = PKInfoView()
+    private var infoViews = [PKInfoView]()
     private var originalPosition = [UIView: CGPoint]()
     private let height = (UIScreen.main.bounds.height/2) - 15
     private let padding: CGFloat = 20
@@ -44,18 +44,18 @@ class QuizVC: AnimatingVC {
     //MARK: - Methods
     private func checkIfMatching(name: String, userInput: String?) {
         guard !(inputTextfield.text?.isEmpty ?? true) else {
-            presentPokeAlert(title: PokeInputError.blankTitle.text,
+            presentPKAlert(title: PKInputError.blankTitle.text,
                              buttonTitle: "ok")
             return
         }
         
         if name == userInput {
-            presentPokeAlert(title: PokeInputError.caughtTitle.text,
+            presentPKAlert(title: PKInputError.caughtTitle.text,
                              buttonTitle: "ok")
         } else {
             self.returnViewsToOrigin()
             self.inputTextfield.resignFirstResponder()
-            presentPokeAlert(title: PokeInputError.missedTitle.text,
+            presentPKAlert(title: PKInputError.missedTitle.text,
                              buttonTitle: "ok")
         }
     }
@@ -116,10 +116,10 @@ class QuizVC: AnimatingVC {
     }
     
     private func returnViewsToOrigin() {
-        firstInfoview.animateBack(to: originalPosition[firstInfoview]!)
-        secondInfoview.animateBack(to: originalPosition[secondInfoview]!)
-        thirdInfoview.animateBack(to: originalPosition[thirdInfoview]!)
-        fourthInfoview.animateBack(to: originalPosition[fourthInfoview]!)
+        firstInfoview.animateToOrigin(originalPosition[firstInfoview]!)
+        secondInfoview.animateToOrigin(originalPosition[secondInfoview]!)
+        thirdInfoview.animateToOrigin(originalPosition[thirdInfoview]!)
+        fourthInfoview.animateToOrigin(originalPosition[fourthInfoview]!)
     }
     
     private func createDismissKeyboardGesture() {
@@ -129,11 +129,11 @@ class QuizVC: AnimatingVC {
     
     //MARK: - Autolayout && UI
     private func configureLayout() {
-        view.backgroundColor = PokeColor.PokeBlack
+        view.backgroundColor = PKColor.PokeBlack
         
         view.addSubview(pokeImageview)
         infoViews = [firstInfoview, secondInfoview, thirdInfoview, fourthInfoview]
-        pokeImageview.backgroundColor = PokeColor.PokeBlack
+        pokeImageview.backgroundColor = PKColor.PokeBlack
         pokeImageview.delegate = self
         pokeImageview.set(img: "lasso")
         
@@ -212,7 +212,7 @@ extension QuizVC: UITextFieldDelegate {
 extension QuizVC: PokeImageDelegate {
     func isTimeOver(_ complete: Bool) {
         if complete {
-            presentPokeAlert(title: "이렇게", buttonTitle: "ok")
+            presentPKAlert(title: "이렇게", buttonTitle: "ok")
         }
     }
 }

@@ -24,12 +24,4 @@ class AlertContainerView: UIView {
         layer.borderColor = UIColor.white.cgColor
         translatesAutoresizingMaskIntoConstraints = false
     }
-    
-    // changing borderColor when darkmode
-//    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-//        super.traitCollectionDidChange(previousTraitCollection)
-//        if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
-//            layer.borderColor = UIColor.black.cgColor
-//        }
-//    }
 }
