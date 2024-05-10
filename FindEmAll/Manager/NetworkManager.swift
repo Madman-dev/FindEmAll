@@ -19,140 +19,75 @@ class NetworkManager {
     }
     
     // 리턴 타입 PokemonType으로 진행
-    func fetchPokemon(completion: @escaping (Pokemon?, String?) -> Void) {
+    func fetchPokemon() async throws -> Pokemon {
         // randomPokemon check
-        let pokemonIndex = Int.random(in: 1...4)
-        
-        // basePoint
+        let pokemonIndex = Int.random(in: GenerationEnum.firstGen)
         let endPoint = baseUrl + "\(pokemonIndex)"
         
-        // url이 있는지 확인 (endpoint)
+        // async takes care using throw
         guard let url = URL(string: endPoint) else {
-            completion(nil, "없는 URL입니다.")
-            return
+            throw NetworkError.invalidURL
         }
         
-        // task 생성 - data, response, error 처리
-        let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
-            
-            guard let self = self else {
-                return
-            }
-            
-            if let _ = error {
-                completion(nil, "데이터 호출 오류가 발생했습니다.")
-                return
-            }
-            
-            guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-                completion(nil, "서버에서 받은 데이터에 오류가 있습니다.")
-                return
-            }
-            
-            guard let data = data else {
-                completion(nil, "데이터 파싱이 잘못되었습니다.")
-                return
-            }
-            
-            do {
-                // 받아온 데이터 decode
-                let pokemonData = try decoder.decode(Pokemon.self, from: data)
-                completion(pokemonData, nil)
-            } catch {
-                completion(nil, "데이터는 올바르게 왔습니다만... \(error).")
-            }
+        // async doesn't require data, response, error type - it removes errors to the end.
+        // do try catch는 error 또는 실제 값을 받은 이후 처리하는 과정
+        let (data, response) = try await URLSession.shared.data(from: url)
+        guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
+            throw NetworkError.invalidResponse
         }
-        task.resume()
+        
+        // take care of final piece of data
+        do {
+            return try decoder.decode(Pokemon.self, from: data)
+        } catch {
+            throw NetworkError.invalidDataFormat
+        }
     }
     
-    func fetchPokemonWithId(id: Int, completion: @escaping (Pokemon?, String?) -> Void?) {
-        // basePoint
-        let endPoint = baseUrl + "\(id)"
+    func fetchPokemonWithId(number: Int) async throws -> Pokemon {
         
-        // url이 있는지 확인 (endpoint)
+        let endPoint = baseUrl + "\(number)"
         guard let url = URL(string: endPoint) else {
-            completion(nil, "없는 URL입니다.")
-            return
+            throw NetworkError.invalidURL
         }
         
-        // task 생성 - data, response, error 처리
-        let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
-            
-            guard let self = self else {
-                return
-            }
-            
-            if let _ = error {
-                completion(nil, "데이터 호출 오류가 발생했습니다.")
-                return
-            }
-            
-            guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-                completion(nil, "서버에서 받은 데이터에 오류가 있습니다.")
-                return
-            }
-            
-            guard let data = data else {
-                completion(nil, "데이터 파싱이 잘못되었습니다.")
-                return
-            }
-            
-            do {
-                // 받아온 데이터 decode
-                let pokemonData = try decoder.decode(Pokemon.self, from: data)
-                completion(pokemonData, nil)
-            } catch {
-                completion(nil, "데이터는 올바르게 왔습니다만... \(error).")
-            }
+        let (data, response) = try await URLSession.shared.data(from: url)
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw NetworkError.invalidResponse
         }
-        task.resume()
+        
+        do {
+            return try decoder.decode(Pokemon.self, from: data)
+        } catch {
+            throw NetworkError.invalidDataFormat
+        }
     }
     
-    // 이미지를 던지는 이유는?
-    func downloadImage(from dataString: String, completed: @escaping (UIImage?) -> Void) {
+    // Not throwing error to make no popup or
+    func downloadImage(from dataString: String) async -> UIImage? {
         
         /// cache check
         // convert String to cacheKey
         let cacheKey = NSString(string: dataString)
         
-        // check if cache has image
         if let image = cache.object(forKey: cacheKey) {
-            // if yes, load image
-            completed(image)
-            return
+            return image
         }
         
-        // check if URL is valid
         guard let url = URL(string: dataString) else {
-            completed(nil)
-            return
+            return nil
         }
         
-        // parse url into data
-        let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
-            guard let self = self else {
-                completed(nil)
-                return
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            guard let image = UIImage(data: data) else {
+                return nil
             }
             
-            // check for error
-            if let error = error {
-                print("에러가 발생했습니다.")
-            }
-            
-            // check for correct response
-            guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-                completed(nil)
-                return
-            }
-            
-            // check if data is correct and convert to image
-            guard let data = data, let image = UIImage(data: data) else {
-                completed(nil)
-                return
-            }
-            completed(image)
+            cache.setObject(image, forKey: cacheKey)
+            return image
+        } catch {
+            return nil
         }
-        task.resume()
     }
 }

@@ -23,7 +23,7 @@ extension UIView {
         }
     }
     
-    func animateBack(to position: CGPoint) {
+    func animateToOrigin(_ position: CGPoint) {
         DispatchQueue.main.async {
             UIView.animate(withDuration: 0.5) {
                 self.frame.origin = position
@@ -31,7 +31,7 @@ extension UIView {
         }
     }
     
-    func tapAnimation(_ completion: @escaping () -> Void) {
+    func animatedWhenTapped(_ completion: @escaping () -> Void) {
         isUserInteractionEnabled = false
         let originalSize = self.frame.size
         
@@ -39,7 +39,7 @@ extension UIView {
             [weak self] in
             guard let self = self else { return }
             let scaleValue: CGFloat = 0.95
-            let scaledSize = CGSize(width: originalSize.width * scaleValue, height: originalSize.height * scaleValue)
+            let scaledSize = CGSize(width: originalSize.width, height: originalSize.height * scaleValue)
             let translation = CGPoint(x: (originalSize.width - scaledSize.width), y: (originalSize.height - scaledSize.height))
             
             let transform = CGAffineTransform.identity

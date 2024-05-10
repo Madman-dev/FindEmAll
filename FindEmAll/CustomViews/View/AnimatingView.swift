@@ -13,7 +13,7 @@ enum Movement {
 class AnimatingView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
-        configure()
+        configureLayout()
     }
     
     convenience init(color: UIColor) {
@@ -25,12 +25,12 @@ class AnimatingView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func configure() {
+    private func configureLayout() {
         layer.cornerRadius = 20
         translatesAutoresizingMaskIntoConstraints = false
     }
     
-    func animate(to position: Movement, completion: (() -> Void)?) {
+    func animate(position: Movement, completion: (() -> Void)?) {
         switch position {
         case .up:
             UIView.animate(withDuration: 0.4) {
@@ -44,7 +44,7 @@ class AnimatingView: UIView {
         }
     }
     
-    func animateFull(to position: Movement, completion: (() -> Void)?) {
+    func animateFull(position: Movement, completion: (() -> Void)?) {
         switch position {
         case .up:
             UIView.animate(withDuration: 0.4) {

@@ -1,5 +1,5 @@
 //
-//  PokeInputTitle.swift
+//  PKInputError.swift
 //  FindEmAll
 //
 //  Created by Porori on 4/19/24.
@@ -7,30 +7,19 @@
 
 import Foundation
 
-enum PokeInputTitle: String {
-    case correctTitle
-    case wrongTitle
+enum PKInputError: String {
+    case caughtTitle
+    case missedTitle
+    case blankTitle
     
     var text: String {
         switch self {
-        case .correctTitle:
-            return "Congrats!"
-        case .wrongTitle:
-            return "Nearly got it"
-        }
-    }
-}
-
-enum PokeInputMessage {
-    case correctMessage
-    case wrongMessage
-    
-    var text: String {
-        switch self {
-        case .correctMessage:
-            return "You caught the Pokemon!"
-        case .wrongMessage:
-            return "Think one more time"
+        case .caughtTitle:
+            return "You caught it!"
+        case .blankTitle:
+            return "Make a guess!"
+        case .missedTitle:
+            return "That was close!"
         }
     }
 }

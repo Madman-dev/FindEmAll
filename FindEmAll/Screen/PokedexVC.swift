@@ -8,46 +8,64 @@
 import UIKit
 
 class PokedexVC: UIViewController {
-    let bottomAnimatingView = AnimatingView(color: Color.PokeGrey)
-    let returnButton = PokeButton(color: .white)
-    let firstDisplayView = DataDisplayView()
-    let secondDisplayView = DataDisplayView()
+    //MARK: - Property
+    let bottomAnimatingView = AnimatingView(color: PKColor.PokeGrey)
+    let returnButton = PKButton(color: .white)
+    let seenDisplayView = DataView()
+    let caughtDisplayView = DataView()
     var collectionView: UICollectionView!
     var encounteredId: [Int: Pokemon] = [:]
-    let expandableCell = PokeCollectionViewCell()
     var selectedIndexPath: IndexPath?
+    let padding: CGFloat = 50
     
+    //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        configure()
         configureAnimatingViews()
-        
-        // animatingView 이후 호출될 수 있도록 시점 변경
         loadAnimatingView()
+        
         configureDataDisplay()
         configureCollectionView()
         configureReturnButton()
-        configureDisplayData()
+        setDisplayViews()
         fetchEncountered()
     }
     
-    init() {
-        super.init(nibName: nil, bundle: nil)
+    override func viewIsAppearing(_ animated: Bool) {
+        super.viewIsAppearing(animated)
+        configureLayout()
+    }
+    
+    //MARK: - Methods
+    private func fetchEncountered() {
+        let encounteredId = PersistenceManager.shared.fetchEncounteredId().sorted()
         
+        for id in encounteredId {
+            Task {
+                do {
+                    let pokemonData = try await NetworkManager.shared.fetchPokemonWithId(number: id)
+                    self.encounteredId[id - 1] = pokemonData
+                    DispatchQueue.main.async {
+                        self.collectionView.reloadData()
+                    }
+                } catch {
+                    throw NetworkError.noDataReturned
+                }
+            }
+        }
     }
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    private func configureDisplayData() {
+    private func setDisplayViews() {
         let totalSeen = PersistenceManager.shared.fetchEncounteredId()
-        firstDisplayView.set(item: .seen, withCount: totalSeen.count)
-        secondDisplayView.set(item: .captured, withCount: 0)
+        seenDisplayView.set(item: .seen, withCount: totalSeen.count)
+        caughtDisplayView.set(item: .captured, withCount: 0)
+        seenDisplayView.setBorder()
+        caughtDisplayView.setBorder()
     }
     
-    private func configure() {
-        view.backgroundColor = Color.PokeRed
+    //MARK: - Autolayout && UI
+    private func configureLayout() {
+        view.backgroundColor = PKColor.PokeRed
         navigationItem.setHidesBackButton(true, animated: false)
     }
     
@@ -62,14 +80,14 @@ class PokedexVC: UIViewController {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         
         collectionView.register(
-            PokeCollectionViewCell.self,
-            forCellWithReuseIdentifier: PokeCollectionViewCell.reuseId
+            PKCollectionViewCell.self,
+            forCellWithReuseIdentifier: PKCollectionViewCell.reuseId
         )
         collectionView.delegate = self
         collectionView.dataSource = self
         
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: firstDisplayView.bottomAnchor, constant: 35),
+            collectionView.topAnchor.constraint(equalTo: seenDisplayView.bottomAnchor, constant: 35),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 5),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -5),
             collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
@@ -77,23 +95,22 @@ class PokedexVC: UIViewController {
     }
     
     private func configureDataDisplay() {
-        view.addSubview(firstDisplayView)
-        view.addSubview(secondDisplayView)
+        view.addSubview(seenDisplayView)
+        view.addSubview(caughtDisplayView)
         
         NSLayoutConstraint.activate([
-            firstDisplayView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            firstDisplayView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            firstDisplayView.heightAnchor.constraint(equalToConstant: 50),
-            firstDisplayView.widthAnchor.constraint(equalToConstant: view.frame.width/2 - 10),
+            seenDisplayView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            seenDisplayView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            seenDisplayView.heightAnchor.constraint(equalToConstant: padding),
+            seenDisplayView.widthAnchor.constraint(equalToConstant: view.frame.width/2 - 10),
             
-            secondDisplayView.centerYAnchor.constraint(equalTo: firstDisplayView.centerYAnchor),
-            secondDisplayView.leadingAnchor.constraint(equalTo: firstDisplayView.trailingAnchor),
-            secondDisplayView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            secondDisplayView.heightAnchor.constraint(equalToConstant: 50),
+            caughtDisplayView.centerYAnchor.constraint(equalTo: seenDisplayView.centerYAnchor),
+            caughtDisplayView.leadingAnchor.constraint(equalTo: seenDisplayView.trailingAnchor),
+            caughtDisplayView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            caughtDisplayView.heightAnchor.constraint(equalToConstant: padding),
         ])
     }
     
-    // 추가 수정할 필요없는 UI
     private func configureAnimatingViews() {
         view.addSubview(bottomAnimatingView)
         
@@ -106,11 +123,12 @@ class PokedexVC: UIViewController {
     }
     
     private func configureReturnButton() {
-        let padding: CGFloat = 50
-        
         view.addSubview(returnButton)
+        let returnAction = UIAction { _ in
+            self.dismissView()
+        }
         returnButton.setImage(UIImage(systemName: "arrowshape.backward.fill"), for: .normal)
-        returnButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        returnButton.addAction(returnAction, for: .touchUpInside)
         
         NSLayoutConstraint.activate([
             returnButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -padding),
@@ -119,41 +137,19 @@ class PokedexVC: UIViewController {
             returnButton.widthAnchor.constraint(equalToConstant: padding)
         ])
     }
-    
-    @objc func backButtonTapped() {
-        print("뒤돌아가기 버튼이 눌렸습니다.")
-        dismissView()
-    }
-    
+
     private func loadAnimatingView() {
-        // pokedex는 어떻게 등장하더라?
         let dispatchGroup = DispatchGroup()
         dispatchGroup.enter()
         
         dispatchGroup.enter()
-        bottomAnimatingView.animateFull(to: .up) {
+        bottomAnimatingView.animateFull(position: .up) {
             dispatchGroup.leave()
         }
     }
     
-    private func fetchEncountered() {
-        let encounteredId = PersistenceManager.shared.fetchEncounteredId().sorted()
-        
-        for id in encounteredId {
-            NetworkManager.shared.fetchPokemonWithId(id: id) { pokemon, errorMessage in
-                if let pokemon = pokemon {
-                    self.encounteredId[id - 1] = pokemon
-                }
-                DispatchQueue.main.async {
-                    self.collectionView.reloadData()
-                }
-            }
-        }
-        
-    }
-    
     private func dismissView() {
-        bottomAnimatingView.animateFull(to: .down) {
+        bottomAnimatingView.animateFull(position: .down) {
             self.navigationController?.popViewController(animated: false)
         }
     }
@@ -165,14 +161,31 @@ class PokedexVC: UIViewController {
 
 extension PokedexVC: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("indexPath가 눌렸어요", indexPath)
-        
-        if selectedIndexPath != nil && selectedIndexPath == indexPath {
-            selectedIndexPath = nil
-        } else {
-            selectedIndexPath = indexPath
+        if let cell = collectionView.cellForItem(at: indexPath) as? PKCollectionViewCell {
+            
+            // print("셀 정보", cell)
+            // print("패스", indexPath)
+            // when indexPath is selected, update the cell within > need to remove data to make it small.
+            if selectedIndexPath?.row == indexPath.row {
+                print("줄었습니다.")
+                cell.configureOpenedStack(show: false)
+                selectedIndexPath = nil
+            } else {
+                print("키웠습니다.")
+                cell.configureOpenedStack(show: true)
+                selectedIndexPath = indexPath
+            }
+            
+            // update the collectionview layout?
+            collectionView.performBatchUpdates(nil)
         }
-        collectionView.performBatchUpdates(nil)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        if let cell = collectionView.cellForItem(at: indexPath) as? PKCollectionViewCell {
+            print("다른 셀을 눌렀습니다")
+            cell.configureOpenedStack(show: false)
+        }
     }
 }
 
@@ -183,12 +196,11 @@ extension PokedexVC: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PokeCollectionViewCell.reuseId, for: indexPath) as! PokeCollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PKCollectionViewCell.reuseId, for: indexPath) as! PKCollectionViewCell
         cell.transform = CGAffineTransform(scaleX: 0.01, y: 0.01)
         
         if let pokemon = encounteredId[indexPath.item] {
             cell.set(data: pokemon)
-            print("indexPath PokeData:", indexPath)
         } else {
             cell.pokeImage.set(img: "clipboard.fill")
         }
@@ -201,10 +213,11 @@ extension PokedexVC: UICollectionViewDataSource {
         let delayBase: Double = 0.2
         let delay = Double(indexPath.row) * delayBase
         
-        UIView.animate(withDuration: animationDuration, delay: delay,
-                       usingSpringWithDamping: 0.8, initialSpringVelocity: 4,
-                       options: []
-        ) {
+        UIView.animate(withDuration: animationDuration,
+                       delay: delay,
+                       usingSpringWithDamping: 0.8,
+                       initialSpringVelocity: 4,
+                       options: []) {
             cell.backgroundColor = UIColor.black.withAlphaComponent(0.1)
             cell.transform = .identity
         }
@@ -219,9 +232,11 @@ extension PokedexVC: UICollectionViewDelegateFlowLayout {
         let availableWidth = width - (padding * 2) - (minimumSpacing * 2)
         let itemWidth = availableWidth / 3
         
+        // 셀이 키워졌을 경우의 값
         if selectedIndexPath == indexPath {
-            return CGSize(width: collectionView.frame.width, height: 500)
+            return CGSize(width: availableWidth, height: availableWidth)
         }
+        // 기본 셀 사이즈 지정
         return CGSize(width: itemWidth - padding, height: itemWidth)
     }
 }

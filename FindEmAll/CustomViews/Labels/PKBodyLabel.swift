@@ -1,5 +1,5 @@
 //
-//  BodyLabel.swift
+//  PKBodyLabel.swift
 //  FindEmAll
 //
 //  Created by Porori on 2/28/24.
@@ -7,10 +7,10 @@
 
 import UIKit
 
-class BodyLabel: UILabel {
+class PKBodyLabel: UILabel {
     override init(frame: CGRect) {
         super.init(frame: frame)
-        configure()
+        configureLayout()
     }
     
     required init?(coder: NSCoder) {
@@ -22,7 +22,7 @@ class BodyLabel: UILabel {
         self.textAlignment = textAlignment
     }
     
-    private func configure() {
+    private func configureLayout() {
         textColor                           = .black
         font                                = UIFont.preferredFont(forTextStyle: .body)
         adjustsFontForContentSizeCategory   = true

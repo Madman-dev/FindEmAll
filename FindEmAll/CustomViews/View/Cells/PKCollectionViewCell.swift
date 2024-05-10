@@ -1,5 +1,5 @@
 //
-//  PokeCollectionViewCell.swift
+//  PKCollectionViewCell.swift
 //  FindEmAll
 //
 //  Created by Porori on 3/20/24.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class PokeCollectionViewCell: UICollectionViewCell {
+class PKCollectionViewCell: UICollectionViewCell {
     
     static let reuseId = "PokeCollectionViewCell"
     
@@ -23,26 +23,28 @@ class PokeCollectionViewCell: UICollectionViewCell {
     }()
     
     // properties
-    let pokeImage = ImageView(frame: .zero)
-    let nameLabel = TitleLabel(textAlignment: .center, fontSize: 18)
+    let pokeImage = PKImageView(frame: .zero)
+    let nameLabel = PKTitleLabel(textAlignment: .center, fontSize: 18)
+    let dataLabel = DataView()
+    let dataLabel2 = DataView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        layout()
+        configureLayout()
         configureClosedStack()
     }
     
     func set(data: Pokemon) {
         DispatchQueue.main.async {
             self.backgroundColor = .white
-            self.bringSubviewToFront(self.pokeImage)
-            self.bringSubviewToFront(self.nameLabel)
             self.nameLabel.text = data.name
+            self.dataLabel.set(item: .type, text: "빈 칸")
+            self.dataLabel2.set(item: .captured, text: "몇 개더라..")
             self.pokeImage.downloadImageUrl(from: data.sprites.frontDefault)
         }
     }
     
-    private func layout() {
+    private func configureLayout() {
         backgroundColor = .clear
         layer.cornerRadius = 10
     }
@@ -67,6 +69,29 @@ class PokeCollectionViewCell: UICollectionViewCell {
             pokeImage.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
             pokeImage.trailingAnchor.constraint(equalTo: stackView.trailingAnchor)
         ])
+    }
+    
+    func configureOpenedStack(show: Bool) {
+        if show {
+            stackView.addArrangedSubview(dataLabel)
+            stackView.addArrangedSubview(dataLabel2)
+            
+            NSLayoutConstraint.activate([
+                dataLabel.topAnchor.constraint(equalTo: pokeImage.bottomAnchor),
+                dataLabel.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
+                dataLabel.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
+                
+                dataLabel2.topAnchor.constraint(equalTo: dataLabel.bottomAnchor),
+                dataLabel2.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
+                dataLabel2.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
+            ])
+            
+            dataLabel.isHidden = false
+            dataLabel2.isHidden = false
+        } else {
+            dataLabel.isHidden = true
+            dataLabel2.isHidden = true
+        }
     }
     
     override func prepareForReuse() {

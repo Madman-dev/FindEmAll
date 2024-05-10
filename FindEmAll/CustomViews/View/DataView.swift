@@ -1,5 +1,5 @@
 //
-//  DataDisplayView.swift
+//  DataView.swift
 //  FindEmAll
 //
 //  Created by Porori on 3/20/24.
@@ -8,18 +8,17 @@
 import UIKit
 
 enum DisplayItem {
-    case seen, captured
+    case seen, captured, type
 }
 
-class DataDisplayView: UIView {
+class DataView: UIView {
     
-    private let titleLabel = TitleLabel(textAlignment: .center, fontSize: 15)
-    private let dataLabel = BodyLabel(textAlignment: .left)
+    private let titleLabel = PKTitleLabel(textAlignment: .center, fontSize: 15)
+    private let dataLabel = PKBodyLabel(textAlignment: .left)
     
     override init(frame: CGRect) {
         super.init(frame: .zero)
-        translatesAutoresizingMaskIntoConstraints = false
-        configure()
+        configureLayout()
         configureLabels()
     }
     
@@ -27,11 +26,29 @@ class DataDisplayView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func configure() {
-        backgroundColor = .white
+    func setBorder() {
         layer.cornerRadius = 10
         layer.borderWidth = 1
         layer.borderColor = UIColor.black.cgColor
+    }
+    
+    func set(item: DisplayItem, withCount value: Int? = nil, text: String? = nil) {
+        switch item {
+        case .seen: titleLabel.text = "본 포켓몬 수:"
+        case .captured: titleLabel.text = "잡은 포켓몬 수:"
+        case .type: titleLabel.text = "타입:"
+        }
+        
+        if let value = value {
+            dataLabel.text = String(value)
+        } else if let text = text {
+            dataLabel.text = text
+        }
+    }
+    
+    private func configureLayout() {
+        backgroundColor = .white
+        translatesAutoresizingMaskIntoConstraints = false
     }
     
     private func configureLabels() {
@@ -44,16 +61,5 @@ class DataDisplayView: UIView {
             dataLabel.leadingAnchor.constraint(equalTo: titleLabel.trailingAnchor, constant: 5),
             dataLabel.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
-    }
-    
-    func set(item: DisplayItem, withCount count: Int) {
-        switch item {
-        case .seen:
-            titleLabel.text = "본 포켓몬 수:"
-        case .captured:
-            titleLabel.text = "잡은 포켓몬 수:"
-        }
-        
-        dataLabel.text = String(count)
     }
 }

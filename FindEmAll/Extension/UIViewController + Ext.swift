@@ -8,8 +8,8 @@
 import UIKit
 
 extension UIViewController {
-    func presentPokeAlert(title: String, message: String, buttonTitle: String) {
-        let alert = PokeAlertVC(title: title, message: message, buttonTitle: buttonTitle)
+    func presentPKAlert(title: String, buttonTitle: String) {
+        let alert = PKAlertVC(title: title, buttonTitle: buttonTitle)
         alert.modalPresentationStyle = .overFullScreen
         alert.modalTransitionStyle = .crossDissolve
         present(alert, animated: true)

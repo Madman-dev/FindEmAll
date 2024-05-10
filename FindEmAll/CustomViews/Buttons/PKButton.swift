@@ -1,5 +1,5 @@
 //
-//  PokeButton.swift
+//  PKButton.swift
 //  FindEmAll
 //
 //  Created by Porori on 2/29/24.
@@ -7,11 +7,11 @@
 
 import UIKit
 
-class PokeButton: UIButton {
+class PKButton: UIButton {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        configure()
+        configureLayout()
     }
     
     convenience init(color: UIColor) {
@@ -34,7 +34,7 @@ class PokeButton: UIButton {
         backgroundColor = color
     }
     
-    private func configure() {
+    private func configureLayout() {
         translatesAutoresizingMaskIntoConstraints = false
     }
     

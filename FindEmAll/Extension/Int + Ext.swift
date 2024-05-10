@@ -8,11 +8,15 @@
 import Foundation
 
 extension Int {
-    func updateValue() -> Double {
+    func valueInDecimal() -> Double {
         return Double(self)/10
     }
     
     func roundToFeet() -> Double {
-        return ((Double(self)/10) * 3.28084).rounded(toPlaces: 2)
+        return ((Double(self)/10) * 3.28084).roundDown(toPlace: 2)
     }
+    
+    var degreesToRadians: CGFloat {
+            return CGFloat(self) * .pi / 180
+        }
 }

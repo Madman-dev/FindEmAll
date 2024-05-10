@@ -1,5 +1,5 @@
 //
-//  TitleLabel.swift
+//  PKTitleLabel.swift
 //  FindEmAll
 //
 //  Created by Porori on 2/28/24.
@@ -7,10 +7,10 @@
 
 import UIKit
 
-class TitleLabel: UILabel {
+class PKTitleLabel: UILabel {
     override init(frame: CGRect) {
         super.init(frame: frame)
-        configure()
+        configureLayout()
     }
     
     required init?(coder: NSCoder) {
@@ -23,8 +23,8 @@ class TitleLabel: UILabel {
         self.font = UIFont.systemFont(ofSize: fontSize, weight: .heavy)
     }
     
-    private func configure() {
-        textColor = .secondaryLabel
+    private func configureLayout() {
+        textColor = .label
         adjustsFontForContentSizeCategory = true
         translatesAutoresizingMaskIntoConstraints = false
     }

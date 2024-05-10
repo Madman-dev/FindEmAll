@@ -7,29 +7,21 @@
 
 import UIKit
 
-class StartingVC: UIViewController {
+class StartingVC: AnimatingVC {
     
-    let titleView = TitleLabel(textAlignment: .center, fontSize: 30)
-    let topAnimatingView = AnimatingView(color: Color.PokeRed)
-    let bottomAnimatingView = AnimatingView(color: Color.PokeGrey)
-    let actionButton = PokeButton(color: .white)
-    let pokedexButton = PokeButton(color: .green)
+    let titleLabel = PKTitleLabel(textAlignment: .center, fontSize: 30)
+    let enterGameButton = PKButton(color: .white)
+    let pokedexButton = PKButton(color: PKColor.PokeBlack)
     var feedbackGenerator: UIImpactFeedbackGenerator? = nil
     private let height = (UIScreen.main.bounds.height/2) - 15
     
     //MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        layoutUI()
-        configureAnimatingViews()
+        configureLayout()
         configureTitleView()
         configureButton()
-        configurePokeDex()
-    }
-    
-    override func viewIsAppearing(_ animated: Bool) {
-        super.viewIsAppearing(animated)
-//        loadingView()
+        configurePokedex()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -38,47 +30,33 @@ class StartingVC: UIViewController {
     }
     
     //MARK: - UILayout
-    private func layoutUI() {
-        view.backgroundColor = Color.PitchBlack
-        view.addSubviews(topAnimatingView, bottomAnimatingView, titleView, actionButton, pokedexButton)
-    }
-    
-    private func configureAnimatingViews() {
-        NSLayoutConstraint.activate([
-            topAnimatingView.topAnchor.constraint(equalTo: view.topAnchor),
-            topAnimatingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            topAnimatingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            topAnimatingView.heightAnchor.constraint(equalToConstant: height),
-            
-            bottomAnimatingView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            bottomAnimatingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            bottomAnimatingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            bottomAnimatingView.heightAnchor.constraint(equalToConstant: height)
-        ])
+    private func configureLayout() {
+        view.backgroundColor = PKColor.PokeBlack
+        view.addSubviews(titleLabel, enterGameButton, pokedexButton)
     }
     
     private func configureTitleView() {
-        titleView.text = "Find'em All"
+        titleLabel.text = "Find'em All"
         
         NSLayoutConstraint.activate([
-            titleView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            titleView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -200)
+            titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            titleLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -200)
         ])
     }
     
     private func configureButton() {
-        actionButton.addTarget(self, action: #selector(actionButtonTapped), for: .touchUpInside)
-        actionButton.addBorder(color: Color.PitchBlack)
+        enterGameButton.addTarget(self, action: #selector(actionButtonTapped), for: .touchUpInside)
+        enterGameButton.addBorder(color: PKColor.PokeBlack)
         
         NSLayoutConstraint.activate([
-            actionButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            actionButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            actionButton.heightAnchor.constraint(equalToConstant: 101),
-            actionButton.widthAnchor.constraint(equalToConstant: 101)
+            enterGameButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            enterGameButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            enterGameButton.heightAnchor.constraint(equalToConstant: 101),
+            enterGameButton.widthAnchor.constraint(equalToConstant: 101)
         ])
     }
     
-    private func configurePokeDex() {
+    private func configurePokedex() {
         pokedexButton.addTarget(self, action: #selector(pokedexButtonTapped), for: .touchUpInside)
         pokedexButton.addBorder(color: .white)
         
@@ -99,46 +77,16 @@ class StartingVC: UIViewController {
     @objc func actionButtonTapped(_ sender: UIButton) {
         self.prepareFeedback()
         let destinationVC = QuizVC()
-        sender.tapAnimation {
+        sender.animatedWhenTapped {
             self.feedbackGenerator?.impactOccurred()
             self.dismissAndAnimateTo(VC: destinationVC)
         }
     }
     
-    @objc func pokedexButtonTapped() {
+    @objc func pokedexButtonTapped(sender: UIButton) {
         let destinationVC = PokedexVC()
-        dismissAndAnimateTo(VC: destinationVC)
-    }
-    
-    private func loadAnimatingView() {
-        let dispatchGroup = DispatchGroup()
-        dispatchGroup.enter()
-        topAnimatingView.animate(to: .down) {
-            dispatchGroup.leave()
-        }
-        
-        dispatchGroup.enter()
-        bottomAnimatingView.animate(to: .up) {
-            dispatchGroup.leave()
-        }
-    }
-    
-    private func dismissAndAnimateTo(VC destination: UIViewController) {
-        // moving the views at once
-        let dispatchGroup = DispatchGroup()
-        
-        dispatchGroup.enter()
-        topAnimatingView.animate(to: .up) {
-            dispatchGroup.leave()
-        }
-        
-        dispatchGroup.enter()
-        bottomAnimatingView.animate(to: .down) {
-            dispatchGroup.leave()
-        }
-        
-        dispatchGroup.notify(queue: .main) {
-            self.navigationController?.pushViewController(destination, animated: false)
+        sender.animatedWhenTapped {
+            self.dismissAndAnimateTo(VC: destinationVC)
         }
     }
     
