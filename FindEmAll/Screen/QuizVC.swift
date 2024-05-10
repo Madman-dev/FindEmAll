@@ -10,13 +10,13 @@ import UIKit
 class QuizVC: AnimatingVC {
     
     //MARK: - Property
-    private let inputTextfield = PokeTextfield(withSpace: true)
-    private let pokeImageview = PokeImageView(frame: .zero)
-    private let firstInfoview = PokeInfoView() // VC로 옮겨서 하나로 만들 수 있는지 시도해보자
-    private let secondInfoview = PokeInfoView()
-    private let thirdInfoview = PokeInfoView()
-    private let fourthInfoview = PokeInfoView()
-    private var infoViews = [PokeInfoView]()
+    private let inputTextfield = PKTextfield(withSpace: true)
+    private let pokeImageview = PKImageView(frame: .zero)
+    private let firstInfoview = PKInfoView() // VC로 옮겨서 하나로 만들 수 있는지 시도해보자
+    private let secondInfoview = PKInfoView()
+    private let thirdInfoview = PKInfoView()
+    private let fourthInfoview = PKInfoView()
+    private var infoViews = [PKInfoView]()
     private var originalPosition = [UIView: CGPoint]()
     private let height = (UIScreen.main.bounds.height/2) - 15
     private let padding: CGFloat = 20
@@ -44,18 +44,18 @@ class QuizVC: AnimatingVC {
     //MARK: - Methods
     private func checkIfMatching(name: String, userInput: String?) {
         guard !(inputTextfield.text?.isEmpty ?? true) else {
-            presentPokeAlert(title: PokeInputError.blankTitle.text,
+            presentPKAlert(title: PKInputError.blankTitle.text,
                              buttonTitle: "ok")
             return
         }
         
         if name == userInput {
-            presentPokeAlert(title: PokeInputError.caughtTitle.text,
+            presentPKAlert(title: PKInputError.caughtTitle.text,
                              buttonTitle: "ok")
         } else {
             self.returnViewsToOrigin()
             self.inputTextfield.resignFirstResponder()
-            presentPokeAlert(title: PokeInputError.missedTitle.text,
+            presentPKAlert(title: PKInputError.missedTitle.text,
                              buttonTitle: "ok")
         }
     }
@@ -67,7 +67,7 @@ class QuizVC: AnimatingVC {
                 savePokemon(with:pokemonData.id)
                 updateUI(with: pokemonData)
             } catch {
-                if let error = error as? NetworkError {
+                if let _ = error as? NetworkError {
                     print("네트워크 오류가 발생했습니다.")
                 } else {
                     print("예측 불가능한 에러가 발생했어요.")
@@ -85,28 +85,24 @@ class QuizVC: AnimatingVC {
         PersistenceManager.shared.savePokeData(id)
     }
     
+    // does not throw an error
     private func loadImage(with data: Pokemon) {
-        NetworkManager.shared.downloadImage(from: data.sprites.frontDefault) { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .success(let image):
-                handleSuccessfulDownload(image, for: data)
-            case .failure(let error):
-                print(error)
+        Task {
+            do {
+                let image = await NetworkManager.shared.downloadImage(from: data.sprites.frontDefault)
+                handleDownload(image, for: data)
             }
         }
     }
     
-    private func handleSuccessfulDownload(_ image: UIImage, for pokemon: Pokemon) {
-        DispatchQueue.main.async {
-            let imageStroke = image.createSilhouette()
-            self.populateInfoViews(pokemon: pokemon)
-            self.pokeImageview.image = imageStroke
-            self.pokeImageview.contentMode = .scaleAspectFit
-            self.pokeImageview.countDownTimer()
-        }
+    private func handleDownload(_ image: UIImage?, for pokemon: Pokemon) {
+        let imageStroke = image?.createSilhouette()
+        self.populateInfoViews(pokemon: pokemon)
+        self.pokeImageview.image = imageStroke
+        self.pokeImageview.contentMode = .scaleAspectFit
+        self.pokeImageview.countDownTimer()
     }
-
+    
     private func populateInfoViews(pokemon: Pokemon) {
         firstInfoview.updateView(data: pokemon, dataType: .height)
         secondInfoview.updateView(data: pokemon, dataType: .move)
@@ -120,10 +116,10 @@ class QuizVC: AnimatingVC {
     }
     
     private func returnViewsToOrigin() {
-        firstInfoview.animateBack(to: originalPosition[firstInfoview]!)
-        secondInfoview.animateBack(to: originalPosition[secondInfoview]!)
-        thirdInfoview.animateBack(to: originalPosition[thirdInfoview]!)
-        fourthInfoview.animateBack(to: originalPosition[fourthInfoview]!)
+        firstInfoview.animateToOrigin(originalPosition[firstInfoview]!)
+        secondInfoview.animateToOrigin(originalPosition[secondInfoview]!)
+        thirdInfoview.animateToOrigin(originalPosition[thirdInfoview]!)
+        fourthInfoview.animateToOrigin(originalPosition[fourthInfoview]!)
     }
     
     private func createDismissKeyboardGesture() {
@@ -133,11 +129,11 @@ class QuizVC: AnimatingVC {
     
     //MARK: - Autolayout && UI
     private func configureLayout() {
-        view.backgroundColor = PokeColor.PokeBlack
+        view.backgroundColor = PKColor.PokeBlack
         
         view.addSubview(pokeImageview)
         infoViews = [firstInfoview, secondInfoview, thirdInfoview, fourthInfoview]
-        pokeImageview.backgroundColor = PokeColor.PokeBlack
+        pokeImageview.backgroundColor = PKColor.PokeBlack
         pokeImageview.delegate = self
         pokeImageview.set(img: "lasso")
         
@@ -165,13 +161,7 @@ class QuizVC: AnimatingVC {
         ])
     }
     
-    private func configureReturnButton() {
-//        let image = UIImage(systemName: "arrowshape.backward.fill")?
-//            .withTintColor(.white, renderingMode: .alwaysOriginal)
-//        let backAction = UIButton(type: .custom, primaryAction: UIAction(handler: { _ in
-//            self.dismissAnimatingView()
-//        }))
-        
+    private func configureReturnButton() {        
         let backButton = UIBarButtonItem(
             image: UIImage(systemName: "arrowshape.backward.fill")?
                 .withTintColor(.white, renderingMode: .alwaysOriginal),
@@ -222,7 +212,7 @@ extension QuizVC: UITextFieldDelegate {
 extension QuizVC: PokeImageDelegate {
     func isTimeOver(_ complete: Bool) {
         if complete {
-            presentPokeAlert(title: "이렇게", buttonTitle: "ok")
+            presentPKAlert(title: "이렇게", buttonTitle: "ok")
         }
     }
 }

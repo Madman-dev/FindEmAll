@@ -1,5 +1,5 @@
 //
-//  DataDisplayView.swift
+//  DataView.swift
 //  FindEmAll
 //
 //  Created by Porori on 3/20/24.
@@ -11,10 +11,10 @@ enum DisplayItem {
     case seen, captured, type
 }
 
-class DataDisplayView: UIView {
+class DataView: UIView {
     
-    private let titleLabel = PokeTitleLabel(textAlignment: .center, fontSize: 15)
-    private let dataLabel = PokeBodyLabel(textAlignment: .left)
+    private let titleLabel = PKTitleLabel(textAlignment: .center, fontSize: 15)
+    private let dataLabel = PKBodyLabel(textAlignment: .left)
     
     override init(frame: CGRect) {
         super.init(frame: .zero)

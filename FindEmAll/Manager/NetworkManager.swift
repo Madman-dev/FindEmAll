@@ -21,7 +21,7 @@ class NetworkManager {
     // 리턴 타입 PokemonType으로 진행
     func fetchPokemon() async throws -> Pokemon {
         // randomPokemon check
-        let pokemonIndex = Int.random(in: PokemonGenerationEnum.firstGen)
+        let pokemonIndex = Int.random(in: GenerationEnum.firstGen)
         let endPoint = baseUrl + "\(pokemonIndex)"
         
         // async takes care using throw
@@ -63,48 +63,31 @@ class NetworkManager {
         }
     }
     
-    // 이미지를 던지는 이유는?
-    func downloadImage(from dataString: String, completed: @escaping (Result<UIImage, Error>) -> Void) {
+    // Not throwing error to make no popup or
+    func downloadImage(from dataString: String) async -> UIImage? {
         
         /// cache check
         // convert String to cacheKey
         let cacheKey = NSString(string: dataString)
         
-        // check if cache has image
         if let image = cache.object(forKey: cacheKey) {
-            // if yes, load image
-            completed(.success(image))
-            return
+            return image
         }
         
-        // check if URL is valid
         guard let url = URL(string: dataString) else {
-            completed(.failure(NetworkError.invalidURL))
-            return
+            return nil
         }
         
-        // parse url into data
-        let task = URLSession.shared.dataTask(with: url) { data, response, error in
-            
-            // check for error
-            if let _ = error {
-                print(NetworkError.networkError)
-                return
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            guard let image = UIImage(data: data) else {
+                return nil
             }
             
-            // check for correct response
-            guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-                completed(.failure(NetworkError.invalidResponse))
-                return
-            }
-            
-            // check if data is correct and convert to image
-            guard let data = data, let image = UIImage(data: data) else {
-                completed(.failure(NetworkError.invalidDataFormat))
-                return
-            }
-            completed(.success(image))
+            cache.setObject(image, forKey: cacheKey)
+            return image
+        } catch {
+            return nil
         }
-        task.resume()
     }
 }

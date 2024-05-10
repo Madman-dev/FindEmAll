@@ -1,5 +1,5 @@
 //
-//  PokeCollectionViewCell.swift
+//  PKCollectionViewCell.swift
 //  FindEmAll
 //
 //  Created by Porori on 3/20/24.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class PokeCollectionViewCell: UICollectionViewCell {
+class PKCollectionViewCell: UICollectionViewCell {
     
     static let reuseId = "PokeCollectionViewCell"
     
@@ -23,10 +23,10 @@ class PokeCollectionViewCell: UICollectionViewCell {
     }()
     
     // properties
-    let pokeImage = PokeImageView(frame: .zero)
-    let nameLabel = PokeTitleLabel(textAlignment: .center, fontSize: 18)
-    let dataLabel = DataDisplayView()
-    let dataLabel2 = DataDisplayView()
+    let pokeImage = PKImageView(frame: .zero)
+    let nameLabel = PKTitleLabel(textAlignment: .center, fontSize: 18)
+    let dataLabel = DataView()
+    let dataLabel2 = DataView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)

@@ -1,5 +1,5 @@
 //
-//  PokeAlertVC.swift
+//  PKAlertVC.swift
 //  FindEmAll
 //
 //  Created by Porori on 4/19/24.
@@ -7,11 +7,11 @@
 
 import UIKit
 
-class PokeAlertVC: UIViewController {
+class PKAlertVC: UIViewController {
     
     private let containerView = AlertContainerView()
-    private let titleLabel = PokeTitleLabel(textAlignment: .center, fontSize: 25)
-    private let actionName = PokeButton(color: PokeColor.PokeRed)
+    private let titleLabel = PKTitleLabel(textAlignment: .center, fontSize: 25)
+    private let actionName = PKButton(color: PKColor.PokeRed)
     
     private var alertTitle: String?
     private var buttonTitle: String?

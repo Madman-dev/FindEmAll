@@ -9,8 +9,8 @@ import UIKit
 
 class AnimatingVC: UIViewController {
     
-    let topAnimatingView = AnimatingView(color: PokeColor.PokeRed)
-    let bottomAnimatingView = AnimatingView(color: PokeColor.PokeGrey)
+    let topAnimatingView = AnimatingView(color: PKColor.PokeRed)
+    let bottomAnimatingView = AnimatingView(color: PKColor.PokeGrey)
     private let height = (UIScreen.main.bounds.height/2) - 15
     
     override func viewDidLoad() {

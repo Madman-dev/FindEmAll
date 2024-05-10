@@ -1,5 +1,5 @@
 //
-//  PokeTextfield.swift
+//  PKTextfield.swift
 //  FindEmAll
 //
 //  Created by Porori on 3/12/24.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class PokeTextfield: UITextField {
+class PKTextfield: UITextField {
     override init(frame: CGRect) {
         super.init(frame: frame)
         configureLayout()

@@ -1,5 +1,5 @@
 //
-//  PokeTitleLabel.swift
+//  PKTitleLabel.swift
 //  FindEmAll
 //
 //  Created by Porori on 2/28/24.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class PokeTitleLabel: UILabel {
+class PKTitleLabel: UILabel {
     override init(frame: CGRect) {
         super.init(frame: frame)
         configureLayout()

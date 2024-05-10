@@ -1,5 +1,5 @@
 //
-//  PokeImageView.swift
+//  PKImageView.swift
 //  FindEmAll
 //
 //  Created by Porori on 3/14/24.
@@ -12,7 +12,7 @@ protocol PokeImageDelegate: AnyObject {
 }
 
 // 메모리 효율성에도 도움이 된다?
-class PokeImageView: UIImageView {
+class PKImageView: UIImageView {
     
     private let timeShapeLayer = CAShapeLayer()
     private let timeLeftShapeLayer = CAShapeLayer()
@@ -20,12 +20,12 @@ class PokeImageView: UIImageView {
     private var timeLeft: TimeInterval = 30
     private var timer = Timer()
     private var isTimeOver: Bool = false
+    private var placeHolder = PKImage.placeHolder
     var delegate: PokeImageDelegate?
     
     override var bounds: CGRect {
         didSet {
             layer.cornerRadius = bounds.width/2
-            print(bounds.size)
         }
     }
     
@@ -74,22 +74,9 @@ class PokeImageView: UIImageView {
         timeLeftShapeLayer.add(countStroke, forKey: nil)
     }
     
-    // duplicate exists in codebase
-//    func makeBorder() {
-//        layer.borderColor = Color.PokeBlack.cgColor
-//        layer.borderWidth = 8
-//    }
-    
     func downloadImageUrl(from url: String) {
-        NetworkManager.shared.downloadImage(from: url) { result in
-            switch result {
-            case .success(let image):
-                DispatchQueue.main.async {
-                    self.image = image
-                }
-            case .failure(let error):
-                print(error)
-            }
+        Task {
+            image = await NetworkManager.shared.downloadImage(from: url)
         }
     }
     

@@ -1,5 +1,5 @@
 //
-//  PokeInfoView.swift
+//  PKInfoView.swift
 //  FindEmAll
 //
 //  Created by Porori on 3/12/24.
@@ -7,16 +7,16 @@
 
 import UIKit
 
-enum PokeData {
+enum PKData {
     case height
     case weight
     case move
     case type
 }
 
-class PokeInfoView: UIView {
+class PKInfoView: UIView {
     
-    let textLabel = PokeBodyLabel(textAlignment: .left)
+    let textLabel = PKBodyLabel(textAlignment: .left)
     let padding: CGFloat = 10
     
     override init(frame: CGRect) {
@@ -29,10 +29,10 @@ class PokeInfoView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func updateView(data: Pokemon, dataType: PokeData) {
-        let decimalHeight = data.height.decimalValue()
+    func updateView(data: Pokemon, dataType: PKData) {
+        let decimalHeight = data.height.valueInDecimal()
         let heightRoundedDown = data.height.roundToFeet()
-        let decimalWeight = data.weight.decimalValue()
+        let decimalWeight = data.weight.valueInDecimal()
         let types = data.types.map { $0.type.name }.joined(separator: ", ")
         
         switch dataType {
